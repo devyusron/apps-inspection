@@ -15,7 +15,28 @@ class Inspection extends CI_Controller
     {
         $data['title'] = 'Master Produk';
         $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
-        $data['master_produk'] = $this->db->get('master_produk')->result_array();
+        $nama_produk_filter = $this->input->get('nama_produk');
+        $kode_produk_filter = $this->input->get('kode_produk');
+        $tanggal_mulai = $this->input->get('tanggal_mulai');
+        $tanggal_akhir = $this->input->get('tanggal_akhir');
+        $this->db->select('*');
+        $this->db->from('master_produk');
+        $this->db->order_by('id_produk', 'DESC'); // Atau sesuaikan dengan kolom pengurutan Anda
+        if ($nama_produk_filter) {
+            $this->db->like('nama_produk', $nama_produk_filter);
+        }
+        if ($kode_produk_filter) {
+            $this->db->like('kode_produk', $kode_produk_filter);
+        }
+        if ($tanggal_mulai && $tanggal_akhir) {
+            $this->db->where('created_at >=', $tanggal_mulai . ' 00:00:00');
+            $this->db->where('created_at <=', $tanggal_akhir . ' 23:59:59');
+        }
+        $data['master_produk'] = $this->db->get()->result_array();
+        // Untuk dropdown Nama Produk
+        $this->db->select('nama_produk');
+        $this->db->distinct();
+        $data['nama_produk_list'] = $this->db->get('master_produk')->result_array();
         $this->load->view('templates/header', $data);
         $this->load->view('templates/sidebar', $data);
         $this->load->view('templates/topbar', $data);
@@ -138,10 +159,21 @@ class Inspection extends CI_Controller
 
     /* unit */
     public function index_unit() {
+        $tanggal_mulai = $this->input->get('tanggal_mulai');
+        $tanggal_akhir = $this->input->get('tanggal_akhir');
+        $nama_produk_filter = $this->input->get('nama_produk');
+        $data['daftar_produk'] = $this->db->get('master_produk')->result_array();
         $this->db->select('unit.*, master_produk.nama_produk');
         $this->db->from('unit');
         $this->db->join('master_produk', 'unit.id_produk = master_produk.id_produk');
         $this->db->order_by('unit_id', 'DESC');
+        if ($tanggal_mulai && $tanggal_akhir) {
+            $this->db->where('unit.tanggal_masuk >=', $tanggal_mulai . ' 00:00:00');
+            $this->db->where('unit.tanggal_masuk <=', $tanggal_akhir . ' 23:59:59');
+        }
+        if ($nama_produk_filter) {
+            $this->db->like('master_produk.nama_produk', $nama_produk_filter);
+        }
         $data['units'] = $this->db->get()->result_array();
         $data['title'] = 'List Unit';
         $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();

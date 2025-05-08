@@ -3,28 +3,65 @@
     <!-- Page Heading -->
     <div class="m-1 shadow card">
     <div class="card-header mb-4 d-flex justify-content-between align-items-center">
-      <h1 class="h3 mb-4 text-gray-800"><?= $title; ?></h1>
-      <a href="" class="btn btn-outline-primary mb-3" data-toggle="modal" data-target="#newMenuModal">
-        <i class="fas fa-plus mr-2"></i>
-        Add Produk
-      </a>
-    </div>
-      <div class="row">
-          <div class="col-lg m-2">
-              <?= form_error('inspection/master_produk', '<div class="alert alert-danger" role="alert">', '</div>'); ?>
-              <?php if ($this->session->flashdata('message')): ?>
-                  <?php echo $this->session->flashdata('message'); ?>
-                  <script>
-                      setTimeout(function() {
-                          var alertElement = document.querySelector('.alert'); // Sesuaikan selector jika perlu
-                          if (alertElement) {
-                              alertElement.style.display = 'none';
-                          }
-                      }, 5000);
-                  </script>
-                  <?php $this->session->unset_userdata('message'); ?>
-              <?php endif; ?>
-              <div class="table-responsive">
+        <h1 class="h3 mb-4 text-gray-800"><?= $title; ?></h1>
+        <a href="" class="btn btn-outline-primary mb-3" data-toggle="modal" data-target="#newMenuModal">
+            <i class="fas fa-plus mr-2"></i>
+            Add Produk
+        </a>
+        </div>
+        <div class="row m-2">
+            <div class="col-md-12">
+                <form action="<?= site_url('inspection/master_produk'); ?>" method="get">
+                    <div class="form-row">
+                        <div class="col-md-2 mb-2">
+                            <label for="nama_produk">Nama Produk:</label>
+                            <select class="form-control form-control-sm" id="nama_produk" name="nama_produk">
+                                <option value="">Semua Produk</option>
+                                <?php foreach ($nama_produk_list as $produk): ?>
+                                    <option value="<?= htmlspecialchars($produk['nama_produk']); ?>"
+                                        <?= ($this->input->get('nama_produk') == $produk['nama_produk']) ? 'selected' : ''; ?>>
+                                        <?= htmlspecialchars($produk['nama_produk']); ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div class="col-md-2 mb-2">
+                            <label for="kode_produk">Kode Produk:</label>
+                            <input type="text" class="form-control form-control-sm" id="kode_produk" name="kode_produk"
+                                    value="<?= $this->input->get('kode_produk'); ?>">
+                        </div>
+                        <div class="col-md-2 mb-2">
+                            <label for="tanggal_mulai">Tanggal Terima Start:</label>
+                            <input type="date" class="form-control form-control-sm" id="tanggal_mulai" name="tanggal_mulai"
+                                    value="<?= $this->input->get('tanggal_mulai'); ?>">
+                        </div>
+                        <div class="col-md-2 mb-2">
+                            <label for="tanggal_akhir">Tanggal Terima End:</label>
+                            <input type="date" class="form-control form-control-sm" id="tanggal_akhir" name="tanggal_akhir"
+                                    value="<?= $this->input->get('tanggal_akhir'); ?>">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-sm">Filter</button>
+                    <a href="<?= site_url('inspection/master_produk'); ?>" class="btn btn-secondary btn-sm">Reset Filter</a>
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg m-2">
+                <?= form_error('inspection/master_produk', '<div class="alert alert-danger" role="alert">', '</div>'); ?>
+                <?php if ($this->session->flashdata('message')): ?>
+                    <?php echo $this->session->flashdata('message'); ?>
+                    <script>
+                        setTimeout(function() {
+                            var alertElement = document.querySelector('.alert'); // Sesuaikan selector jika perlu
+                            if (alertElement) {
+                                alertElement.style.display = 'none';
+                            }
+                        }, 5000);
+                    </script>
+                    <?php $this->session->unset_userdata('message'); ?>
+                <?php endif; ?>
+                <div class="table-responsive">
                 <table class="table table-hover" id="dataTable">
                     <thead>
                         <tr>
@@ -378,3 +415,7 @@
         </div>
     </div>
 </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-rc.0/js/select2.min.js"></script>
+<script>
+    $('#nama_produk').select2(); 
+</script>

@@ -182,6 +182,14 @@ class Inspection extends CI_Controller
         $this->load->view('templates/topbar', $data);
         $this->load->view('inspection/unit/index', $data);
         $this->load->view('templates/footer');
+        $this->session->unset_userdata('swal');
+        $this->session->set_flashdata('swal', [
+            'title' => 'Berhasil!',
+            'text' => 'Data berhasil ditampilkan',
+            'icon' => 'success',
+            'showConfirmButton' => false,
+            'timer' => 1500
+        ]);
     }
 
     public function add_unit() {
@@ -230,16 +238,35 @@ class Inspection extends CI_Controller
                 $this->db->update('master_produk');
                 if ($this->db->trans_status() === FALSE) {
                     $this->db->trans_rollback();
-                    $this->session->set_flashdata('error', 'Terjadi kesalahan saat menambahkan unit dan memperbarui stok produk.');
+                    $this->session->unset_userdata('swal');
+                    $this->session->set_flashdata('swal', [
+                        'title' => 'Gagal!',
+                        'text' => 'Terjadi kesalahan saat menambahkan unit dan memperbarui stok produk.',
+                        'icon' => 'error',
+                        'showConfirmButton' => true,
+                    ]);
                     $this->add_unit();
                 } else {
                     $this->db->trans_commit();
-                    $this->session->set_flashdata('success', 'Data unit berhasil ditambahkan dan stok produk diperbarui.');
+                    $this->session->unset_userdata('swal');
+                    $this->session->set_flashdata('swal', [
+                        'title' => 'Berhasil!',
+                        'text' => 'Data unit telah ditambahkan.',
+                        'icon' => 'success',
+                        'showConfirmButton' => false,
+                        'timer' => 1500
+                    ]);
                     redirect('inspection/index_unit');
                 }
             } else {
                 $this->db->trans_rollback();
-                $this->session->set_flashdata('error', 'Terjadi kesalahan saat menambahkan data unit.');
+                $this->session->unset_userdata('swal');
+                $this->session->set_flashdata('swal', [
+                    'title' => 'Gagal!',
+                    'text' => 'Terjadi kesalahan saat menambahkan data unit.',
+                    'icon' => 'error',
+                    'showConfirmButton' => true,
+                ]);
                 $this->add_unit();
             }
         }
@@ -303,16 +330,35 @@ class Inspection extends CI_Controller
                 }
                 if ($this->db->trans_status() === FALSE) {
                     $this->db->trans_rollback();
-                    $this->session->set_flashdata('error', 'Terjadi kesalahan saat memperbarui unit dan stok produk.');
+                    $this->session->unset_userdata('swal');
+                    $this->session->set_flashdata('swal', [
+                        'title' => 'Gagal!',
+                        'text' => 'Terjadi kesalahan saat memperbarui unit dan stok produk.',
+                        'icon' => 'error',
+                        'showConfirmButton' => true,
+                    ]);
                     $this->edit_unit($id);
                 } else {
                     $this->db->trans_commit();
-                    $this->session->set_flashdata('success', 'Data unit berhasil diperbarui dan stok produk disesuaikan.');
+                    $this->session->unset_userdata('swal');
+                    $this->session->set_flashdata('swal', [
+                        'title' => 'Berhasil!',
+                        'text' => 'Data unit berhasil diperbarui dan stok produk disesuaikan.',
+                        'icon' => 'success',
+                        'showConfirmButton' => false,
+                        'timer' => 1500
+                    ]);
                     redirect('inspection/index_unit');
                 }
             } else {
                 $this->db->trans_rollback();
-                $this->session->set_flashdata('error', 'Terjadi kesalahan saat memperbarui data unit.');
+                $this->session->unset_userdata('swal');
+                $this->session->set_flashdata('swal', [
+                    'title' => 'Gagal!',
+                    'text' => 'Terjadi kesalahan saat memperbarui data unit.',
+                    'icon' => 'error',
+                    'showConfirmButton' => true,
+                ]);
                 $this->edit_unit($id);
             }
         }
@@ -337,11 +383,25 @@ class Inspection extends CI_Controller
                 $this->session->set_flashdata('error', 'Terjadi kesalahan saat menghapus unit dan memperbarui stok produk.');
             } else {
                 $this->db->trans_commit();
-                $this->session->set_flashdata('success', 'Data unit berhasil dihapus dan stok produk disesuaikan.');
+                $this->session->unset_userdata('swal');
+                $this->session->set_flashdata('swal', [
+                    'title' => 'Berhasil!',
+                    'text' => 'Data unit telah dihapus.',
+                    'icon' => 'success',
+                    'showConfirmButton' => false,
+                    'timer' => 1500
+                ]);
             }
         } else {
             $this->db->trans_rollback(); // Jaga-jaga jika ada transaksi yang tidak sengaja dimulai
-            $this->session->set_flashdata('error', 'Terjadi kesalahan saat menghapus data unit.');
+            $this->session->unset_userdata('swal');
+            $this->session->set_flashdata('swal', [
+                'title' => 'Gagal!',
+                'text' => 'Terjadi kesalahan saat menghapus data unit.',
+                'icon' => 'error',
+                'showConfirmButton' => false,
+                'timer' => 1500
+            ]);
         }
         redirect('inspection/index_unit');
     }

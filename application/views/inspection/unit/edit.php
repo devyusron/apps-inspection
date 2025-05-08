@@ -24,8 +24,11 @@
                     </div>
                     <div class="form-group">
                         <label for="status_inspection">Status Inspeksi</label>
-                        <input type="text" class="form-control" id="status_inspection" name="status_inspection"
-                            value="<?= htmlspecialchars($unit['status_inspection']); ?>" required>
+                        <select class="form-control" id="status_inspection" name="status_inspection" required>
+                            <option value="" disabled selected>Pilih Status Inspeksi</option>
+                            <option value="Belum Inspeksi" <?= (isset($unit['status_inspection']) && $unit['status_inspection'] == 'Belum Inspeksi') ? 'selected' : ''; ?>>Belum Inspeksi</option>
+                            <option value="Sudah Inspeksi" <?= (isset($unit['status_inspection']) && $unit['status_inspection'] == 'Sudah Inspeksi') ? 'selected' : ''; ?>>Sudah Inspeksi</option>
+                        </select>
                     </div>
                     <div class="form-group">
                         <label for="qty">Kuantitas</label>
@@ -33,28 +36,38 @@
                     </div>
                     <div class="form-group">
                         <label for="kondisi_unit">Kondisi Unit</label>
-                        <input type="text" class="form-control" id="kondisi_unit" name="kondisi_unit"
-                            value="<?= htmlspecialchars($unit['kondisi_unit']); ?>" required>
+                        <select class="form-control" id="kondisi_unit" name="kondisi_unit" required>
+                            <option value="" disabled selected>Pilih Kondisi</option>
+                            <option value="Berfungsi" <?= (isset($unit['kondisi_unit']) && $unit['kondisi_unit'] == 'Berfungsi') ? 'selected' : ''; ?>>Berfungsi</option>
+                            <option value="Tidak Berfungsi" <?= (isset($unit['kondisi_unit']) && $unit['kondisi_unit'] == 'Tidak Berfungsi') ? 'selected' : ''; ?>>Tidak Berfungsi</option>
+                        </select>
                     </div>
                     <div class="form-group">
                         <label for="tanggal_masuk">Tanggal Masuk</label>
                         <input type="datetime-local" class="form-control" id="tanggal_masuk" name="tanggal_masuk"
                             value="<?= str_replace(' ', 'T', $unit['tanggal_masuk']); ?>" required>
                     </div>
-                    <div class="form-group">
+                    <!-- <div class="form-group">
                         <label for="tanggal_keluar">Tanggal Keluar</label>
                         <input type="datetime-local" class="form-control" id="tanggal_keluar" name="tanggal_keluar"
                             value="<?= str_replace(' ', 'T', $unit['tanggal_keluar']); ?>">
-                    </div>
+                    </div> -->
                     <div class="form-group">
                         <label for="status_unit">Status Unit</label>
-                        <input type="text" class="form-control" id="status_unit" name="status_unit"
-                            value="<?= htmlspecialchars($unit['status_unit']); ?>" required>
+                        <select class="form-control" id="status_unit" name="status_unit" required>
+                            <option value="" disabled selected>Pilih Status</option>
+                            <option value="Baru" <?= (isset($unit['status_unit']) && $unit['status_unit'] == 'Baru') ? 'selected' : ''; ?>>Baru</option>
+                            <option value="Perbaikan" <?= (isset($unit['status_unit']) && $unit['status_unit'] == 'Perbaikan') ? 'selected' : ''; ?>>Perbaikan</option>
+                        </select>
                     </div>
                     <div class="form-group">
                         <label for="lokasi_unit">Lokasi Unit</label>
-                        <input type="text" class="form-control" id="lokasi_unit" name="lokasi_unit"
-                            value="<?= htmlspecialchars($unit['lokasi_unit']); ?>" required>
+                        <select class="form-control" id="lokasi_unit" name="lokasi_unit" required>
+                            <option value="" disabled selected>Pilih Lokasi</option>
+                            <option value="Vendor" <?= (isset($unit['lokasi_unit']) && $unit['lokasi_unit'] == 'Vendor') ? 'selected' : ''; ?>>Vendor</option>
+                            <option value="Gudang" <?= (isset($unit['lokasi_unit']) && $unit['lokasi_unit'] == 'Gudang') ? 'selected' : ''; ?>>Gudang</option>
+                            <option value="Customer" <?= (isset($unit['lokasi_unit']) && $unit['lokasi_unit'] == 'Customer') ? 'selected' : ''; ?>>Customer</option>
+                        </select>
                     </div>
                     <div class="form-group">
                         <label for="keterangan_unit">Keterangan Unit</label>

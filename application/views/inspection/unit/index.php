@@ -8,6 +8,11 @@
                 Tambah Unit
             </a>
         </div>
+        <?php if ($this->session->flashdata('swal')): ?>
+            <script>
+            Swal.fire(<?php echo json_encode($this->session->flashdata('swal')); ?>);
+            </script>
+        <?php endif; ?>
         <div class="row m-2">
             <div class="col">
                 <form action="<?= site_url('inspection/index_unit'); ?>" method="get">
@@ -38,8 +43,25 @@
                             <label for="status_inspection">Status Inspection:</label>
                             <select class="form-control form-control-sm" id="status_inspection" name="status_inspection">
                                 <option value="">Pilih Status</option>
-                                <option value="">Sudah Inspectionk</option>
-                                <option value="">Belum Inspectionk</option>
+                                <option value="Sudah Inspeksi">Sudah Inspeksi</option>
+                                <option value="Belum Inspeksi">Belum Inspeksi</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2 mb-2">
+                            <label for="kondisi_unit">Kondisi Unit:</label>
+                            <select class="form-control form-control-sm" id="kondisi_unit" name="kondisi_unit">
+                                <option value="">Pilih Kondisi</option>
+                                <option value="Berfungsi">Berfungsi</option>
+                                <option value="Tidak Berfungsi">Tidak Berfungsi</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2 mb-2">
+                            <label for="lokasi_unit">Lokasi Unit:</label>
+                            <select class="form-control form-control-sm" id="lokasi_unit" name="lokasi_unit">
+                                <option value="">Pilih Lokasi</option>
+                                <option value="Gudang">Gudang</option>
+                                <option value="Vendor">Vendor</option>
+                                <option value="Customer">Customer</option>
                             </select>
                         </div>
                     </div>
@@ -70,16 +92,16 @@
                                 <th>ID Unit</th>
                                 <th>Serial Number</th>
                                 <th>Nama Produk</th>
-                                <th>Status Inspeksi</th>
                                 <th>Qty</th>
                                 <th>Kondisi Unit</th>
                                 <th>Tanggal Masuk</th>
-                                <th>Tanggal Keluar</th>
+                                <!-- <th>Tanggal Keluar</th> -->
                                 <th>Status Unit</th>
                                 <th>Lokasi Unit</th>
                                 <th>Keterangan Unit</th>
-                                <th>Created At</th>
-                                <th>Created By</th>
+                                <!-- <th>Created At</th>
+                                <th>Created By</th> -->
+                                <th>Status Inspeksi</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
@@ -89,19 +111,37 @@
                                     <td><?= $unit['unit_id']; ?></td>
                                     <td><?= htmlspecialchars($unit['serial_number']); ?></td>
                                     <td><?= htmlspecialchars($unit['nama_produk']); ?></td>
-                                    <td><?= htmlspecialchars($unit['status_inspection']); ?></td>
                                     <td><?= $unit['qty']; ?></td>
                                     <td><?= htmlspecialchars($unit['kondisi_unit']); ?></td>
                                     <td><?= $unit['tanggal_masuk']; ?></td>
-                                    <td><?= $unit['tanggal_keluar']; ?></td>
+                                    <!-- <td><?= $unit['tanggal_keluar']; ?></td> -->
                                     <td><?= htmlspecialchars($unit['status_unit']); ?></td>
                                     <td><?= htmlspecialchars($unit['lokasi_unit']); ?></td>
                                     <td><?= htmlspecialchars($unit['keterangan_unit']); ?></td>
-                                    <td><?= $unit['created_at']; ?></td>
-                                    <td><?= htmlspecialchars($unit['created_by']); ?></td>
+                                    <!-- <td><?= $unit['created_at']; ?></td>
+                                    <td><?= htmlspecialchars($unit['created_by']); ?></td> -->
                                     <td>
-                                        <a href="<?= site_url('inspection/edit_unit/' . $unit['unit_id']); ?>" class="btn btn-warning btn-sm">Edit</a>
-                                        <a href="<?= site_url('inspection/delete_unit/' . $unit['unit_id']); ?>" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin menghapus unit ini?')">Hapus</a>
+                                        <?php if ($unit['status_inspection'] == 'Belum Inspeksi'): ?>
+                                            <span class="badge badge-danger">Belum Inspeksi</span>
+                                        <?php elseif ($unit['status_inspection'] == 'Sudah Inspeksi'): ?>
+                                            <span class="badge badge-success">Sudah Inspeksi</span>
+                                        <?php else: ?>
+                                            <?= htmlspecialchars($unit['status_inspection']); ?> 
+                                        <?php endif; ?>
+                                    </td>
+                                    <td>
+                                        <?php if ($unit['status_inspection'] == 'Belum Inspeksi') : ?>
+                                            <a href="" class="btn btn-success btn-sm"
+                                            data-toggle="tooltip" data-placement="top" title="Inspeksi">
+                                                <i class="fas fa-search"></i> </a>
+                                        <?php endif; ?>
+                                        <a href="<?= site_url('inspection/edit_unit/' . $unit['unit_id']); ?>" class="btn btn-warning btn-sm"
+                                            data-toggle="tooltip" data-placement="top" title="Edit">
+                                            <i class="fas fa-edit"></i>  </a>
+                                            <a href="#" class="btn btn-danger btn-sm btn-delete"
+                                                data-toggle="tooltip" data-placement="top" title="Hapus"
+                                                data-unit-id="<?= $unit['unit_id']; ?>">  <i class="fas fa-trash-alt"></i>
+                                            </a>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
@@ -115,7 +155,33 @@
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-rc.0/js/select2.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     $('#nama_produk').select2(); // Coba inisialisasi di sini (hanya untuk debug)
     $('#status_inspection').select2(); // Coba inisialisasi di sini (hanya untuk debug)
+</script>
+<script>
+$(document).ready(function() {
+    $('.btn-delete').on('click', function(e) {
+        e.preventDefault(); // Prevent default link behavior
+
+        var unitId = $(this).data('unit-id'); // Ambil ID unit dari data atribut
+
+        Swal.fire({
+            title: 'Apakah Anda yakin?',
+            text: "Anda tidak akan dapat mengembalikan unit ini!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya, hapus!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Jika pengguna mengkonfirmasi, arahkan ke URL penghapusan
+                window.location.href = "<?= site_url('inspection/delete_unit/'); ?>" + unitId;
+            }
+        });
+    });
+});
 </script>

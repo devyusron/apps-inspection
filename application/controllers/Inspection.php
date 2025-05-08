@@ -143,7 +143,7 @@ class Inspection extends CI_Controller
         $this->db->join('master_produk', 'unit.id_produk = master_produk.id_produk');
         $this->db->order_by('unit_id', 'DESC');
         $data['units'] = $this->db->get()->result_array();
-        $data['title'] = 'Manajemen Unit';
+        $data['title'] = 'List Unit';
         $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
         $this->load->view('templates/header', $data);
         $this->load->view('templates/sidebar', $data);
@@ -325,4 +325,39 @@ class Inspection extends CI_Controller
         return TRUE;
     }
     /* end unit */
+
+    /* form inspection */
+    public function index_form() {
+        $this->db->select('*');
+        $this->db->from('inspection_template');
+        $data['inspection_template'] = $this->db->get()->result_array();
+        $data['title'] = 'Form Inspection';
+        $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+        $this->load->view('templates/header', $data);
+        $this->load->view('templates/sidebar', $data);
+        $this->load->view('templates/topbar', $data);
+        $this->load->view('inspection/form/index', $data);
+        $this->load->view('templates/footer');
+    }
+
+    public function view_form($id) {
+        $query = $this->db->query("
+            SELECT
+                ii.nama_group,
+                ii.nama_item
+            FROM
+                inspection_template it
+            JOIN
+                inspection_item ii ON ii.id_template = it.id_template
+            WHERE
+                it.id_template = ?
+            ORDER BY
+                ii.urutan ASC
+        ", [$id]);
+        $template_items = $query->result_array();
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode($template_items));
+    }
+    /* end form inspection */
 }

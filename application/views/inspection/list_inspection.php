@@ -1,0 +1,163 @@
+<div class="container-fluid">
+    <!-- Page Heading -->
+    <div class="m-1 shadow card">
+        <div class="card-header mb-4 d-flex justify-content-between align-items-center">
+            <h1 class="h3 mb-4 text-gray-800"><?= $title; ?></h1>
+        </div>
+        <?php if ($this->session->flashdata('swal')): ?>
+            <script>
+            Swal.fire(<?php echo json_encode($this->session->flashdata('swal')); ?>);
+            </script>
+        <?php endif; ?>
+        <div class="row m-2">
+            <div class="col">
+                <form action="<?= site_url('inspection/index_unit'); ?>" method="get">
+                    <div class="form-row">
+                        <div class="col-md-2 mb-2">
+                            <label for="tanggal_mulai">Tanggal Masuk Start:</label>
+                            <input type="date" class="form-control form-control-sm" id="tanggal_mulai" name="tanggal_mulai"
+                                value="<?= $this->input->get('tanggal_mulai'); ?>">
+                        </div>
+                        <div class="col-md-2 mb-2">
+                            <label for="tanggal_akhir">Tanggal Masuk End:</label>
+                            <input type="date" class="form-control form-control-sm" id="tanggal_akhir" name="tanggal_akhir"
+                                value="<?= $this->input->get('tanggal_akhir'); ?>">
+                        </div>
+                        <div class="col-md-2 mb-2">
+                            <label for="nama_produk">Nama Produk:</label>
+                            <select class="form-control form-control-sm" id="nama_produk" name="nama_produk">
+                                <option value="">Semua Produk</option>
+                                <?php foreach ($daftar_produk as $produk): ?>
+                                    <option value="<?= htmlspecialchars($produk['nama_produk']); ?>"
+                                        <?= ($this->input->get('nama_produk') == $produk['nama_produk']) ? 'selected' : ''; ?>>
+                                        <?= htmlspecialchars($produk['nama_produk']); ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div class="col-md-2 mb-2">
+                            <label for="status_inspection">Status Inspection:</label>
+                            <select class="form-control form-control-sm" id="status_inspection" name="status_inspection">
+                                <option value="">Pilih Status</option>
+                                <option value="Sudah Inspeksi">Sudah Inspeksi</option>
+                                <option value="Belum Inspeksi">Belum Inspeksi</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2 mb-2">
+                            <label for="kondisi_unit">Kondisi Unit:</label>
+                            <select class="form-control form-control-sm" id="kondisi_unit" name="kondisi_unit">
+                                <option value="">Pilih Kondisi</option>
+                                <option value="Berfungsi">Berfungsi</option>
+                                <option value="Tidak Berfungsi">Tidak Berfungsi</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2 mb-2">
+                            <label for="lokasi_unit">Lokasi Unit:</label>
+                            <select class="form-control form-control-sm" id="lokasi_unit" name="lokasi_unit">
+                                <option value="">Pilih Lokasi</option>
+                                <option value="Gudang">Gudang</option>
+                                <option value="Vendor">Vendor</option>
+                                <option value="Customer">Customer</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-sm">Filter</button>
+                    <a href="<?= site_url('inspection/index_unit'); ?>" class="btn btn-secondary btn-sm">Reset Filter</a>
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg m-2">
+                <?= form_error('inspection/master_produk', '<div class="alert alert-danger" role="alert">', '</div>'); ?>
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="dataTable">
+                        <thead>
+                            <tr>
+                                <th>ID Unit</th>
+                                <th>Serial Number</th>
+                                <th>Nama Produk</th>
+                                <th>Qty</th>
+                                <th>Kondisi Unit</th>
+                                <th>Tanggal Masuk</th>
+                                <th>Status Unit</th>
+                                <th>Lokasi Unit</th>
+                                <th>Keterangan Unit</th>
+                                <th>Status Inspeksi</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php $i=1; foreach ($units as $unit): ?>
+                                <tr>
+                                    <td><?= $i++; ?></td>
+                                    <td><?= htmlspecialchars($unit['serial_number']); ?></td>
+                                    <td><?= htmlspecialchars($unit['nama_produk']); ?></td>
+                                    <td><?= $unit['qty']; ?></td>
+                                    <td><?= htmlspecialchars($unit['kondisi_unit']); ?></td>
+                                    <td><?= $unit['tanggal_masuk']; ?></td>
+                                    <td><?= htmlspecialchars($unit['status_unit']); ?></td>
+                                    <td><?= htmlspecialchars($unit['lokasi_unit']); ?></td>
+                                    <td><?= htmlspecialchars($unit['keterangan_unit']); ?></td>
+                                    <td>
+                                        <?php if ($unit['status_inspection'] == 'Belum Inspeksi'): ?>
+                                            <span class="badge badge-danger">Belum Inspeksi</span>
+                                        <?php elseif ($unit['status_inspection'] == 'Sudah Inspeksi'): ?>
+                                            <span class="badge badge-success">Sudah Inspeksi</span>
+                                        <?php else: ?>
+                                            <?= htmlspecialchars($unit['status_inspection']); ?> 
+                                        <?php endif; ?>
+                                    </td>
+                                    <td>
+                                        <a href="#" class="btn btn-success btn-sm lihat-template"
+                                          data-toggle="tooltip" data-placement="top" title="Inspeksi">
+                                            <i class="fas fa-clipboard-check"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modalInspection" tabindex="-1" role="dialog" aria-labelledby="modalInspectionLabel"
+  aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalInspectionLabel">Pilih Form PDI</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="inspection-detail-content">
+                <?php foreach ($inspection_template as $template) : ?>
+                    <button class="btn btn-outline-primary btn-block mb-2 pdi-form-button"
+                            data-template-id="<?= $template['id_template'] ?>">
+                        <?= $template['nama_template'] ?>
+                    </button>
+                <?php endforeach; ?>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-rc.0/js/select2.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    $('#nama_produk').select2(); // Coba inisialisasi di sini (hanya untuk debug)
+    $('#status_inspection').select2(); // Coba inisialisasi di sini (hanya untuk debug)
+</script>
+<script>
+  $(document).ready(function() {
+      $('.lihat-template').on('click', function() {
+          $('#modalInspection').modal('show');
+      });
+  });
+</script>

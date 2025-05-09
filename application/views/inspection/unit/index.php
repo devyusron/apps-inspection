@@ -106,9 +106,9 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach ($units as $unit): ?>
+                            <?php $i=1; foreach ($units as $unit): ?>
                                 <tr>
-                                    <td><?= $unit['unit_id']; ?></td>
+                                    <td><?= $i++; ?></td>
                                     <td><?= htmlspecialchars($unit['serial_number']); ?></td>
                                     <td><?= htmlspecialchars($unit['nama_produk']); ?></td>
                                     <td><?= $unit['qty']; ?></td>
@@ -133,7 +133,7 @@
                                         <?php if ($unit['status_inspection'] == 'Belum Inspeksi') : ?>
                                             <a href="" class="btn btn-success btn-sm"
                                             data-toggle="tooltip" data-placement="top" title="Inspeksi">
-                                                <i class="fas fa-search"></i> </a>
+                                                <i class="fas fa-clipboard-check"></i> </a>
                                         <?php endif; ?>
                                         <a href="<?= site_url('inspection/edit_unit/' . $unit['unit_id']); ?>" class="btn btn-warning btn-sm"
                                             data-toggle="tooltip" data-placement="top" title="Edit">

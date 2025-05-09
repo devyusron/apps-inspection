@@ -183,13 +183,6 @@ class Inspection extends CI_Controller
         $this->load->view('inspection/unit/index', $data);
         $this->load->view('templates/footer');
         $this->session->unset_userdata('swal');
-        $this->session->set_flashdata('swal', [
-            'title' => 'Berhasil!',
-            'text' => 'Data berhasil ditampilkan',
-            'icon' => 'success',
-            'showConfirmButton' => false,
-            'timer' => 1500
-        ]);
     }
 
     public function add_unit() {
@@ -452,4 +445,37 @@ class Inspection extends CI_Controller
             ->set_output(json_encode($template_items));
     }
     /* end form inspection */
+
+    /* list inspection */
+    public function index_list_inspection() {
+        $tanggal_mulai = $this->input->get('tanggal_mulai');
+        $tanggal_akhir = $this->input->get('tanggal_akhir');
+        $nama_produk_filter = $this->input->get('nama_produk');
+        $data['daftar_produk'] = $this->db->get('master_produk')->result_array();
+        $this->db->select('unit.*, master_produk.nama_produk');
+        $this->db->from('unit');
+        $this->db->join('master_produk', 'unit.id_produk = master_produk.id_produk');
+        $this->db->order_by('unit_id', 'DESC');
+        $this->db->where('unit.status_inspection', 'Belum Inspeksi');
+        if ($tanggal_mulai && $tanggal_akhir) {
+            $this->db->where('unit.tanggal_masuk >=', $tanggal_mulai . ' 00:00:00');
+            $this->db->where('unit.tanggal_masuk <=', $tanggal_akhir . ' 23:59:59');
+        }
+        if ($nama_produk_filter) {
+            $this->db->like('master_produk.nama_produk', $nama_produk_filter);
+        }
+        $data['units'] = $this->db->get()->result_array();
+        $data['title'] = 'List Inspection';
+        $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+        $this->db->select('*');
+        $this->db->from('inspection_template');
+        $data['inspection_template'] = $this->db->get()->result_array();
+        $this->load->view('templates/header', $data);
+        $this->load->view('templates/sidebar', $data);
+        $this->load->view('templates/topbar', $data);
+        $this->load->view('inspection/list_inspection', $data);
+        $this->load->view('templates/footer');
+        $this->session->unset_userdata('swal');
+    }
+    /* end list inspection */
 }

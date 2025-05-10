@@ -428,6 +428,7 @@ class Inspection extends CI_Controller
     public function view_form($id) {
         $query = $this->db->query("
             SELECT
+                ii.id_item,
                 ii.nama_group,
                 ii.nama_item
             FROM
@@ -476,6 +477,69 @@ class Inspection extends CI_Controller
         $this->load->view('inspection/list_inspection', $data);
         $this->load->view('templates/footer');
         $this->session->unset_userdata('swal');
+    }
+
+    public function submit_inspection() {
+        // $this->form_validation->set_rules('unit_id', 'Unit ID', 'required|numeric');
+        // $this->form_validation->set_rules('template_id', 'Template ID', 'required|numeric');
+    
+        // if ($this->form_validation->run() == FALSE) {
+        //     $this->output->set_status_header(400);
+        //     echo json_encode(array('error' => validation_errors()));
+        //     return;
+        // }
+    
+        // $unit_id = $this->input->post('unit_id');
+        // $template_id = $this->input->post('template_id');
+        // $inspection_date = date('Y-m-d H:i:s');
+        // $additional_comment = $this->input->post('additional_comment');
+        // $acknowledge = $this->input->post('acknowledge');
+        // $mechanic = $this->input->post('mechanic');
+    
+        // $inspection_data = array(
+        //     'unit_id' => $unit_id,
+        //     'inspection_template_id' => $template_id,
+        //     'tanggal_inspeksi' => $inspection_date,
+        //     'additional_comment' => $additional_comment,
+        //     'acknowledge' => $acknowledge,
+        //     'mechanic' => $mechanic,
+        // );
+    
+        // $this->db->insert('inspection', $inspection_data);
+        // $inspection_id = $this->db->insert_id();
+    
+        // $detail_data = array();
+        // $item_ids = $this->input->post('item_id'); // Get the array of item IDs
+        // $adds = $this->input->post('add');
+        // $clean_ups = $this->input->post('clean_up');
+        // $lubricates = $this->input->post('lubricate');
+        // $replace_changes = $this->input->post('replace_change');
+        // $adjusts = $this->input->post('adjust');
+        // $test_checks = $this->input->post('test_check');
+        // $remarks = $this->input->post('remark');
+    
+        // if ($item_ids) { // Check if item_ids array is not empty
+        //     foreach ($item_ids as $index => $item_id) {
+        //         $detail_data[] = array(
+        //             'inspection_id' => $inspection_id,
+        //             'item_id' => $item_id,
+        //             'add' => isset($adds[$item_id]) ? $adds[$item_id] : 0,
+        //             'clean_up' => isset($clean_ups[$item_id]) ? $clean_ups[$item_id] : 0,
+        //             'lubricate' => isset($lubricates[$item_id]) ? $lubricates[$item_id] : 0,
+        //             'replace_change' => isset($replace_changes[$item_id]) ? $replace_changes[$item_id] : 0,
+        //             'adjust' => isset($adjusts[$item_id]) ? $adjusts[$item_id] : 0,
+        //             'test_check' => isset($test_checks[$item_id]) ? $test_checks[$item_id] : '', //sesuaikan dengan varchar
+        //             'remark' => isset($remarks[$item_id]) ? $remarks[$item_id] : NULL,
+        //         );
+        //     }
+        //     $this->db->insert_batch('inspection_detail', $detail_data);
+        // }
+    
+        // $this->db->where('id_unit', $unit_id);
+        // $this->db->update('unit', array('status_inspeksi' => 'Sudah Inspeksi'));
+    
+        // echo json_encode(array('success' => 'Inspeksi berhasil disimpan!'));
+        echo json_encode(array('success' => $this->input->post()));
     }
     /* end list inspection */
 }

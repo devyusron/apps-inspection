@@ -67,7 +67,6 @@
             var id_template = $(this).data('id');
             var modalBody = $('#inspection-detail-content');
             modalBody.empty(); // Kosongkan isi modal sebelum menampilkan data baru
-            console.log('<?= site_url('inspection/view_form/'); ?>' + id_template)
             $.ajax({
                 url: '<?= site_url('inspection/view_form/'); ?>' + id_template,
                 type: 'GET',

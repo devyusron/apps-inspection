@@ -479,67 +479,85 @@ class Inspection extends CI_Controller
         $this->session->unset_userdata('swal');
     }
 
-    public function submit_inspection() {
-        // $this->form_validation->set_rules('unit_id', 'Unit ID', 'required|numeric');
-        // $this->form_validation->set_rules('template_id', 'Template ID', 'required|numeric');
-    
-        // if ($this->form_validation->run() == FALSE) {
-        //     $this->output->set_status_header(400);
-        //     echo json_encode(array('error' => validation_errors()));
-        //     return;
-        // }
-    
-        // $unit_id = $this->input->post('unit_id');
-        // $template_id = $this->input->post('template_id');
-        // $inspection_date = date('Y-m-d H:i:s');
-        // $additional_comment = $this->input->post('additional_comment');
-        // $acknowledge = $this->input->post('acknowledge');
-        // $mechanic = $this->input->post('mechanic');
-    
-        // $inspection_data = array(
-        //     'unit_id' => $unit_id,
-        //     'inspection_template_id' => $template_id,
-        //     'tanggal_inspeksi' => $inspection_date,
-        //     'additional_comment' => $additional_comment,
-        //     'acknowledge' => $acknowledge,
-        //     'mechanic' => $mechanic,
-        // );
-    
-        // $this->db->insert('inspection', $inspection_data);
-        // $inspection_id = $this->db->insert_id();
-    
-        // $detail_data = array();
-        // $item_ids = $this->input->post('item_id'); // Get the array of item IDs
-        // $adds = $this->input->post('add');
-        // $clean_ups = $this->input->post('clean_up');
-        // $lubricates = $this->input->post('lubricate');
-        // $replace_changes = $this->input->post('replace_change');
-        // $adjusts = $this->input->post('adjust');
-        // $test_checks = $this->input->post('test_check');
-        // $remarks = $this->input->post('remark');
-    
-        // if ($item_ids) { // Check if item_ids array is not empty
-        //     foreach ($item_ids as $index => $item_id) {
-        //         $detail_data[] = array(
-        //             'inspection_id' => $inspection_id,
-        //             'item_id' => $item_id,
-        //             'add' => isset($adds[$item_id]) ? $adds[$item_id] : 0,
-        //             'clean_up' => isset($clean_ups[$item_id]) ? $clean_ups[$item_id] : 0,
-        //             'lubricate' => isset($lubricates[$item_id]) ? $lubricates[$item_id] : 0,
-        //             'replace_change' => isset($replace_changes[$item_id]) ? $replace_changes[$item_id] : 0,
-        //             'adjust' => isset($adjusts[$item_id]) ? $adjusts[$item_id] : 0,
-        //             'test_check' => isset($test_checks[$item_id]) ? $test_checks[$item_id] : '', //sesuaikan dengan varchar
-        //             'remark' => isset($remarks[$item_id]) ? $remarks[$item_id] : NULL,
-        //         );
-        //     }
-        //     $this->db->insert_batch('inspection_detail', $detail_data);
-        // }
-    
-        // $this->db->where('id_unit', $unit_id);
-        // $this->db->update('unit', array('status_inspeksi' => 'Sudah Inspeksi'));
-    
-        // echo json_encode(array('success' => 'Inspeksi berhasil disimpan!'));
-        echo json_encode(array('success' => $this->input->post()));
+    public function submit_inspection()
+    {
+        // Ambil data dari input
+        $input_data = file_get_contents('php://input');
+        // Coba decode data JSON
+        $post_data = json_decode($input_data, TRUE);
+
+        // Debug: Periksa data yang di-decode
+        // echo '<pre>';
+        // print_r($post_data);
+        // echo '</pre>';
+
+        if ($post_data) { // Periksa apakah decoding berhasil
+            $unit_id = $post_data['unit_id'];
+
+            $inspection_data = array(
+                'unit_id' => $unit_id,
+                'tanggal_inspeksi' => date('Y-m-d H:i:s'),
+                'mechanic' => $post_data['mechanic'],
+                'acknowledge' => $post_data['acknowledge'],
+                'additional_comment' => $post_data['additional_comment'],
+                'created_by' => 'user_yang_login',
+                'inspection_template_id' => $post_data['template_id']
+            );
+
+            $this->db->insert('inspection', $inspection_data);
+            $inspection_id = $this->db->insert_id();
+
+            if ($inspection_id) {
+                $item_data = $post_data['items'];
+
+                if (is_array($item_data) && !empty($item_data)) {
+                    $detail_data = array();
+                    foreach ($item_data as $item) {
+                        if (isset($item['id_item'])) {
+                            $detail_data[] = array(
+                                'inspection_id' => $inspection_id,
+                                'item_id' => $item['id_item'],
+                                'test_check' => isset($item['test_check']) ? $item['test_check'] : null,
+                                'remark' => isset($item['remark']) ? $item['remark'] : null,
+                                'add' => isset($item['add']) ? $item['add'] : 0,
+                                'clean_up' => isset($item['clean_up']) ? $item['clean_up'] : 0,
+                                'lubricate' => isset($item['lubricate']) ? $item['lubricate'] : 0,
+                                'replace_change' => isset($item['replace_change']) ? $item['replace_change'] : 0,
+                                'adjust' => isset($item['adjust']) ? $item['adjust'] : 0
+                            );
+                        }
+                        else{
+                            $response = array('status' => 'error', 'message' => 'item_id tidak ada.');
+                            $this->output
+                                ->set_content_type('application/json')
+                                ->set_output(json_encode($response));
+                            return;
+                         }
+                    }
+
+                    if (!empty($detail_data)) {
+                        $this->db->insert_batch('inspection_detail', $detail_data);
+                        $this->db->where('unit_id', $unit_id);
+                        $this->db->update('unit', array('status_inspection' => 'Sudah Inspeksi'));
+                        $response = array('status' => 'success', 'message' => 'Data inspeksi berhasil disimpan dan status unit diupdate.');
+                    } else {
+                        $response = array('status' => 'warning', 'message' => 'Data detail inspeksi kosong.');
+                        $this->db->delete('inspection', array('id_inspection' => $inspection_id));
+                    }
+                } else {
+                    $response = array('status' => 'warning', 'message' => 'Tidak ada data item inspeksi untuk disimpan.');
+                    $this->db->delete('inspection', array('id_inspection' => $inspection_id));
+                }
+            } else {
+                $response = array('status' => 'error', 'message' => 'Gagal menyimpan data inspeksi utama.');
+            }
+        } else {
+            $response = array('status' => 'error', 'message' => 'Tidak ada data POST yang diterima.');
+        }
+
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode($response));
     }
     /* end list inspection */
 }

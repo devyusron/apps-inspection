@@ -321,22 +321,27 @@
             console.log("Data Form yang Dikumpulkan:", formData);
 
             // Kirim data formData menggunakan AJAX ke server Anda
-            /*
             $.ajax({
-                url: '/api/simpan-inspeksi', // Ganti dengan URL API Anda
+                url: '<?php echo site_url('inspection/submit_inspection'); ?>',
                 type: 'POST',
-                contentType: 'application/json', // Jika Anda mengirim sebagai JSON
-                data: JSON.stringify(formData),
+                contentType: 'application/json',
+                data: JSON.stringify(formData), // Pastikan formData memiliki properti 'items' yang merupakan array
                 success: function(response) {
-                    console.log('Sukses menyimpan:', response);
-                    // Lakukan sesuatu setelah berhasil menyimpan
+                    console.log(response);
+                    if (response.status == 'success') {
+                        // Lakukan sesuatu setelah berhasil menyimpan
+                        // alert(response.message);
+                        window.location.reload();
+                    } else {
+                        // Tangani error
+                        // alert(response.message);
+                    }
                 },
                 error: function(error) {
-                    console.error('Gagal menyimpan:', error);
-                    // Tangani error
+                    console.error('Error saat mengirim data:', error);
+                    alert('Terjadi kesalahan saat menyimpan data.');
                 }
             });
-            */
         });
     }
 

@@ -131,13 +131,21 @@
                                     </td>
                                     <td>
                                         <?php if ($unit['status_inspection'] == 'Belum Inspeksi') : ?>
-                                            <a href="" class="btn btn-success btn-sm"
-                                            data-toggle="tooltip" data-placement="top" title="Inspeksi">
-                                                <i class="fas fa-clipboard-check"></i> </a>
+                                            <a href="#" class="btn btn-success btn-sm lihat-template"
+                                                data-toggle="tooltip" data-placement="top" title="Inspeksi"
+                                                data-unit-id="<?= $unit['unit_id']; ?>"> 
+                                                <i class="fas fa-clipboard-check"></i>
+                                            </a>
+                                            <?php else : ?>
+                                            <a href="<?= site_url('inspection/view_hasil_inspeksi/' . $unit['unit_id']); ?>" class="btn btn-info btn-sm"
+                                            data-toggle="tooltip" data-placement="top" title="Lihat Hasil Inspeksi">
+                                                <i class="fas fa-search"></i> 
+                                            </a>
                                         <?php endif; ?>
-                                        <a href="<?= site_url('inspection/edit_unit/' . $unit['unit_id']); ?>" class="btn btn-warning btn-sm"
-                                            data-toggle="tooltip" data-placement="top" title="Edit">
-                                            <i class="fas fa-edit"></i>  </a>
+                                            <a href="<?= site_url('inspection/edit_unit/' . $unit['unit_id']); ?>" class="btn btn-warning btn-sm"
+                                                data-toggle="tooltip" data-placement="top" title="Edit">
+                                                <i class="fas fa-edit"></i> 
+                                            </a>
                                             <a href="#" class="btn btn-danger btn-sm btn-delete"
                                                 data-toggle="tooltip" data-placement="top" title="Hapus"
                                                 data-unit-id="<?= $unit['unit_id']; ?>">  <i class="fas fa-trash-alt"></i>
@@ -148,6 +156,48 @@
                         </tbody>
                     </table>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modalInspection" tabindex="-1" role="dialog" aria-labelledby="modalInspectionLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalInspectionLabel">Pilih Form PDI</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="inspection-detail-content">
+                <?php foreach ($inspection_template as $template) : ?>
+                    <button class="btn btn-outline-primary btn-block mb-2 pdi-form-button"
+                            data-template-id="<?= $template['id_template'] ?>">
+                        <?= $template['nama_template'] ?>
+                    </button>
+                <?php endforeach; ?>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modalFormView" tabindex="-1" role="dialog" aria-labelledby="modalFormViewLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalFormViewLabel">Form Inspeksi</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="form-view-content" style="overflow-y: auto; max-height: 80vh;">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
             </div>
         </div>
     </div>
@@ -164,9 +214,7 @@
 $(document).ready(function() {
     $('.btn-delete').on('click', function(e) {
         e.preventDefault(); // Prevent default link behavior
-
         var unitId = $(this).data('unit-id'); // Ambil ID unit dari data atribut
-
         Swal.fire({
             title: 'Apakah Anda yakin?',
             text: "Anda tidak akan dapat mengembalikan unit ini!",
@@ -184,4 +232,198 @@ $(document).ready(function() {
         });
     });
 });
+</script>
+<script>
+    function buildInspectionForm(data, unitId, templateId) {
+        var html = '<form id="inspectionForm">';
+        html += '<input type="hidden" name="unit_id" value="' + unitId + '">';
+        html += '<input type="hidden" name="template_id" value="' + templateId + '">';
+        html += '<div class="row">';
+        html += '<div class="col-md-6">';
+        html += '<div class="form-group row">';
+        html += '<label for="customer" class="col-sm-3 col-form-label">Customer</label>';
+        html += '<div class="col-sm-9"><input type="text" class="form-control form-control-sm" id="customer" name="customer"></div>';
+        html += '</div>';
+        html += '<div class="form-group row">';
+        html += '<label for="address" class="col-sm-3 col-form-label">Address</label>';
+        html += '<div class="col-sm-9"><textarea  class="form-control form-control-sm" id="address" name="address"></textarea></div>';
+        html += '</div>';
+        html += '<div class="form-group row">';
+        html += '<label for="attachment" class="col-sm-3 col-form-label">Other Attachment</label>';
+        html += '<div class="col-sm-9"><input  type="text" class="form-control form-control-sm" id="attachment" name="attachment"></div>';
+        html += '</div>';
+        html += '</div>';
+        html += '<div class="col-md-6">';
+        html += '<div class="form-group row">';
+        html += '<label for="mechine" class="col-sm-3 col-form-label">Mechine</label>';
+        html += '<div class="col-sm-9"><input  type="text" class="form-control form-control-sm" id="mechine" name="mechine"></div>';
+        html += '</div>';
+        html += '<div class="form-group row">';
+        html += '<label for="model_no" class="col-sm-3 col-form-label">Model No.</label>';
+        html += '<div class="col-sm-9"><input  type="text" class="form-control form-control-sm" id="model_no" name="model_no"></div>';
+        html += '</div>';
+        html += '<div class="form-group row">';
+        html += '<label for="serial_no" class="col-sm-3 col-form-label">Serial No.</label>';
+        html += '<div class="col-sm-9"><input  type="text" class="form-control form-control-sm" id="serial_no" name="serial_no"></div>';
+        html += '</div>';
+        html += '<div class="form-group row">';
+        html += '<label for="hours" class="col-sm-3 col-form-label">Hours</label>';
+        html += '<div class="col-sm-9"><input  type="text" class="form-control form-control-sm" id="hours" name="hours"></div>';
+        html += '</div>';
+        html += '<div class="form-group row">';
+        html += '<label for="inspection_d" class="col-sm-3 col-form-label">Inspection Date</label>';
+        html += '<div class="col-sm-9"><input  type="date" class="form-control form-control-sm" id="inspection_d" name="inspection_d"></div>';
+        html += '</div>';
+        html += '</div>';
+        html += '</div>';
+        html += '<hr class="mt-2 mb-2">';
+        html += '<table class="table table-bordered">';
+        html += '<thead><tr><th>Group</th><th>Item</th><th>Add</th><th>Clean Up</th><th>Lubricate</th><th>Replace Or Change</th><th>Adjust</th><th>Test or Check</th><th>Remark</th></tr></thead><tbody>';
+        $.each(data, function(i, item) {
+            html += '<tr>';
+            html += '<td>' + item.nama_group + '</td>';
+            html += '<td>' + item.nama_item + '</td>';
+            html += '<td class="text-center"><input type="checkbox" name="add[' + item.id_item + ']" value="1"></td>';
+            html += '<td class="text-center"><input type="checkbox" name="clean_up[' + item.id_item + ']" value="1"></td>';
+            html += '<td class="text-center"><input type="checkbox" name="lubricate[' + item.id_item + ']" value="1"></td>';
+            html += '<td class="text-center"><input type="checkbox" name="replace_change[' + item.id_item + ']" value="1"></td>';
+            html += '<td class="text-center"><input type="checkbox" name="adjust[' + item.id_item + ']" value="1"></td>';
+            html += '<td class="text-center"><input type="checkbox" name="test_check[' + item.id_item + ']" value="1"></td>';
+            html += '<td><input type="text" name="remark[' + item.id_item + ']" class="form-control form-control-sm"></td>';
+            html += '</tr>';
+        });
+        html += '</tbody></table>';
+        html += '<div class="form-group mt-3">';
+        html += '<label for="additional_comment">Additional Comment :</label>';
+        html += '<textarea  class="form-control" id="additional_comment" name="additional_comment" rows="3"></textarea>';
+        html += '</div>';
+        html += '<div class="row mt-3">';
+        html += '<div class="col-md-6">';
+        html += '<label for="acknowledge">Acknowledge :</label>';
+        html += '<input  type="text" class="form-control form-control-sm" id="acknowledge" name="acknowledge">';
+        html += '</div>';
+        html += '<div class="col-md-6">';
+        html += '<label for="mechanic">Mechanic :</label>';
+        html += '<input  type="text" class="form-control form-control-sm" id="mechanic" name="mechanic">';
+        html += '</div>';
+        html += '</div>';
+        html += '<button type="submit" class="btn btn-primary mt-3">Simpan Inspeksi</button>';
+        html += '</form>';
+        return html;
+    }
+
+    function loadInspectionForm(templateId, unitId) {
+        $.ajax({
+            url: '<?= site_url('inspection/view_form/'); ?>/' + templateId,
+            type: 'GET',
+            dataType: 'json',
+            data: {
+                unit_id: unitId
+            },
+            success: function(data) {
+                var html = buildInspectionForm(data, unitId, templateId);
+                $('#form-view-content').html(html);
+                $('#modalFormView').modal('show');
+                setupFormSubmission();
+            },
+            error: function(xhr, status, error) {
+                $('#form-view-content').html('<p>Terjadi kesalahan saat mengambil data: ' + error + '</p>');
+                $('#modalFormView').modal('show');
+                console.error(xhr, status, error);
+            }
+        });
+    }
+
+    function setupFormSubmission() {
+        $('#inspectionForm').submit(function(event) {
+            event.preventDefault();
+            var formData = {
+                unit_id: $('input[name="unit_id"]').val(),
+                template_id: $('input[name="template_id"]').val(),
+                customer: $('input[name="customer"]').val(),
+                address: $('textarea[name="address"]').val(),
+                attachment: $('input[name="attachment"]').val(),
+                mechine: $('input[name="mechine"]').val(),
+                model_no: $('input[name="model_no"]').val(),
+                serial_no: $('input[name="serial_no"]').val(),
+                hours: $('input[name="hours"]').val(),
+                inspection_d: $('input[name="inspection_d"]').val(),
+                additional_comment: $('textarea[name="additional_comment"]').val(),
+                acknowledge: $('input[name="acknowledge"]').val(),
+                mechanic: $('input[name="mechanic"]').val(),
+                items: [] // Array untuk menyimpan informasi item tabel
+            };
+            $('#inspectionForm table tbody tr').each(function() {
+                var row = $(this);
+                var idItemMatch = row.find('input[type="checkbox"][name^="add"]').attr('name').match(/\[(.*?)\]/);
+                if (idItemMatch && idItemMatch[1]) {
+                    var idItem = idItemMatch[1];
+                    var itemData = {
+                        id_item: idItem,
+                        add: row.find('input[name="add[' + idItem + ']"]').is(':checked') ? 1 : 0,
+                        clean_up: row.find('input[name="clean_up[' + idItem + ']"]').is(':checked') ? 1 : 0,
+                        lubricate: row.find('input[name="lubricate[' + idItem + ']"]').is(':checked') ? 1 : 0,
+                        replace_change: row.find('input[name="replace_change[' + idItem + ']"]').is(':checked') ? 1 : 0,
+                        adjust: row.find('input[name="adjust[' + idItem + ']"]').is(':checked') ? 1 : 0,
+                        test_check: row.find('input[name="test_check[' + idItem + ']"]').is(':checked') ? 1 : 0,
+                        remark: row.find('input[name="remark[' + idItem + ']"]').val()
+                    };
+                    formData.items.push(itemData);
+                }
+            });
+            console.log("Data Form yang Dikumpulkan:", formData);
+            $.ajax({
+                url: '<?php echo site_url('inspection/submit_inspection'); ?>',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(formData), // Pastikan formData memiliki properti 'items' yang merupakan array
+                success: function(response) {
+                    console.log(response);
+                    if (response.status == 'success') {
+                        Swal.fire({
+                            title: 'Berhasil!',
+                            text: response.message,
+                            icon: 'success',
+                            confirmButtonText: 'OK'
+                        }).then(() => {
+                            window.location.reload();
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Error!',
+                            text: response.message,
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                },
+                error: function(error) {
+                    console.error('Error saat mengirim data:', error);
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'Terjadi kesalahan saat mengirim data: ' + status + ' - ' + error,
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            });
+        });
+    }
+
+    $(document).ready(function() {
+        $('.lihat-template').on('click', function() {
+            var unitId = $(this).data('unit-id');
+            console.log(unitId);
+            $('#modalInspection').data('unit-id', unitId);
+            $('#modalInspection').modal('show');
+        });
+
+        $('.pdi-form-button').on('click', function() {
+            var templateId = $(this).data('template-id');
+            var unitId = $('#modalInspection').data('unit-id');
+            console.log('Memuat form dengan ID Template:', templateId, 'untuk Unit ID:', unitId);
+            $('#modalInspection').modal('hide');
+            loadInspectionForm(templateId, unitId);
+        });
+    });
 </script>

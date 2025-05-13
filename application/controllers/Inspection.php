@@ -7,7 +7,7 @@ class Inspection extends CI_Controller
     {
         parent::__construct();
         // date_default_timezone_set('Asia/Jakarta');
-        // is_logged_in();
+        is_logged_in();
     }
 
     /* produk */
@@ -159,6 +159,9 @@ class Inspection extends CI_Controller
 
     /* unit */
     public function index_unit() {
+        $this->db->select('*');
+        $this->db->from('inspection_template');
+        $data['inspection_template'] = $this->db->get()->result_array();
         $tanggal_mulai = $this->input->get('tanggal_mulai');
         $tanggal_akhir = $this->input->get('tanggal_akhir');
         $nama_produk_filter = $this->input->get('nama_produk');
@@ -481,19 +484,10 @@ class Inspection extends CI_Controller
 
     public function submit_inspection()
     {
-        // Ambil data dari input
         $input_data = file_get_contents('php://input');
-        // Coba decode data JSON
         $post_data = json_decode($input_data, TRUE);
-
-        // Debug: Periksa data yang di-decode
-        // echo '<pre>';
-        // print_r($post_data);
-        // echo '</pre>';
-
         if ($post_data) { // Periksa apakah decoding berhasil
             $unit_id = $post_data['unit_id'];
-
             $inspection_data = array(
                 'unit_id' => $unit_id,
                 'tanggal_inspeksi' => date('Y-m-d H:i:s'),
@@ -503,13 +497,10 @@ class Inspection extends CI_Controller
                 'created_by' => 'user_yang_login',
                 'inspection_template_id' => $post_data['template_id']
             );
-
             $this->db->insert('inspection', $inspection_data);
             $inspection_id = $this->db->insert_id();
-
             if ($inspection_id) {
                 $item_data = $post_data['items'];
-
                 if (is_array($item_data) && !empty($item_data)) {
                     $detail_data = array();
                     foreach ($item_data as $item) {
@@ -532,9 +523,8 @@ class Inspection extends CI_Controller
                                 ->set_content_type('application/json')
                                 ->set_output(json_encode($response));
                             return;
-                         }
+                        }
                     }
-
                     if (!empty($detail_data)) {
                         $this->db->insert_batch('inspection_detail', $detail_data);
                         $this->db->where('unit_id', $unit_id);
@@ -554,10 +544,33 @@ class Inspection extends CI_Controller
         } else {
             $response = array('status' => 'error', 'message' => 'Tidak ada data POST yang diterima.');
         }
-
         $this->output
             ->set_content_type('application/json')
             ->set_output(json_encode($response));
+    }
+
+    public function view_hasil_inspeksi($unit_id) {
+        $this->db->select('i.*, mp.nama_produk');
+        $this->db->from('inspection i');
+        $this->db->join('unit u', 'i.unit_id = u.unit_id');
+        $this->db->join('master_produk mp', 'u.id_produk = mp.id_produk');
+        $this->db->where('i.unit_id', $unit_id);
+        $inspection = $this->db->get()->row_array();
+    
+        $this->db->select('*');
+        $this->db->from('inspection_detail id');
+        $this->db->where('id.inspection_id', $inspection['id_inspection']); // Gunakan ID inspeksi
+        $detail_inspeksi = $this->db->get()->result_array();
+    
+        $data['title'] = 'Hasil Inspeksi Unit ' . $inspection['no_unit'];
+        $data['inspection'] = $inspection;
+        $data['detail_inspeksi'] = $detail_inspeksi;
+    
+        $this->load->view('templates/header', $data);
+        $this->load->view('templates/sidebar', $data);
+        $this->load->view('templates/topbar', $data);
+        $this->load->view('inspection/result_inspection_id', $data);
+        $this->load->view('templates/footer');
     }
     /* end list inspection */
 }

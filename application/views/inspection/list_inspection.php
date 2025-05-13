@@ -329,17 +329,31 @@
                 success: function(response) {
                     console.log(response);
                     if (response.status == 'success') {
-                        // Lakukan sesuatu setelah berhasil menyimpan
-                        // alert(response.message);
-                        window.location.reload();
+                        Swal.fire({
+                            title: 'Berhasil!',
+                            text: response.message,
+                            icon: 'success',
+                            confirmButtonText: 'OK'
+                        }).then(() => {
+                            window.location.reload();
+                        });
                     } else {
-                        // Tangani error
-                        // alert(response.message);
+                        Swal.fire({
+                            title: 'Error!',
+                            text: response.message,
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
                     }
                 },
                 error: function(error) {
                     console.error('Error saat mengirim data:', error);
-                    alert('Terjadi kesalahan saat menyimpan data.');
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'Terjadi kesalahan saat mengirim data: ' + status + ' - ' + error,
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
                 }
             });
         });

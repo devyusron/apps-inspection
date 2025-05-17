@@ -166,9 +166,10 @@ class Inspection extends CI_Controller
         $tanggal_akhir = $this->input->get('tanggal_akhir');
         $nama_produk_filter = $this->input->get('nama_produk');
         $data['daftar_produk'] = $this->db->get('master_produk')->result_array();
-        $this->db->select('unit.*, master_produk.nama_produk');
+        $this->db->select('unit.*, master_produk.nama_produk, inspection.inspection_template_id as id_template');
         $this->db->from('unit');
         $this->db->join('master_produk', 'unit.id_produk = master_produk.id_produk');
+        $this->db->join('inspection', 'unit.unit_id = inspection.unit_id', 'left');
         $this->db->order_by('unit_id', 'DESC');
         if ($tanggal_mulai && $tanggal_akhir) {
             $this->db->where('unit.tanggal_masuk >=', $tanggal_mulai . ' 00:00:00');
@@ -428,6 +429,35 @@ class Inspection extends CI_Controller
         $this->load->view('templates/footer');
     }
 
+    public function edit_form($id) {
+        $this->db->select('*');
+        $this->db->from('inspection_template');
+        $this->db->where('id_template', $id);
+        $data['inspection_template'] = $this->db->get()->row_array();
+        if(!$data['inspection_template']){
+            redirect('inspection/index_form');
+        }
+        $data['title'] = 'Edit Form Inspection';
+        $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+        $this->load->view('templates/header', $data);
+        $this->load->view('templates/sidebar', $data);
+        $this->load->view('templates/topbar', $data);
+        $this->load->view('inspection/form/edit', $data); //create this file
+        $this->load->view('templates/footer');
+    }
+
+    public function update_form() {
+        $id = $this->input->post('id_template');
+        $data = [
+            'nama_template' => $this->input->post('nama_template'),
+            'deskripsi_template' => $this->input->post('deskripsi_template'),
+        ];
+        $this->db->where('id_template', $id);
+        $this->db->update('inspection_template', $data);
+        $this->session->set_flashdata('message', 'Form inspection berhasil diupdate');
+        redirect('inspection/index_form');
+    }
+
     public function view_form($id) {
         $query = $this->db->query("
             SELECT
@@ -478,6 +508,37 @@ class Inspection extends CI_Controller
         $this->load->view('templates/sidebar', $data);
         $this->load->view('templates/topbar', $data);
         $this->load->view('inspection/list_inspection', $data);
+        $this->load->view('templates/footer');
+        $this->session->unset_userdata('swal');
+    }
+    public function result() {
+        $tanggal_mulai = $this->input->get('tanggal_mulai');
+        $tanggal_akhir = $this->input->get('tanggal_akhir');
+        $nama_produk_filter = $this->input->get('nama_produk');
+        $data['daftar_produk'] = $this->db->get('master_produk')->result_array();
+        $this->db->select('unit.*, master_produk.nama_produk, inspection.inspection_template_id as id_template');
+        $this->db->from('unit');
+        $this->db->join('master_produk', 'unit.id_produk = master_produk.id_produk');
+        $this->db->join('inspection', 'unit.unit_id = inspection.unit_id', 'left');
+        $this->db->order_by('unit_id', 'DESC');
+        $this->db->where('unit.status_inspection', 'Sudah Inspeksi');
+        if ($tanggal_mulai && $tanggal_akhir) {
+            $this->db->where('unit.tanggal_masuk >=', $tanggal_mulai . ' 00:00:00');
+            $this->db->where('unit.tanggal_masuk <=', $tanggal_akhir . ' 23:59:59');
+        }
+        if ($nama_produk_filter) {
+            $this->db->like('master_produk.nama_produk', $nama_produk_filter);
+        }
+        $data['units'] = $this->db->get()->result_array();
+        $data['title'] = 'Result Inspection';
+        $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+        $this->db->select('*');
+        $this->db->from('inspection_template');
+        $data['inspection_template'] = $this->db->get()->result_array();
+        $this->load->view('templates/header', $data);
+        $this->load->view('templates/sidebar', $data);
+        $this->load->view('templates/topbar', $data);
+        $this->load->view('inspection/result_inspection', $data);
         $this->load->view('templates/footer');
         $this->session->unset_userdata('swal');
     }
@@ -573,4 +634,219 @@ class Inspection extends CI_Controller
         $this->load->view('templates/footer');
     }
     /* end list inspection */
+
+    /* inspection item */
+    public function index_inspection_item()
+    {
+        $this->db->select('inspection_item.*, inspection_template.nama_template');
+        $this->db->from('inspection_item');
+        $this->db->join('inspection_template', 'inspection_item.id_template = inspection_template.id_template', 'left'); // Gunakan LEFT JOIN
+        $query = $this->db->get();
+        $data['inspection_items'] = $query->result_array();
+        $data['title'] = 'Item Inspection';
+        $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+        $this->load->view('templates/header', $data);
+        $this->load->view('templates/sidebar', $data);
+        $this->load->view('templates/topbar', $data);
+        $this->load->view('inspection/item/index', $data);
+        $this->load->view('templates/footer');
+    }
+
+    public function create_inspection_item()
+    {
+        $data['title'] = 'Create Inspection Item';
+        $data['inspection_template'] = $this->db->get('inspection_template')->result_array();
+        $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+        $this->load->view('templates/header', $data);
+        $this->load->view('templates/sidebar', $data);
+        $this->load->view('templates/topbar', $data);
+        $this->load->view('inspection/item/create', $data);
+        $this->load->view('templates/footer');
+        $this->session->unset_userdata('message');
+    }
+
+    public function save_inspection_item()
+    {
+        $this->form_validation->set_rules('nama_group', 'Group Name', 'required');
+        $this->form_validation->set_rules('nama_item', 'Item Name', 'required');
+        $this->form_validation->set_rules('urutan', 'Order', 'integer');
+
+        if ($this->form_validation->run() == FALSE) {
+            $this->session->set_flashdata('error', validation_errors());
+            redirect('inspection/create_inspection_item'); // Redirect tanpa id_template
+        } else {
+            $data = [
+                'nama_group' => $this->input->post('nama_group'),
+                'nama_item' => $this->input->post('nama_item'),
+                'urutan' => $this->input->post('urutan'),
+                'id_template' => $this->input->post('id_template')
+            ];
+
+            $this->db->insert('inspection_item', $data);
+            $this->session->set_flashdata('message', 'Inspection item berhasil ditambahkan.');
+            $this->session->unset_userdata('message');
+            redirect('inspection/index_inspection_item'); // Redirect tanpa id_template
+        }
+    }
+
+    public function edit_inspection_item($id_item)
+    {
+        $data['inspection_item'] = $this->db->get_where('inspection_item', ['id_item' => $id_item])->row_array();
+         if (!$data['inspection_item']) {
+            $this->session->unset_userdata('message');
+             $this->session->set_flashdata('error', 'Inspection item tidak ditemukan.');
+            redirect('inspection/index_inspection_item/');
+        }
+        $data['title'] = 'Edit Inspection Item';
+        $data['inspection_template'] = $this->db->get('inspection_template')->result_array();
+        $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+        $this->load->view('templates/header', $data);
+        $this->load->view('templates/sidebar', $data);
+        $this->load->view('templates/topbar', $data);
+        $this->load->view('inspection/item/edit', $data);
+        $this->load->view('templates/footer');
+    }
+
+    public function update_inspection_item()
+    {
+        $this->form_validation->set_rules('nama_group', 'Group Name', 'required');
+        $this->form_validation->set_rules('nama_item', 'Item Name', 'required');
+        $this->form_validation->set_rules('urutan', 'Order', 'integer');
+
+        if ($this->form_validation->run() == FALSE) {
+            $this->session->set_flashdata('error', validation_errors());
+            redirect('inspection/edit_inspection_item/'.$this->input->post('id_item'));
+        } else {
+            $id_item = $this->input->post('id_item');
+            $data = [
+                'nama_group' => $this->input->post('nama_group'),
+                'nama_item' => $this->input->post('nama_item'),
+                'urutan' => $this->input->post('urutan'),
+                'id_template' => $this->input->post('id_template'),
+            ];
+
+            $this->db->where('id_item', $id_item);
+            $this->db->update('inspection_item', $data);
+            $this->session->unset_userdata('message');
+            $this->session->set_flashdata('message', 'Inspection item berhasil diupdate.');
+            redirect('inspection/index_inspection_item'); // Redirect
+        }
+    }
+
+    public function delete_inspection_item($id_item)
+    {
+        $this->db->where('id_item', $id_item);
+        $this->db->delete('inspection_item');
+         if ($this->db->affected_rows() > 0) {
+            $this->session->set_flashdata('message', 'Inspection item berhasil dihapus.');
+        } else {
+             $this->session->set_flashdata('error', 'Inspection item gagal dihapus.');
+        }
+        redirect('inspection/index_inspection_item'); // Redirect
+        $this->session->unset_userdata('message');
+    }
+    /* end inspection item */
+
+    /* template inspection */
+    public function index_template()
+    {
+        $query = $this->db->get('inspection_template');
+        $data['inspection_templates'] = $query->result_array();
+        $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+        $data['title'] = 'Template Inspection';
+        $this->load->view('templates/header', $data); // Load header
+        $this->load->view('templates/sidebar', $data); // Load sidebar
+        $this->load->view('templates/topbar', $data);    //load topbar
+        $this->load->view('inspection/template/index', $data);
+        $this->load->view('templates/footer'); // Load footer
+        $this->session->unset_userdata('message');
+    }
+
+    public function create_template()
+    {
+        $data['title'] = 'Create Inspection Template';
+        $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+        $this->load->view('templates/header', $data);  //load header
+        $this->load->view('templates/sidebar', $data);  //load sidebar
+        $this->load->view('templates/topbar', $data);    //load topbar
+        $this->load->view('inspection/template/create');
+        $this->load->view('templates/footer'); //load footer
+    }
+
+    public function save_template()
+    {
+        $this->form_validation->set_rules('nama_template', 'Template Name', 'required');
+        $this->form_validation->set_rules('deskripsi_template', 'Description', 'trim');
+        $this->form_validation->set_rules('created_by', 'Created By', 'trim');
+
+        if ($this->form_validation->run() == FALSE) {
+            $this->session->set_flashdata('error', validation_errors());
+            redirect('inspection/create_template');
+        } else {
+            $data = [
+                'nama_template' => $this->input->post('nama_template'),
+                'deskripsi_template' => $this->input->post('deskripsi_template'),
+                'created_at' => date('Y-m-d H:i:s'), // Set created_at here
+                'created_by' => $this->input->post('created_by'),
+            ];
+
+            $this->db->insert('inspection_template', $data);
+            $this->session->unset_userdata('message');
+            $this->session->set_flashdata('message', 'Inspection template berhasil ditambahkan.');
+            redirect('inspection/index_template');
+        }
+    }
+
+    public function edit_template($id_template)
+    {
+        $query = $this->db->get_where('inspection_template', ['id_template' => $id_template]);
+        $data['inspection_template'] = $query->row_array();
+        if (!$data['inspection_template']) {
+            $this->session->unset_userdata('message');
+            $this->session->set_flashdata('error', 'Inspection template tidak ditemukan.');
+            redirect('inspection/index_template');
+        }
+        $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+        $data['title'] = 'Edit Inspection Template';
+        $this->load->view('templates/header', $data); //load header
+        $this->load->view('templates/sidebar', $data); //load side bar
+        $this->load->view('templates/topbar', $data);    //load topbar
+        $this->load->view('inspection/template/edit', $data);
+        $this->load->view('templates/footer');  //load footer
+    }
+
+    public function update_template()
+    {
+        $this->form_validation->set_rules('nama_template', 'Template Name', 'required');
+        $this->form_validation->set_rules('deskripsi_template', 'Description', 'trim');
+        $this->form_validation->set_rules('created_by', 'Created By', 'trim');
+
+        if ($this->form_validation->run() == FALSE) {
+            $this->session->set_flashdata('error', validation_errors());
+            redirect('inspection/edit_template/' . $this->input->post('id_template'));
+        } else {
+            $id_template = $this->input->post('id_template');
+            $data = [
+                'nama_template' => $this->input->post('nama_template'),
+                'deskripsi_template' => $this->input->post('deskripsi_template'),
+                'created_by' => $this->input->post('created_by'),
+            ];
+
+            $this->db->where('id_template', $id_template);
+            $this->db->update('inspection_template', $data);
+            $this->session->unset_userdata('message');
+            $this->session->set_flashdata('message', 'Inspection template berhasil diupdate.');
+            redirect('inspection/index_template');
+        }
+    }
+
+    public function delete_template($id_template)
+    {
+        $this->db->where('id_template', $id_template);
+        $this->db->delete('inspection_template');
+        $this->session->unset_userdata('message');
+        $this->session->set_flashdata('message', 'Inspection template berhasil dihapus.');
+        redirect('inspection/index_template');
+    }
+    /* end template inspection */
 }

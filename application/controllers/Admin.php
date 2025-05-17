@@ -24,7 +24,16 @@ class Admin extends CI_Controller
     {
         $data['title'] = 'Dashboard';
         $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
-
+        $data['total_produk'] = $this->db->count_all('master_produk');
+        $data['total_unit'] = $this->db->count_all('unit');
+        $data['unit_sudah_inspeksi'] = $this->db->where('status_inspection', 'Sudah Inspeksi')->count_all_results('unit');
+        $data['unit_belum_inspeksi'] = $this->db->where('status_inspection', 'Belum Inspeksi')->count_all_results('unit');
+        $data['units'] = $this->db->select('unit.*, master_produk.nama_produk, inspection.tanggal_inspeksi')
+        ->from('unit')
+        ->join('master_produk', 'unit.id_produk = master_produk.id_produk', 'left')
+        ->join('inspection', 'unit.unit_id = inspection.unit_id', 'left') // Gabungkan dengan tabel inspection
+        ->get()
+        ->result_array();
         $this->load->view('templates/header', $data);
         $this->load->view('templates/sidebar', $data);
         $this->load->view('templates/topbar', $data);

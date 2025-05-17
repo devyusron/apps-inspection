@@ -35,14 +35,14 @@
                                 <?php endforeach; ?>
                             </select>
                         </div>
-                        <div class="col-md-2 mb-2">
+                        <!-- <div class="col-md-2 mb-2">
                             <label for="status_inspection">Status Inspection:</label>
                             <select class="form-control form-control-sm" id="status_inspection" name="status_inspection">
                                 <option value="">Pilih Status</option>
                                 <option value="Sudah Inspeksi">Sudah Inspeksi</option>
                                 <option value="Belum Inspeksi">Belum Inspeksi</option>
                             </select>
-                        </div>
+                        </div> -->
                         <div class="col-md-2 mb-2">
                             <label for="kondisi_unit">Kondisi Unit:</label>
                             <select class="form-control form-control-sm" id="kondisi_unit" name="kondisi_unit">

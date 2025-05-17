@@ -28,6 +28,7 @@
                                     <td><?= htmlspecialchars($form['nama_template']); ?></td>
                                     <td><?= htmlspecialchars($form['deskripsi_template']); ?></td>
                                     <td>
+                                        <a href="<?= site_url('inspection/edit_form/'.$form['id_template'])?>" class="btn btn-primary btn-sm"><i class="fas fa-edit"></i></a>
                                     <button type="button" class="btn btn-warning btn-sm lihat-template" data-id="<?= $form['id_template']; ?>" data-toggle="modal" data-target="#modalInspection"><i class="fas fa-clipboard-check"></i></button>
                                     </td>
                                 </tr>
@@ -38,24 +39,24 @@
             </div>
         </div>
         <div class="modal fade" id="modalInspection" tabindex="-1" role="dialog" aria-labelledby="modalInspectionLabel" aria-hidden="true">
-          <div class="modal-dialog modal-xl" role="document">
-              <div class="modal-content">
-                  <div class="modal-header">
-                      <h5 class="modal-title" id="modalInspectionLabel">Inspection form</h5>
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                          <span aria-hidden="true">&times;</span>
-                      </button>
-                  </div>
-                  <div class="modal-body">
-                      <div id="inspection-detail-content">
-                          </div>
-                  </div>
-                  <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-                  </div>
-              </div>
-          </div>
-      </div>
+            <div class="modal-dialog modal-xl" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalInspectionLabel">Inspection form</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="inspection-detail-content">
+                            </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>

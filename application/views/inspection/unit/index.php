@@ -92,6 +92,8 @@
                                 <th>ID Unit</th>
                                 <th>Serial Number</th>
                                 <th>Nama Produk</th>
+                                <th>Machine No</th>      
+                                <th>Model No</th>
                                 <th>Qty</th>
                                 <th>Kondisi Unit</th>
                                 <th>Tanggal Masuk</th>
@@ -111,6 +113,8 @@
                                     <td><?= $i++; ?></td>
                                     <td><?= htmlspecialchars($unit['serial_number']); ?></td>
                                     <td><?= htmlspecialchars($unit['nama_produk']); ?></td>
+                                    <td><?= $unit['machine_no']; ?></td>    
+                                    <td><?= $unit['model_no']; ?>
                                     <td><?= $unit['qty']; ?></td>
                                     <td><?= htmlspecialchars($unit['kondisi_unit']); ?></td>
                                     <td><?= $unit['tanggal_masuk']; ?></td>

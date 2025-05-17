@@ -28,7 +28,7 @@
                                     <td><?= htmlspecialchars($form['nama_template']); ?></td>
                                     <td><?= htmlspecialchars($form['deskripsi_template']); ?></td>
                                     <td>
-                                        <a href="<?= site_url('inspection/edit_form/'.$form['id_template'])?>" class="btn btn-primary btn-sm"><i class="fas fa-edit"></i></a>
+                                        <!-- <a href="<?= site_url('inspection/edit_form/'.$form['id_template'])?>" class="btn btn-primary btn-sm"><i class="fas fa-edit"></i></a> -->
                                     <button type="button" class="btn btn-warning btn-sm lihat-template" data-id="<?= $form['id_template']; ?>" data-toggle="modal" data-target="#modalInspection"><i class="fas fa-clipboard-check"></i></button>
                                     </td>
                                 </tr>

@@ -209,6 +209,8 @@ class Inspection extends CI_Controller
         $this->form_validation->set_rules('status_unit', 'Status Unit', 'required|trim');
         $this->form_validation->set_rules('lokasi_unit', 'Lokasi Unit', 'required|trim');
         $this->form_validation->set_rules('keterangan_unit', 'Keterangan Unit', 'trim');
+        $this->form_validation->set_rules('machine_no', 'Machine Number', 'trim'); // Tambah validasi
+        $this->form_validation->set_rules('model_no', 'Model Number', 'trim');     // Tambah validasi
         if ($this->form_validation->run() == FALSE) {
             $this->add_unit();
         } else {
@@ -224,7 +226,9 @@ class Inspection extends CI_Controller
                 'lokasi_unit' => $this->input->post('lokasi_unit'),
                 'keterangan_unit' => $this->input->post('keterangan_unit'),
                 'created_at' => date('Y-m-d H:i:s'),
-                'created_by' => $this->session->userdata('user_id')
+                'created_by' => $this->session->userdata('user_id'),
+                'machine_no' => $this->input->post('machine_no'), // Simpan data
+                'model_no' => $this->input->post('model_no'),     // Simpan data
             ];
             $this->db->trans_start(); // Mulai transaksi database
             if ($this->db->insert('unit', $data_unit)) {
@@ -290,6 +294,8 @@ class Inspection extends CI_Controller
         $this->form_validation->set_rules('status_unit', 'Status Unit', 'required|trim');
         $this->form_validation->set_rules('lokasi_unit', 'Lokasi Unit', 'required|trim');
         $this->form_validation->set_rules('keterangan_unit', 'Keterangan Unit', 'trim');
+        $this->form_validation->set_rules('machine_no', 'Machine Number', 'trim'); // Tambah validasi
+        $this->form_validation->set_rules('model_no', 'Model Number', 'trim');     // Tambah validasi
         if ($this->form_validation->run() == FALSE) {
             $this->edit_unit($id);
         } else {
@@ -315,6 +321,8 @@ class Inspection extends CI_Controller
                 'keterangan_unit' => $this->input->post('keterangan_unit'),
                 // 'updated_at' => date('Y-m-d H:i:s'),
                 // 'updated_by' => $this->session->userdata('user_id')
+                'machine_no' => $this->input->post('machine_no'), // Update data
+                'model_no' => $this->input->post('model_no'),     // Update data
             ];
             $this->db->trans_start(); // Mulai transaksi database
             $this->db->where('unit_id', $id);

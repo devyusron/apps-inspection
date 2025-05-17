@@ -74,6 +74,8 @@
                             <tr>
                                 <th>ID Unit</th>
                                 <th>Serial Number</th>
+                                <th>Machine No</th>      
+                                <th>Model No</th>
                                 <th>Nama Produk</th>
                                 <th>Qty</th>
                                 <th>Kondisi Unit</th>
@@ -90,6 +92,8 @@
                                 <tr>
                                     <td><?= $i++; ?></td>
                                     <td><?= htmlspecialchars($unit['serial_number']); ?></td>
+                                    <td><?= htmlspecialchars($unit['machine_no']); ?></td>
+                                    <td><?= htmlspecialchars($unit['model_no']); ?></td>
                                     <td><?= htmlspecialchars($unit['nama_produk']); ?></td>
                                     <td><?= $unit['qty']; ?></td>
                                     <td><?= htmlspecialchars($unit['kondisi_unit']); ?></td>

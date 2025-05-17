@@ -113,7 +113,10 @@
                                     <td>
                                         <a href="#" class="btn btn-success btn-sm lihat-template"
                                         data-toggle="tooltip" data-placement="top" title="Inspeksi"
-                                        data-unit-id="<?= $unit['unit_id']; ?>"> 
+                                        data-unit-id="<?= $unit['unit_id']; ?>" 
+                                        data-machine-no="<?= $unit['machine_no']; ?>" 
+                                        data-model-no="<?= $unit['model_no']; ?>" 
+                                        data-serial-number="<?= $unit['serial_number']?>"> 
                                             <i class="fas fa-clipboard-check"></i>
                                         </a>
                                     </td>
@@ -177,7 +180,7 @@
     $('#status_inspection').select2(); // Coba inisialisasi di sini (hanya untuk debug)
 </script>
 <script>
-    function buildInspectionForm(data, unitId, templateId) {
+    function buildInspectionForm(data, unitId, templateId, machineNo, modelNo, serialNumber) {
         var html = '<form id="inspectionForm">';
         html += '<input type="hidden" name="unit_id" value="' + unitId + '">';
         html += '<input type="hidden" name="template_id" value="' + templateId + '">';
@@ -198,16 +201,16 @@
         html += '</div>';
         html += '<div class="col-md-6">';
         html += '<div class="form-group row">';
-        html += '<label for="mechine" class="col-sm-3 col-form-label">Mechine</label>';
-        html += '<div class="col-sm-9"><input  type="text" class="form-control form-control-sm" id="mechine" name="mechine"></div>';
+        html += '<label for="machine_no" class="col-sm-3 col-form-label">Machine</label>';
+        html += '<div class="col-sm-9"><input  type="text" class="form-control form-control-sm" id="machine_no" name="machine_no" value="' + machineNo + '"></div>';
         html += '</div>';
         html += '<div class="form-group row">';
         html += '<label for="model_no" class="col-sm-3 col-form-label">Model No.</label>';
-        html += '<div class="col-sm-9"><input  type="text" class="form-control form-control-sm" id="model_no" name="model_no"></div>';
+        html += '<div class="col-sm-9"><input  type="text" class="form-control form-control-sm" id="model_no" name="model_no" value="' + modelNo + '"></div>';
         html += '</div>';
         html += '<div class="form-group row">';
         html += '<label for="serial_no" class="col-sm-3 col-form-label">Serial No.</label>';
-        html += '<div class="col-sm-9"><input  type="text" class="form-control form-control-sm" id="serial_no" name="serial_no"></div>';
+        html += '<div class="col-sm-9"><input  type="text" class="form-control form-control-sm" id="serial_no" name="serial_no" value="' + serialNumber + '"></div>';
         html += '</div>';
         html += '<div class="form-group row">';
         html += '<label for="hours" class="col-sm-3 col-form-label">Hours</label>';
@@ -259,7 +262,7 @@
         return html;
     }
 
-    function loadInspectionForm(templateId, unitId) {
+    function loadInspectionForm(templateId, unitId, machineNo, modelNo, serialNumber) {
         $.ajax({
             url: '<?= site_url('inspection/view_form/'); ?>/' + templateId,
             type: 'GET',
@@ -268,7 +271,7 @@
                 unit_id: unitId
             },
             success: function(data) {
-                var html = buildInspectionForm(data, unitId, templateId);
+                var html = buildInspectionForm(data, unitId, templateId, machineNo, modelNo, serialNumber);
                 $('#form-view-content').html(html);
                 $('#modalFormView').modal('show');
                 setupFormSubmission();
@@ -366,17 +369,26 @@
     $(document).ready(function() {
         $('.lihat-template').on('click', function() {
             var unitId = $(this).data('unit-id');
+            var machineNo = $(this).data('machine-no');
+            var modelNo = $(this).data('model-no');
+            var serialNumber = $(this).data('serial-number');
             console.log(unitId);
             $('#modalInspection').data('unit-id', unitId);
+            $('#modalInspection').data('machine-no', machineNo);
+            $('#modalInspection').data('model-no', modelNo);
+            $('#modalInspection').data('serial-number', serialNumber);
             $('#modalInspection').modal('show');
         });
 
         $('.pdi-form-button').on('click', function() {
             var templateId = $(this).data('template-id');
             var unitId = $('#modalInspection').data('unit-id');
+            var machineNo = $('#modalInspection').data('machine-no');
+            var modelNo = $('#modalInspection').data('model-no');
+            var serialNumber = $('#modalInspection').data('serial-number');
             console.log('Memuat form dengan ID Template:', templateId, 'untuk Unit ID:', unitId);
             $('#modalInspection').modal('hide');
-            loadInspectionForm(templateId, unitId);
+            loadInspectionForm(templateId, unitId, machineNo, modelNo, serialNumber);
         });
     });
 </script>

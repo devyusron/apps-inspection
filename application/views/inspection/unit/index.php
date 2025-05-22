@@ -260,6 +260,7 @@ $(document).ready(function() {
             type: 'GET',
             dataType: 'json',
             success: function(data) {
+                console.log(data)
                 if (data && data.length > 0) {
                     var html = '<div class="row">';
                     html += '<div class="col-md-6">';
@@ -322,15 +323,18 @@ $(document).ready(function() {
                     html += '<label for="additional_comment">Additional Comment :</label>';
                     html += '<textarea readonly class="form-control" id="additional_comment" name="additional_comment" rows="3"></textarea>';
                     html += '</div>';
-
+                    html += '<div class="form-group mt-3">';
+                    html += '<label for="photo_inspection">Photo Inspection :</label>';
+                    html += '<input type="file" class="form-control-file" id="photo_inspection" name="photo_inspection" accept="image/*" required>';
+                    html += '</div>';
                     html += '<div class="row mt-3">';
                     html += '<div class="col-md-6">';
                     html += '<label for="acknowledge">Acknowledge :</label>';
-                    html += '<input readonly type="text" class="form-control form-control-sm" id="acknowledge" name="acknowledge">';
+                    html += '<input readonly type="text" class="form-control form-control-sm" id="acknowledge" name="acknowledge" required>';
                     html += '</div>';
                     html += '<div class="col-md-6">';
                     html += '<label for="mechanic">Mechanic :</label>';
-                    html += '<input readonly type="text" class="form-control form-control-sm" id="mechanic" name="mechanic">';
+                    html += '<input readonly type="text" class="form-control form-control-sm" id="mechanic" name="mechanic" required>';
                     html += '</div>';
                     html += '</div>';
                     modalBody.append(html);
@@ -356,7 +360,7 @@ $(document).ready(function() {
 });
 </script>
 <script>
-    function buildInspectionForm(data, unitId, templateId) {
+    function buildInspectionForm(data, unitId, templateId, machineNo, modelNo, serialNumber) {
         var html = '<form id="inspectionForm">';
         html += '<input type="hidden" name="unit_id" value="' + unitId + '">';
         html += '<input type="hidden" name="template_id" value="' + templateId + '">';
@@ -364,7 +368,7 @@ $(document).ready(function() {
         html += '<div class="col-md-6">';
         html += '<div class="form-group row">';
         html += '<label for="customer" class="col-sm-3 col-form-label">Customer</label>';
-        html += '<div class="col-sm-9"><input type="text" class="form-control form-control-sm" id="customer" name="customer"></div>';
+        html += '<div class="col-sm-9"><input readonly type="text" class="form-control form-control-sm" id="customer" name="customer"></div>';
         html += '</div>';
         html += '<div class="form-group row">';
         html += '<label for="address" class="col-sm-3 col-form-label">Address</label>';
@@ -377,16 +381,16 @@ $(document).ready(function() {
         html += '</div>';
         html += '<div class="col-md-6">';
         html += '<div class="form-group row">';
-        html += '<label for="mechine" class="col-sm-3 col-form-label">Mechine</label>';
-        html += '<div class="col-sm-9"><input  type="text" class="form-control form-control-sm" id="mechine" name="mechine"></div>';
+        html += '<label for="machine_no" class="col-sm-3 col-form-label">Machine</label>';
+        html += '<div class="col-sm-9"><input readonly type="text" class="form-control form-control-sm" id="machine_no" name="machine_no" value="' + machineNo + '"></div>';
         html += '</div>';
         html += '<div class="form-group row">';
         html += '<label for="model_no" class="col-sm-3 col-form-label">Model No.</label>';
-        html += '<div class="col-sm-9"><input  type="text" class="form-control form-control-sm" id="model_no" name="model_no"></div>';
+        html += '<div class="col-sm-9"><input readonly type="text" class="form-control form-control-sm" id="model_no" name="model_no" value="' + modelNo + '"></div>';
         html += '</div>';
         html += '<div class="form-group row">';
         html += '<label for="serial_no" class="col-sm-3 col-form-label">Serial No.</label>';
-        html += '<div class="col-sm-9"><input  type="text" class="form-control form-control-sm" id="serial_no" name="serial_no"></div>';
+        html += '<div class="col-sm-9"><input readonly type="text" class="form-control form-control-sm" id="serial_no" name="serial_no" value="' + serialNumber + '"></div>';
         html += '</div>';
         html += '<div class="form-group row">';
         html += '<label for="hours" class="col-sm-3 col-form-label">Hours</label>';
@@ -398,7 +402,9 @@ $(document).ready(function() {
         html += '</div>';
         html += '</div>';
         html += '</div>';
+
         html += '<hr class="mt-2 mb-2">';
+
         html += '<table class="table table-bordered">';
         html += '<thead><tr><th>Group</th><th>Item</th><th>Add</th><th>Clean Up</th><th>Lubricate</th><th>Replace Or Change</th><th>Adjust</th><th>Test or Check</th><th>Remark</th></tr></thead><tbody>';
         $.each(data, function(i, item) {
@@ -415,18 +421,23 @@ $(document).ready(function() {
             html += '</tr>';
         });
         html += '</tbody></table>';
+
         html += '<div class="form-group mt-3">';
         html += '<label for="additional_comment">Additional Comment :</label>';
         html += '<textarea  class="form-control" id="additional_comment" name="additional_comment" rows="3"></textarea>';
         html += '</div>';
+        html += '<div class="form-group mt-3">';
+        html += '<label for="photo_inspection">Photo Inspection :</label>';
+        html += '<input type="file" class="form-control-file" id="photo_inspection" name="photo_inspection" accept="image/*" required>';
+        html += '</div>';
         html += '<div class="row mt-3">';
         html += '<div class="col-md-6">';
         html += '<label for="acknowledge">Acknowledge :</label>';
-        html += '<input  type="text" class="form-control form-control-sm" id="acknowledge" name="acknowledge">';
+        html += '<input  type="text" class="form-control form-control-sm" id="acknowledge" name="acknowledge" required>';
         html += '</div>';
         html += '<div class="col-md-6">';
         html += '<label for="mechanic">Mechanic :</label>';
-        html += '<input  type="text" class="form-control form-control-sm" id="mechanic" name="mechanic">';
+        html += '<input  type="text" class="form-control form-control-sm" id="mechanic" name="mechanic" required>';
         html += '</div>';
         html += '</div>';
         html += '<button type="submit" class="btn btn-primary mt-3">Simpan Inspeksi</button>';
@@ -434,7 +445,7 @@ $(document).ready(function() {
         return html;
     }
 
-    function loadInspectionForm(templateId, unitId) {
+    function loadInspectionForm(templateId, unitId, machineNo, modelNo, serialNumber) {
         $.ajax({
             url: '<?= site_url('inspection/view_form/'); ?>/' + templateId,
             type: 'GET',
@@ -443,10 +454,12 @@ $(document).ready(function() {
                 unit_id: unitId
             },
             success: function(data) {
-                var html = buildInspectionForm(data, unitId, templateId);
+                var html = buildInspectionForm(data, unitId, templateId, machineNo, modelNo, serialNumber);
                 $('#form-view-content').html(html);
                 $('#modalFormView').modal('show');
                 setupFormSubmission();
+                var timestamp = new Date().getTime();
+                $('#customer').val('CUST' + timestamp);
             },
             error: function(xhr, status, error) {
                 $('#form-view-content').html('<p>Terjadi kesalahan saat mengambil data: ' + error + '</p>');
@@ -459,6 +472,7 @@ $(document).ready(function() {
     function setupFormSubmission() {
         $('#inspectionForm').submit(function(event) {
             event.preventDefault();
+
             var formData = {
                 unit_id: $('input[name="unit_id"]').val(),
                 template_id: $('input[name="template_id"]').val(),
@@ -475,6 +489,8 @@ $(document).ready(function() {
                 mechanic: $('input[name="mechanic"]').val(),
                 items: [] // Array untuk menyimpan informasi item tabel
             };
+
+            // Loop melalui setiap baris tabel (kecuali header)
             $('#inspectionForm table tbody tr').each(function() {
                 var row = $(this);
                 var idItemMatch = row.find('input[type="checkbox"][name^="add"]').attr('name').match(/\[(.*?)\]/);
@@ -493,7 +509,10 @@ $(document).ready(function() {
                     formData.items.push(itemData);
                 }
             });
+
             console.log("Data Form yang Dikumpulkan:", formData);
+
+            // Kirim data formData menggunakan AJAX ke server Anda
             $.ajax({
                 url: '<?php echo site_url('inspection/submit_inspection'); ?>',
                 type: 'POST',
@@ -502,14 +521,21 @@ $(document).ready(function() {
                 success: function(response) {
                     console.log(response);
                     if (response.status == 'success') {
-                        Swal.fire({
+                        /* Swal.fire({
                             title: 'Berhasil!',
                             text: response.message,
                             icon: 'success',
                             confirmButtonText: 'OK'
                         }).then(() => {
                             window.location.reload();
-                        });
+                        }); */
+                        const inspectionId = response.inspection_id; // Server harus mengembalikan ID inspeksi
+                        console.log('ID Inspeksi:', inspectionId);
+                        if (inspectionId) {
+                            uploadInspectionPhoto(inspectionId);
+                        } else {
+                            Swal.fire('Error!', 'ID Inspeksi tidak ditemukan setelah submit data utama.', 'error');
+                        }
                     } else {
                         Swal.fire({
                             title: 'Error!',
@@ -532,20 +558,73 @@ $(document).ready(function() {
         });
     }
 
+    function uploadInspectionPhoto(inspectionId) {
+        const photoFile = $('#photo_inspection')[0].files[0];
+        if (photoFile) {
+            var formDataPhoto = new FormData();
+            formDataPhoto.append('inspection_id', inspectionId); // Kirim ID inspeksi untuk mengaitkan foto
+            formDataPhoto.append('photo_inspection', photoFile);
+            $.ajax({
+                url: '<?php echo site_url('inspection/upload_inspection_photo'); ?>', // Endpoint terpisah untuk upload foto
+                type: 'POST',
+                data: formDataPhoto,
+                processData: false, // Penting untuk FormData
+                contentType: false, // Penting untuk FormData
+                success: function(response) {
+                    console.log(typeof(response));
+                    if (response.includes('success')) {
+                        Swal.fire({
+                            title: 'Berhasil!',
+                            text: 'Data inspeksi dan foto berhasil disimpan!',
+                            icon: 'success',
+                            confirmButtonText: 'OK'
+                        }).then(() => {
+                            window.location.reload();
+                        });
+                    } else {
+                        Swal.fire('Error!', 'Gagal mengupload foto: ' + response.message, 'error');
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.error('Error saat mengupload foto:', textStatus, errorThrown);
+                    Swal.fire('Error!', 'Terjadi kesalahan saat mengupload foto: ' + textStatus + ' - ' + errorThrown, 'error');
+                }
+            });
+        } else {
+            Swal.fire({
+                title: 'Berhasil!',
+                text: 'Data inspeksi berhasil disimpan (tanpa foto).',
+                icon: 'success',
+                confirmButtonText: 'OK'
+            }).then(() => {
+                window.location.reload();
+            });
+        }
+    }
+
     $(document).ready(function() {
         $('.lihat-template').on('click', function() {
             var unitId = $(this).data('unit-id');
+            var machineNo = $(this).data('machine-no');
+            var modelNo = $(this).data('model-no');
+            var serialNumber = $(this).data('serial-number');
             console.log(unitId);
             $('#modalInspection').data('unit-id', unitId);
+            $('#modalInspection').data('machine-no', machineNo);
+            $('#modalInspection').data('model-no', modelNo);
+            $('#modalInspection').data('serial-number', serialNumber);
             $('#modalInspection').modal('show');
         });
 
         $('.pdi-form-button').on('click', function() {
             var templateId = $(this).data('template-id');
             var unitId = $('#modalInspection').data('unit-id');
+            var machineNo = $('#modalInspection').data('machine-no');
+            var modelNo = $('#modalInspection').data('model-no');
+            var serialNumber = $('#modalInspection').data('serial-number');
             console.log('Memuat form dengan ID Template:', templateId, 'untuk Unit ID:', unitId);
             $('#modalInspection').modal('hide');
-            loadInspectionForm(templateId, unitId);
+            loadInspectionForm(templateId, unitId, machineNo, modelNo, serialNumber);
         });
     });
 </script>

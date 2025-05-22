@@ -8,6 +8,8 @@ class Inspection extends CI_Controller
         parent::__construct();
         // date_default_timezone_set('Asia/Jakarta');
         is_logged_in();
+        $this->load->helper('url');
+        $this->load->library('upload');
     }
 
     /* produk */
@@ -166,7 +168,7 @@ class Inspection extends CI_Controller
         $tanggal_akhir = $this->input->get('tanggal_akhir');
         $nama_produk_filter = $this->input->get('nama_produk');
         $data['daftar_produk'] = $this->db->get('master_produk')->result_array();
-        $this->db->select('unit.*, master_produk.nama_produk, inspection.inspection_template_id as id_template');
+        $this->db->select('unit.*, master_produk.nama_produk, inspection.inspection_template_id as id_template, inspection.id_inspection as id_inspection');
         $this->db->from('unit');
         $this->db->join('master_produk', 'unit.id_produk = master_produk.id_produk');
         $this->db->join('inspection', 'unit.unit_id = inspection.unit_id', 'left');
@@ -564,10 +566,12 @@ class Inspection extends CI_Controller
                 'acknowledge' => $post_data['acknowledge'],
                 'additional_comment' => $post_data['additional_comment'],
                 'created_by' => 'user_yang_login',
-                'inspection_template_id' => $post_data['template_id']
+                'inspection_template_id' => $post_data['template_id'],
+                'photo_inspection' => 0
             );
             $this->db->insert('inspection', $inspection_data);
             $inspection_id = $this->db->insert_id();
+            // $inspection_id = 24;
             if ($inspection_id) {
                 $item_data = $post_data['items'];
                 if (is_array($item_data) && !empty($item_data)) {
@@ -585,8 +589,7 @@ class Inspection extends CI_Controller
                                 'replace_change' => isset($item['replace_change']) ? $item['replace_change'] : 0,
                                 'adjust' => isset($item['adjust']) ? $item['adjust'] : 0
                             );
-                        }
-                        else{
+                        } else {
                             $response = array('status' => 'error', 'message' => 'item_id tidak ada.');
                             $this->output
                                 ->set_content_type('application/json')
@@ -598,7 +601,7 @@ class Inspection extends CI_Controller
                         $this->db->insert_batch('inspection_detail', $detail_data);
                         $this->db->where('unit_id', $unit_id);
                         $this->db->update('unit', array('status_inspection' => 'Sudah Inspeksi'));
-                        $response = array('status' => 'success', 'message' => 'Data inspeksi berhasil disimpan dan status unit diupdate.');
+                        $response = array('status' => 'success', 'message' => 'Data inspeksi berhasil disimpan dan status unit diupdate.','inspection_id'=> $inspection_id);
                     } else {
                         $response = array('status' => 'warning', 'message' => 'Data detail inspeksi kosong.');
                         $this->db->delete('inspection', array('id_inspection' => $inspection_id));
@@ -616,6 +619,70 @@ class Inspection extends CI_Controller
         $this->output
             ->set_content_type('application/json')
             ->set_output(json_encode($response));
+    }
+
+    public function upload_inspection_photo() {
+        // $response = array('fils' => $_FILES, 'post' => $this->input->post());
+        $response = array('status' => 'error', 'message' => 'Terjadi kesalahan saat upload foto.');
+
+        if ($this->input->method() == 'post') {
+            $inspection_id = $this->input->post('inspection_id'); // Ambil ID inspeksi dari FormData
+
+            if (empty($inspection_id)) {
+                $response['message'] = 'ID Inspeksi tidak ditemukan.';
+                echo json_encode($response);
+                return;
+            }
+
+            if (!empty($_FILES['photo_inspection']['name'])) {
+                $original_filename = $_FILES['photo_inspection']['name'];
+                $file_extension = pathinfo($original_filename, PATHINFO_EXTENSION);
+                
+                // Gunakan timestamp untuk nama file yang unik
+                list($usec, $sec) = explode(" ", microtime());
+                $milliseconds = round($usec * 1000);
+                $new_file_name = 'inspection_' . $sec . sprintf('%03d', $milliseconds) . '.' . $file_extension;
+
+                $config['upload_path']   = FCPATH . 'assets/img/inspection_photos/'; // Pastikan path ini benar dan dapat ditulis
+                $config['allowed_types'] = 'gif|jpg|png|jpeg'; // Menambahkan 'gif' ke allowed_types
+                $config['max_size']      = 2048; // 2MB
+                $config['file_name']     = $new_file_name; // Gunakan nama file yang sudah digenerate
+
+                // Pastikan direktori ada
+                if (!is_dir($config['upload_path'])) {
+                    mkdir($config['upload_path'], 0777, TRUE); // Buat direktori jika belum ada
+                }
+
+                // Inisialisasi ulang library upload dengan konfigurasi baru
+                $this->upload->initialize($config);
+                $this->upload->set_allowed_types('*');
+                if ($this->upload->do_upload('photo_inspection')) {
+                    $upload_data = $this->upload->data();
+                    $photo_path = $upload_data['file_name']; // Simpan hanya nama file
+
+                    // Update kolom photo_inspection di tabel 'inspection'
+                    $this->db->where('id_inspection', $inspection_id); // Sesuaikan dengan nama kolom ID di tabel inspection Anda
+                    $update = $update_success = $this->db->update('inspection', array('photo_inspection' => $photo_path));
+
+                    if ($update_success) {
+                        $response['status'] = 'success';
+                        $response['message'] = 'Foto berhasil diupload dan disimpan.';
+                    } else {
+                        // Jika gagal update database, hapus file yang sudah diupload
+                        unlink($upload_data['full_path']);
+                        $response['message'] = 'Gagal menyimpan path foto ke database.';
+                    }
+                } else {
+                    $response['message'] = 'Gagal upload foto: ' . $this->upload->display_errors('', '');
+                }
+            } else {
+                $response['status'] = 'success'; // Jika tidak ada foto yang diupload, tetap anggap sukses
+                $response['message'] = 'Tidak ada foto yang diupload.';
+            }
+        } else {
+            $response['message'] = 'Metode request tidak diizinkan.';
+        }
+        echo json_encode($response);
     }
 
     public function view_hasil_inspeksi($unit_id) {

@@ -51,6 +51,20 @@
             <!-- Custom scripts for all pages-->
             <script src="<?= base_url('assets/'); ?>js/sb-admin-2.min.js"></script>
 
+            <!-- <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script> -->
+            <!-- <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script> -->
+            <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+
+            <!-- Untuk export Excel -->
+            <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
+
+            <!-- Untuk export PDF (opsional) -->
+            <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script> -->
+
+            <!-- Untuk export ke Excel (xlsx) pakai JSZip -->
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
             <script>
                 $('.custom-file-input').on('change', function() {
                     let fileName = $(this).val().split('\\').pop();
@@ -77,7 +91,12 @@
 
                 });
                 $('#dataTable').DataTable();
-                $('#dataTable1').DataTable();
+                $('#dataTable1').DataTable({
+                    dom: 'Bfrtip', // tempat tombol berada
+                    buttons: [
+                        'excelHtml5' // tombol export excel
+                    ]
+                });
                 $('.dataTable1').DataTable();
 
                 $(document).ready(function() {

@@ -579,6 +579,7 @@ class Inspection extends CI_Controller
         $this->load->view('templates/footer');
         $this->session->unset_userdata('swal');
     }
+
     public function result() {
         $tanggal_mulai = $this->input->get('tanggal_mulai');
         $tanggal_akhir = $this->input->get('tanggal_akhir');
@@ -617,6 +618,63 @@ class Inspection extends CI_Controller
         $this->load->view('inspection/result_inspection', $data);
         $this->load->view('templates/footer');
         $this->session->unset_userdata('swal');
+    }
+
+    public function export_excel()
+    {
+        $this->load->library('excel');
+
+        $objPHPExcel = $this->excel->createSpreadsheet();
+        $sheet = $objPHPExcel->getActiveSheet();
+
+        // Ambil data unit seperti sebelumnya
+        $this->db->select('unit.*, master_produk.nama_produk');
+        $this->db->from('unit');
+        $this->db->join('master_produk', 'unit.id_produk = master_produk.id_produk');
+        $this->db->where('unit.status_inspection', 'Sudah Inspeksi');
+        $units = $this->db->get()->result_array();
+
+        // Header kolom
+        $sheet->setCellValue('A1', 'No');
+        $sheet->setCellValue('B1', 'Serial Number');
+        $sheet->setCellValue('C1', 'Machine No');
+        $sheet->setCellValue('D1', 'Model No');
+        $sheet->setCellValue('E1', 'Nama Produk');
+        $sheet->setCellValue('F1', 'Qty');
+        $sheet->setCellValue('G1', 'Kondisi Unit');
+        $sheet->setCellValue('H1', 'Tanggal Masuk');
+        $sheet->setCellValue('I1', 'Status Unit');
+        $sheet->setCellValue('J1', 'Lokasi Unit');
+        $sheet->setCellValue('K1', 'Keterangan Unit');
+        $sheet->setCellValue('L1', 'Status Inspeksi');
+
+        $row = 2;
+        $no = 1;
+        foreach ($units as $unit) {
+            $sheet->setCellValue('A' . $row, $no++);
+            $sheet->setCellValue('B' . $row, $unit['serial_number']);
+            $sheet->setCellValue('C' . $row, $unit['machine_no']);
+            $sheet->setCellValue('D' . $row, $unit['model_no']);
+            $sheet->setCellValue('E' . $row, $unit['nama_produk']);
+            $sheet->setCellValue('F' . $row, $unit['qty']);
+            $sheet->setCellValue('G' . $row, $unit['kondisi_unit']);
+            $sheet->setCellValue('H' . $row, $unit['tanggal_masuk']);
+            $sheet->setCellValue('I' . $row, $unit['status_unit']);
+            $sheet->setCellValue('J' . $row, $unit['lokasi_unit']);
+            $sheet->setCellValue('K' . $row, $unit['keterangan_unit']);
+            $sheet->setCellValue('L' . $row, $unit['status_inspection']);
+            $row++;
+        }
+
+        $filename = 'Result_Inspection_' . date('Ymd_His') . '.xls';
+
+        header('Content-Type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment; filename="' . $filename . '"');
+        header('Cache-Control: max-age=0');
+
+        $writer = $this->excel->createWriter($objPHPExcel);
+        $writer->save('php://output');
+        exit;
     }
 
     public function submit_inspection()

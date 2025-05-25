@@ -70,13 +70,16 @@
                     </div>
                     <button type="submit" class="btn btn-primary btn-sm">Filter</button>
                     <a href="<?= site_url('inspection/result'); ?>" class="btn btn-secondary btn-sm">Reset Filter</a>
+                    <!-- <a href="<?= site_url('inspection/export_excel'); ?>" class="btn btn-success btn-sm mb-2">
+                        <i class="fas fa-file-excel"></i> Export Excel
+                    </a> -->
                 </form>
             </div>
         </div>
         <div class="row">
             <div class="col-lg m-2">
                 <div class="table-responsive">
-                    <table class="table table-bordered" id="dataTable">
+                    <table class="table table-bordered" id="dataTable1">
                         <thead>
                             <tr>
                                 <th>ID Unit</th>

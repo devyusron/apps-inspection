@@ -167,6 +167,9 @@ class Inspection extends CI_Controller
         $tanggal_mulai = $this->input->get('tanggal_mulai');
         $tanggal_akhir = $this->input->get('tanggal_akhir');
         $nama_produk_filter = $this->input->get('nama_produk');
+        $kondisi_unit = $this->input->get('kondisi_unit');
+        $lokasi_unit = $this->input->get('lokasi_unit');
+        $status_inspection = $this->input->get('status_inspection');
         $data['daftar_produk'] = $this->db->get('master_produk')->result_array();
         $this->db->select('unit.*, master_produk.nama_produk, inspection.inspection_template_id as id_template, inspection.id_inspection as id_inspection');
         $this->db->from('unit');
@@ -179,6 +182,15 @@ class Inspection extends CI_Controller
         }
         if ($nama_produk_filter) {
             $this->db->like('master_produk.nama_produk', $nama_produk_filter);
+        }
+        if ($lokasi_unit) {
+            $this->db->like('unit.lokasi_unit', $lokasi_unit);
+        }
+        if ($kondisi_unit) {
+            $this->db->like('unit.kondisi_unit', $kondisi_unit);
+        }
+        if ($status_inspection) {
+            $this->db->like('unit.status_inspection', $status_inspection);
         }
         $data['units'] = $this->db->get()->result_array();
         $data['title'] = 'List Unit';
@@ -488,6 +500,44 @@ class Inspection extends CI_Controller
             ->set_content_type('application/json')
             ->set_output(json_encode($template_items));
     }
+
+    public function view_result_inspection($id) {
+        $query = $this->db->query("
+            SELECT
+                inspection_template_id,model_no,machine_no,serial_number,customer,address,attachment,time(i.tanggal_inspeksi) hours,i.additional_comment,
+                date(i.tanggal_inspeksi) tanggal_inspeksi,
+                i.mechanic,
+                i.acknowledge,
+                i.additional_comment,
+                i.photo_inspection,
+                ii.nama_group,
+                ii.nama_item,
+                id.add,
+                id.clean_up,
+                id.lubricate,
+                id.replace_change,
+                id.adjust,
+                id.test_check,
+                id.remark
+            FROM
+                inspection i
+            JOIN
+                inspection_template it ON it.id_template = i.inspection_template_id
+            JOIN
+                inspection_detail id ON id.inspection_id = i.id_inspection
+            JOIN
+                inspection_item ii ON ii.id_item = id.item_id
+            join unit on unit.unit_id = i.unit_id
+            WHERE
+                i.id_inspection = ?
+            ORDER BY
+                ii.urutan ASC -- Menambahkan ORDER BY agar hasilnya terurut, jika ada kolom 'urutan' di inspection_item
+        ", [$id]);
+        $inspection_results = $query->result_array();
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode($inspection_results));
+    }
     /* end form inspection */
 
     /* list inspection */
@@ -495,6 +545,8 @@ class Inspection extends CI_Controller
         $tanggal_mulai = $this->input->get('tanggal_mulai');
         $tanggal_akhir = $this->input->get('tanggal_akhir');
         $nama_produk_filter = $this->input->get('nama_produk');
+        $kondisi_unit = $this->input->get('kondisi_unit');
+        $lokasi_unit = $this->input->get('lokasi_unit');
         $data['daftar_produk'] = $this->db->get('master_produk')->result_array();
         $this->db->select('unit.*, master_produk.nama_produk');
         $this->db->from('unit');
@@ -507,6 +559,12 @@ class Inspection extends CI_Controller
         }
         if ($nama_produk_filter) {
             $this->db->like('master_produk.nama_produk', $nama_produk_filter);
+        }
+        if ($lokasi_unit) {
+            $this->db->like('unit.lokasi_unit', $lokasi_unit);
+        }
+        if ($kondisi_unit) {
+            $this->db->like('unit.kondisi_unit', $kondisi_unit);
         }
         $data['units'] = $this->db->get()->result_array();
         $data['title'] = 'List Inspection';
@@ -525,8 +583,10 @@ class Inspection extends CI_Controller
         $tanggal_mulai = $this->input->get('tanggal_mulai');
         $tanggal_akhir = $this->input->get('tanggal_akhir');
         $nama_produk_filter = $this->input->get('nama_produk');
+        $kondisi_unit = $this->input->get('kondisi_unit');
+        $lokasi_unit = $this->input->get('lokasi_unit');
         $data['daftar_produk'] = $this->db->get('master_produk')->result_array();
-        $this->db->select('unit.*, master_produk.nama_produk, inspection.inspection_template_id as id_template');
+        $this->db->select('unit.*, master_produk.nama_produk, inspection.inspection_template_id as id_template, inspection.id_inspection as id_inspection');
         $this->db->from('unit');
         $this->db->join('master_produk', 'unit.id_produk = master_produk.id_produk');
         $this->db->join('inspection', 'unit.unit_id = inspection.unit_id', 'left');
@@ -538,6 +598,12 @@ class Inspection extends CI_Controller
         }
         if ($nama_produk_filter) {
             $this->db->like('master_produk.nama_produk', $nama_produk_filter);
+        }
+        if ($lokasi_unit) {
+            $this->db->like('unit.lokasi_unit', $lokasi_unit);
+        }
+        if ($kondisi_unit) {
+            $this->db->like('unit.kondisi_unit', $kondisi_unit);
         }
         $data['units'] = $this->db->get()->result_array();
         $data['title'] = 'Result Inspection';
@@ -563,6 +629,9 @@ class Inspection extends CI_Controller
                 'unit_id' => $unit_id,
                 'tanggal_inspeksi' => date('Y-m-d H:i:s'),
                 'mechanic' => $post_data['mechanic'],
+                'customer' => $post_data['customer'],
+                'address' => $post_data['address'],
+                'attachment' => $post_data['attachment'],
                 'acknowledge' => $post_data['acknowledge'],
                 'additional_comment' => $post_data['additional_comment'],
                 'created_by' => 'user_yang_login',

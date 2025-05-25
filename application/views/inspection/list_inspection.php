@@ -11,7 +11,7 @@
         <?php endif; ?>
         <div class="row m-2">
             <div class="col">
-                <form action="<?= site_url('inspection/index_unit'); ?>" method="get">
+                <form action="<?= site_url('inspection/index_list_inspection'); ?>" method="get">
                     <div class="form-row">
                         <div class="col-md-2 mb-2">
                             <label for="tanggal_mulai">Tanggal Masuk Start:</label>
@@ -62,7 +62,7 @@
                         </div>
                     </div>
                     <button type="submit" class="btn btn-primary btn-sm">Filter</button>
-                    <a href="<?= site_url('inspection/index_unit'); ?>" class="btn btn-secondary btn-sm">Reset Filter</a>
+                    <a href="<?= site_url('inspection/index_list_inspection'); ?>" class="btn btn-secondary btn-sm">Reset Filter</a>
                 </form>
             </div>
         </div>

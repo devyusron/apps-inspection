@@ -137,11 +137,22 @@
                                         <?php if ($unit['status_inspection'] == 'Belum Inspeksi') : ?>
                                             <a href="#" class="btn btn-success btn-sm lihat-template"
                                                 data-toggle="tooltip" data-placement="top" title="Inspeksi"
-                                                data-unit-id="<?= $unit['unit_id']; ?>"> 
+                                                data-unit-id="<?= $unit['unit_id']; ?>"
+                                                data-machine-no="<?= $unit['machine_no']; ?>" 
+                                                data-model-no="<?= $unit['model_no']; ?>" 
+                                                data-serial-number="<?= $unit['serial_number']?>"> 
                                                 <i class="fas fa-clipboard-check"></i>
                                             </a>
                                         <?php else : ?>
-                                            <button type="button" class="btn btn-success btn-sm lihat-template-result" data-id="<?= $unit['id_template']; ?>" data-toggle="modal" title="Hasil Inspeksi" data-target="#modalInspectionResult"><i class="fas fa-search"></i></button>
+                                            <button type="button" class="btn btn-success btn-sm lihat-template-result" 
+                                            data-inspection-id="<?= $unit['id_inspection']; ?>"
+                                            data-unit-id="<?= $unit['unit_id']; ?>"
+                                            data-machine-no="<?= $unit['machine_no']; ?>" 
+                                            data-model-no="<?= $unit['model_no']; ?>" 
+                                            data-serial-number="<?= $unit['serial_number']?>"
+                                            data-id="<?= $unit['id_template']; ?>" 
+                                            data-toggle="modal" title="Hasil Inspeksi" 
+                                            data-target="#modalInspectionResult"><i class="fas fa-search"></i></button>
                                         <?php endif; ?>
                                             <a href="<?= site_url('inspection/edit_unit/' . $unit['unit_id']); ?>" class="btn btn-warning btn-sm"
                                                 data-toggle="tooltip" data-placement="top" title="Edit Unit">
@@ -252,103 +263,125 @@ $(document).ready(function() {
         });
     });
     $('.lihat-template-result').on('click', function() {
+        let hasil_inspeksi;
+        var id_inspection = $(this).data('inspection-id');
         var id_template = $(this).data('id');
-        var modalBody = $('#inspection-detail-content');
-        modalBody.empty(); // Kosongkan isi modal sebelum menampilkan data baru
         $.ajax({
-            url: '<?= site_url('inspection/view_form/'); ?>' + id_template,
+            url: '<?= site_url('inspection/view_result_inspection/'); ?>' + id_inspection,
             type: 'GET',
             dataType: 'json',
-            success: function(data) {
-                console.log(data)
-                if (data && data.length > 0) {
-                    var html = '<div class="row">';
-                    html += '<div class="col-md-6">';
-                    html += '<div class="form-group row">';
-                    html += '<label for="customer" class="col-sm-3 col-form-label">Customer</label>';
-                    html += '<div class="col-sm-9"><input readonly type="text" class="form-control form-control-sm" id="customer" name="customer"></div>';
-                    html += '</div>';
-                    html += '<div class="form-group row">';
-                    html += '<label for="address" class="col-sm-3 col-form-label">Address</label>';
-                    html += '<div class="col-sm-9"><textarea readonly class="form-control form-control-sm" id="address" name="address"></textarea></div>';
-                    html += '</div>';
-                    html += '<div class="form-group row">';
-                    html += '<label for="attachment" class="col-sm-3 col-form-label">Other Attachment</label>';
-                    html += '<div class="col-sm-9"><input readonly type="text" class="form-control form-control-sm" id="attachment" name="attachment"></div>';
-                    html += '</div>';
-                    html += '</div>';
-                    html += '<div class="col-md-6">';
-                    html += '<div class="form-group row">';
-                    html += '<label for="mechine" class="col-sm-3 col-form-label">Mechine</label>';
-                    html += '<div class="col-sm-9"><input readonly type="text" class="form-control form-control-sm" id="mechine" name="mechine"></div>';
-                    html += '</div>';
-                    html += '<div class="form-group row">';
-                    html += '<label for="model_no" class="col-sm-3 col-form-label">Model No.</label>';
-                    html += '<div class="col-sm-9"><input readonly type="text" class="form-control form-control-sm" id="model_no" name="model_no"></div>';
-                    html += '</div>';
-                    html += '<div class="form-group row">';
-                    html += '<label for="serial_no" class="col-sm-3 col-form-label">Serial No.</label>';
-                    html += '<div class="col-sm-9"><input readonly type="text" class="form-control form-control-sm" id="serial_no" name="serial_no"></div>';
-                    html += '</div>';
-                    html += '<div class="form-group row">';
-                    html += '<label for="hours" class="col-sm-3 col-form-label">Hours</label>';
-                    html += '<div class="col-sm-9"><input readonly type="text" class="form-control form-control-sm" id="hours" name="hours"></div>';
-                    html += '</div>';
-                    html += '<div class="form-group row">';
-                    html += '<label for="inspection_d" class="col-sm-3 col-form-label">Inspection Date</label>';
-                    html += '<div class="col-sm-9"><input readonly type="date" class="form-control form-control-sm" id="inspection_d" name="inspection_d"></div>';
-                    html += '</div>';
-                    html += '</div>';
-                    html += '</div>'; // End of row
+            success: function(response) {
+                hasil_inspeksi = response;
+                console.log(response)
+                var modalBody = $('#inspection-detail-content');
+                modalBody.empty(); // Kosongkan isi modal sebelum menampilkan data baru
+                $.ajax({
+                    url: '<?= site_url('inspection/view_form/'); ?>' + id_template,
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(data) {
+                        // console.log(data)
+                        if (data && data.length > 0) {
+                            var html = '<div class="row">';
+                            html += '<div class="col-md-6">';
+                            html += '<div class="form-group row">';
+                            html += '<label for="customer" class="col-sm-3 col-form-label">Customer</label>';
+                            html += '<div class="col-sm-9"><input readonly type="text" class="form-control form-control-sm" id="customer" name="customer" value="' + hasil_inspeksi[0].customer + '"></div>';
+                            html += '</div>';
+                            html += '<div class="form-group row">';
+                            html += '<label for="address" class="col-sm-3 col-form-label">Address</label>';
+                            html += '<div class="col-sm-9"><textarea readonly class="form-control form-control-sm" id="address" name="address" value="' + hasil_inspeksi[0].address + '">' + hasil_inspeksi[0].address + '</textarea></div>';
+                            html += '</div>';
+                            html += '<div class="form-group row">';
+                            html += '<label for="attachment" class="col-sm-3 col-form-label">Other Attachment</label>';
+                            html += '<div class="col-sm-9"><input readonly type="text" class="form-control form-control-sm" id="attachment" name="attachment" value="' + hasil_inspeksi[0].attachment + '"></div>';
+                            html += '</div>';
+                            html += '</div>';
+                            html += '<div class="col-md-6">';
+                            html += '<div class="form-group row">';
+                            html += '<label for="mechine" class="col-sm-3 col-form-label">Mechine</label>';
+                            html += '<div class="col-sm-9"><input readonly type="text" class="form-control form-control-sm" id="mechine" name="mechine" value="' + hasil_inspeksi[0].machine_no + '"></div>';
+                            html += '</div>';
+                            html += '<div class="form-group row">';
+                            html += '<label for="model_no" class="col-sm-3 col-form-label">Model No.</label>';
+                            html += '<div class="col-sm-9"><input readonly type="text" class="form-control form-control-sm" id="model_no" name="model_no" value="' + hasil_inspeksi[0].model_no + '"></div>';
+                            html += '</div>';
+                            html += '<div class="form-group row">';
+                            html += '<label for="serial_no" class="col-sm-3 col-form-label">Serial No.</label>';
+                            html += '<div class="col-sm-9"><input readonly type="text" class="form-control form-control-sm" id="serial_no" name="serial_no" value="' + hasil_inspeksi[0].serial_number + '"></div>';
+                            html += '</div>';
+                            html += '<div class="form-group row">';
+                            html += '<label for="hours" class="col-sm-3 col-form-label">Hours</label>';
+                            html += '<div class="col-sm-9"><input readonly type="text" class="form-control form-control-sm" id="hours" name="hours" value="' + hasil_inspeksi[0].hours + '"></div>';
+                            html += '</div>';
+                            html += '<div class="form-group row">';
+                            html += '<label for="inspection_d" class="col-sm-3 col-form-label">Inspection Date</label>';
+                            html += '<div class="col-sm-9"><input readonly type="date" class="form-control form-control-sm" id="inspection_d" name="inspection_d" value="' + hasil_inspeksi[0].tanggal_inspeksi + '"></div>';
+                            html += '</div>';
+                            html += '</div>';
+                            html += '</div>'; // End of row
 
-                    html += '<hr class="mt-2 mb-2">'; // Garis pemisah antara info atas dan tabel
+                            html += '<hr class="mt-2 mb-2">'; // Garis pemisah antara info atas dan tabel
 
-                    html += '<table class="table table-bordered">';
-                    html += '<thead><tr><th>Group</th><th>Item</th><th>Add</th><th>Clean Up</th><th>Lubricate</th><th>Replace Or Change</th><th>Adjust</th><th>Test or Check</th><th>Remark</th></tr></thead><tbody>';
-                    $.each(data, function(i, item) {
-                        html += '<tr>';
-                        html += '<td>' + item.nama_group + '</td>';
-                        html += '<td>' + item.nama_item + '</td>';
-                        html += '<td class="text-center"></td>';
-                        html += '<td class="text-center"></td>';
-                        html += '<td class="text-center"></td>';
-                        html += '<td class="text-center"></td>';
-                        html += '<td class="text-center"></td>';
-                        html += '<td class="text-center"></td>';
-                        html += '<td></td>';
-                        html += '</tr>';
-                    });
-                    html += '</tbody></table>';
-                    html += '<div class="form-group mt-3">';
-                    html += '<label for="additional_comment">Additional Comment :</label>';
-                    html += '<textarea readonly class="form-control" id="additional_comment" name="additional_comment" rows="3"></textarea>';
-                    html += '</div>';
-                    html += '<div class="form-group mt-3">';
-                    html += '<label for="photo_inspection">Photo Inspection :</label>';
-                    html += '<input type="file" class="form-control-file" id="photo_inspection" name="photo_inspection" accept="image/*" required>';
-                    html += '</div>';
-                    html += '<div class="row mt-3">';
-                    html += '<div class="col-md-6">';
-                    html += '<label for="acknowledge">Acknowledge :</label>';
-                    html += '<input readonly type="text" class="form-control form-control-sm" id="acknowledge" name="acknowledge" required>';
-                    html += '</div>';
-                    html += '<div class="col-md-6">';
-                    html += '<label for="mechanic">Mechanic :</label>';
-                    html += '<input readonly type="text" class="form-control form-control-sm" id="mechanic" name="mechanic" required>';
-                    html += '</div>';
-                    html += '</div>';
-                    modalBody.append(html);
-                    $('#modalInspectionResult').modal('show');
-                    // Swal.fire({
-                    //     text: 'Data berhasil ditampilkan!',
-                    //     icon: 'success',
-                    //     timer: 1500,
-                    //     showConfirmButton: false
-                    // });
-                } else {
-                    modalBody.append('<p>Tidak ada item inspeksi untuk template ini.</p>');
-                    $('#modalInspectionResult').modal('show');
-                }
+                            html += '<table class="table table-bordered">';
+                            html += '<thead><tr><th>Group</th><th>Item</th><th>Add</th><th>Clean Up</th><th>Lubricate</th><th>Replace Or Change</th><th>Adjust</th><th>Test or Check</th><th>Remark</th></tr></thead><tbody>';
+                            const getCheckbox = (value) => {
+                                const checked = value == 1 ? 'checked' : '';
+                                return `<input type="checkbox" ${checked} disabled>`; // Checkbox disabled karena ini tampilan hasil
+                            };
+                            $.each(hasil_inspeksi, function(i, item) {
+                                html += '<tr>';
+                                html += '<td>' + item.nama_group + '</td>';
+                                html += '<td>' + item.nama_item + '</td>';
+                                html += '<td class="text-center">'+getCheckbox(item.add)+'</td>';
+                                html += '<td class="text-center">'+getCheckbox(item.clean_up)+'</td>';
+                                html += '<td class="text-center">'+getCheckbox(item.lubricate)+'</td>';
+                                html += '<td class="text-center">'+getCheckbox(item.replace_change)+'</td>';
+                                html += '<td class="text-center">'+getCheckbox(item.adjust)+'</td>';
+                                html += '<td class="text-center">'+getCheckbox(item.test_check)+'</td>';
+                                html += '<td><textarea readonly class="form-control form-control-sm" rows="1">' + (item.remark || '') + '</textarea></td>';
+                                html += '</tr>';
+                            });
+                            html += '</tbody></table>';
+                            html += '<div class="form-group mt-3">';
+                            html += '<label for="additional_comment">Additional Comment :</label>';
+                            html += '<textarea readonly class="form-control" id="additional_comment" name="additional_comment" rows="3">'+hasil_inspeksi[0].additional_comment+'</textarea>';
+                            html += '</div>';
+                            html += '<div class="form-group mt-3">';
+                            html += '<label for="photo_inspection">Photo Inspection :</label>';
+                            // html += '<input type="file" class="form-control-file" id="photo_inspection" name="photo_inspection" accept="image/*" required>';
+                            html += '<a href="<?= base_url('assets/img/inspection_photos/'); ?>' + hasil_inspeksi[0].photo_inspection + '" data-lightbox="inspection-photo" data-title="Foto Inspeksi">';
+                            html += '<img src="<?= base_url('assets/img/inspection_photos/'); ?>' + hasil_inspeksi[0].photo_inspection + '" class="img-fluid" alt="Inspection Photo" style="max-width: 300px; border-radius: 8px;">';
+                            html += '</div>';
+                            html += '<div class="row mt-3">';
+                            html += '<div class="col-md-6">';
+                            html += '<label for="acknowledge">Acknowledge :</label>';
+                            html += '<input readonly type="text" class="form-control form-control-sm" id="acknowledge" name="acknowledge" value="' + hasil_inspeksi[0].acknowledge + '" required>';
+                            html += '</div>';
+                            html += '<div class="col-md-6">';
+                            html += '<label for="mechanic">Mechanic :</label>';
+                            html += '<input readonly type="text" class="form-control form-control-sm" id="mechanic" name="mechanic" value="' + hasil_inspeksi[0].mechanic + '" required>';
+                            html += '</div>';
+                            html += '</div>';
+                            modalBody.append(html);
+                            $('#modalInspectionResult').modal('show');
+                            // Swal.fire({
+                            //     text: 'Data berhasil ditampilkan!',
+                            //     icon: 'success',
+                            //     timer: 1500,
+                            //     showConfirmButton: false
+                            // });
+                        } else {
+                            modalBody.append('<p>Tidak ada item inspeksi untuk template ini.</p>');
+                            $('#modalInspectionResult').modal('show');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        modalBody.append('<p>Terjadi kesalahan saat mengambil data.</p>');
+                        $('#modalInspectionResult').modal('show');
+                        console.error(xhr, status, error);
+                    }
+                });
             },
             error: function(xhr, status, error) {
                 modalBody.append('<p>Terjadi kesalahan saat mengambil data.</p>');
@@ -358,6 +391,14 @@ $(document).ready(function() {
         });
     });
 });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox-plus-jquery.min.js"></script>
+<script>
+    // Konfigurasi Lightbox2 (opsional, bisa disesuaikan)
+    lightbox.option({
+        'resizeDuration': 200,
+        'wrapAround': true
+    })
 </script>
 <script>
     function buildInspectionForm(data, unitId, templateId, machineNo, modelNo, serialNumber) {

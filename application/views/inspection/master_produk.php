@@ -4,10 +4,12 @@
     <div class="m-1 shadow card">
     <div class="card-header mb-4 d-flex justify-content-between align-items-center">
         <h1 class="h3 mb-4 text-gray-800"><?= $title; ?></h1>
+        <?php if($this->session->userdata('role_id') == 1) : ?>
         <a href="" class="btn btn-outline-primary mb-3" data-toggle="modal" data-target="#newMenuModal">
             <i class="fas fa-plus mr-2"></i>
             Add Produk
         </a>
+        <?php endif; ?>
         </div>
         <div class="row m-2">
             <div class="col-md-12">
@@ -124,6 +126,7 @@
                                 <td><?= $m['created_by']; ?></td>
                                 <td><?= date('d F Y H:i:s', strtotime($m['created_at'])); ?></td> -->
                                 <td>
+                                    <?php if($this->session->userdata('role_id') == 1) : ?>
                                     <a href="#" class="badge badge-success" data-toggle="modal" data-target="#editMenuModal"
                                         data-id_produk="<?= $m['id_produk']; ?>"
                                         data-nama_produk="<?= $m['nama_produk']; ?>"
@@ -143,6 +146,10 @@
                                         data-warna_produk="<?= $m['warna_produk']; ?>"
                                         data-is_active="<?= $m['is_active']; ?>">edit</a>
                                     <a href="<?= base_url('inspection/delete_master_produk/' . $m['id_produk']); ?>" class="badge badge-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus produk ini?');">delete</a>
+                                    <?php else : ?>
+                                    <a class="badge badge-success disabled-link">edit</a>
+                                    <a class="badge badge-danger disabled-link">delete</a>
+                                    <?php endif; ?>
                                 </td>
                             </tr>
                             <?php $i++; ?>

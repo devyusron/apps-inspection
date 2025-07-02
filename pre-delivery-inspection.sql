@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 10, 2025 at 06:23 AM
+-- Generation Time: Jul 02, 2025 at 03:12 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -36,8 +36,22 @@ CREATE TABLE `inspection` (
   `additional_comment` text DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `created_by` varchar(100) DEFAULT NULL,
-  `inspection_template_id` int(11) NOT NULL
+  `inspection_template_id` int(11) NOT NULL,
+  `photo_inspection` varchar(255) NOT NULL,
+  `customer` varchar(200) NOT NULL,
+  `address` varchar(255) NOT NULL,
+  `attachment` varchar(200) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `inspection`
+--
+
+INSERT INTO `inspection` (`id_inspection`, `unit_id`, `tanggal_inspeksi`, `mechanic`, `acknowledge`, `additional_comment`, `created_at`, `created_by`, `inspection_template_id`, `photo_inspection`, `customer`, `address`, `attachment`) VALUES
+(34, 22, '2025-05-21 14:42:08', 'Ut rerum quidem non ', 'Labore architecto di', 'Voluptas est deseru', '2025-05-21 12:42:08', 'user_yang_login', 1, 'inspection_1747831328136.png', '', '', ''),
+(35, 21, '2025-05-24 04:38:06', 'Iste assumenda repel', 'Aliquam accusamus no', 'Animi rem rem qui q', '2025-05-24 02:38:06', 'user_yang_login', 3, 'inspection_1748054286637.png', '', '', ''),
+(36, 20, '2025-05-25 04:19:08', 'Dolore rerum numquam', 'Non molestiae evenie', 'Temporibus libero oc', '2025-05-25 02:19:08', 'user_yang_login', 5, 'inspection_1748139548497.png', 'CUST1748139531869', 'Ut facilis unde id ', 'Eu velit aliquid sed'),
+(37, 14, '2025-07-02 14:51:38', 'teknisi', 'manager', 'test', '2025-07-02 12:51:38', 'user_yang_login', 3, 'inspection_1751460698663.png', 'CUST1751460424992', 'tangerang', '');
 
 -- --------------------------------------------------------
 
@@ -57,6 +71,136 @@ CREATE TABLE `inspection_detail` (
   `replace_change` varchar(100) NOT NULL,
   `adjust` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `inspection_detail`
+--
+
+INSERT INTO `inspection_detail` (`id_detail`, `inspection_id`, `item_id`, `test_check`, `remark`, `add`, `clean_up`, `lubricate`, `replace_change`, `adjust`) VALUES
+(839, 34, 311, '0', 'Tempor enim ratione ', '1', '0', '1', '1', '1'),
+(840, 34, 312, '1', 'Sint consequuntur a', '0', '0', '0', '1', '1'),
+(841, 34, 313, '1', 'Sit molestias nostr', '1', '0', '0', '1', '0'),
+(842, 34, 314, '0', 'Et exercitation volu', '0', '1', '0', '0', '1'),
+(843, 34, 315, '1', 'Exercitation et nisi', '1', '0', '1', '1', '1'),
+(844, 34, 316, '0', 'Quis ut molestiae al', '1', '1', '0', '0', '1'),
+(845, 34, 317, '0', 'Non molestiae corrup', '0', '0', '1', '0', '0'),
+(846, 34, 318, '1', 'Dicta aperiam sint s', '1', '0', '0', '1', '0'),
+(847, 34, 319, '1', 'In id dolore eum qu', '1', '1', '1', '1', '0'),
+(848, 34, 320, '0', 'Molestias sit ratio', '0', '1', '0', '0', '0'),
+(849, 34, 321, '0', 'At id fugiat consec', '1', '0', '1', '1', '1'),
+(850, 34, 322, '1', 'Nulla nisi illo aut ', '1', '1', '1', '1', '1'),
+(851, 34, 323, '0', 'Repudiandae tempora ', '1', '1', '0', '1', '1'),
+(852, 34, 324, '0', 'Quod dolore eaque de', '1', '1', '1', '1', '1'),
+(853, 34, 325, '0', 'Incididunt aliqua T', '0', '0', '1', '0', '1'),
+(854, 34, 326, '0', 'Officia et iusto et ', '1', '1', '0', '1', '0'),
+(855, 34, 327, '1', 'Quod molestias ea cu', '1', '0', '1', '0', '0'),
+(856, 34, 328, '0', 'Sed perferendis enim', '0', '1', '1', '0', '1'),
+(857, 34, 329, '1', 'Veniam reiciendis o', '1', '0', '0', '0', '0'),
+(858, 34, 330, '0', 'Et blanditiis eum pr', '0', '1', '0', '0', '1'),
+(859, 34, 331, '1', 'Voluptatem Vero qua', '1', '1', '1', '1', '0'),
+(860, 34, 332, '0', 'Commodo nostrum mole', '0', '1', '0', '0', '0'),
+(861, 34, 333, '1', 'Alias laboriosam pa', '0', '1', '0', '0', '0'),
+(862, 34, 334, '1', 'Deleniti fuga Praes', '0', '1', '1', '0', '0'),
+(863, 34, 335, '1', 'Dignissimos ut omnis', '0', '0', '1', '1', '0'),
+(864, 34, 336, '0', 'Tempora velit volup', '1', '0', '1', '1', '1'),
+(865, 34, 337, '0', 'Repellendus Nihil o', '1', '1', '0', '0', '0'),
+(866, 34, 338, '1', 'Sit dolor eiusmod d', '0', '1', '1', '0', '0'),
+(867, 34, 339, '0', 'Ea minus duis pariat', '1', '0', '1', '0', '0'),
+(868, 34, 340, '1', 'Numquam eos optio e', '1', '1', '0', '1', '0'),
+(869, 34, 341, '0', 'Incididunt ut repell', '1', '1', '0', '0', '1'),
+(870, 34, 342, '0', 'Velit aut vel in a', '1', '0', '0', '0', '1'),
+(871, 34, 343, '0', 'Velit enim ea a itaq', '0', '0', '1', '1', '0'),
+(872, 34, 344, '1', 'Molestias dolor volu', '1', '1', '1', '1', '0'),
+(873, 35, 376, '1', 'Dolor consequatur d', '0', '0', '0', '0', '1'),
+(874, 35, 377, '0', 'Modi minima deserunt', '1', '0', '1', '1', '1'),
+(875, 35, 378, '0', 'Qui dolore exercitat', '0', '0', '1', '0', '1'),
+(876, 35, 379, '0', 'Non non deleniti vol', '0', '0', '0', '0', '1'),
+(877, 35, 380, '0', 'Qui cupidatat sit ve', '0', '1', '0', '1', '0'),
+(878, 35, 381, '1', 'Amet quia inventore', '1', '1', '0', '0', '1'),
+(879, 35, 382, '0', 'Deserunt exercitatio', '1', '0', '1', '0', '0'),
+(880, 35, 383, '1', 'Velit culpa eum co', '1', '0', '1', '1', '0'),
+(881, 35, 384, '1', 'Obcaecati accusamus ', '0', '0', '0', '1', '1'),
+(882, 35, 385, '1', 'Soluta vero est rati', '0', '0', '1', '0', '0'),
+(883, 35, 386, '1', 'Nostrud ut dicta vol', '1', '1', '0', '0', '0'),
+(884, 35, 387, '0', 'Quia ab eaque sequi ', '1', '1', '0', '1', '1'),
+(885, 35, 388, '0', 'Exercitationem aut s', '1', '1', '0', '0', '1'),
+(886, 35, 389, '1', 'Quidem et officia cu', '0', '1', '1', '0', '1'),
+(887, 35, 390, '1', 'Nesciunt ea asperio', '0', '0', '0', '0', '1'),
+(888, 35, 391, '1', 'Explicabo Ex magna ', '1', '0', '1', '1', '0'),
+(889, 35, 392, '0', 'Deserunt ipsa ad is', '1', '1', '1', '1', '0'),
+(890, 35, 393, '0', 'Quasi in veritatis q', '1', '1', '0', '0', '0'),
+(891, 35, 394, '0', 'Magni facere volupta', '0', '0', '1', '1', '1'),
+(892, 35, 395, '1', 'Ut et in tempore do', '1', '1', '1', '1', '1'),
+(893, 35, 396, '1', 'Incididunt necessita', '0', '0', '0', '1', '1'),
+(894, 35, 397, '1', 'Consequatur tempora ', '0', '1', '1', '0', '0'),
+(895, 35, 398, '0', 'Qui eiusmod hic recu', '0', '1', '0', '1', '1'),
+(896, 35, 399, '0', 'Deserunt exercitatio', '0', '1', '1', '1', '0'),
+(897, 35, 400, '0', 'Consequatur ipsam lo', '0', '0', '0', '0', '1'),
+(898, 35, 401, '1', 'Delectus cum evenie', '0', '0', '1', '1', '1'),
+(899, 35, 402, '1', 'Dolore quae est vel ', '1', '1', '0', '1', '1'),
+(900, 35, 403, '1', 'In est perferendis ', '1', '1', '0', '1', '1'),
+(901, 36, 432, '1', 'Quod esse doloremque', '0', '0', '1', '0', '0'),
+(902, 36, 433, '0', 'Minus rerum quia in ', '0', '0', '1', '1', '1'),
+(903, 36, 434, '0', 'Fugiat ea vel proid', '0', '1', '0', '1', '0'),
+(904, 36, 435, '1', 'Nemo itaque totam ea', '1', '0', '1', '1', '0'),
+(905, 36, 436, '1', 'Mollitia reprehender', '0', '0', '1', '1', '1'),
+(906, 36, 437, '1', 'Deserunt in suscipit', '1', '0', '0', '1', '1'),
+(907, 36, 438, '1', 'Dolor iusto cillum s', '1', '1', '0', '0', '1'),
+(908, 36, 439, '1', 'Quo soluta minima do', '1', '0', '1', '1', '0'),
+(909, 36, 440, '0', 'Beatae rem rerum des', '0', '0', '1', '1', '1'),
+(910, 36, 441, '1', 'In perspiciatis ips', '1', '0', '1', '1', '0'),
+(911, 36, 442, '0', 'Quo omnis ea tenetur', '1', '0', '1', '1', '1'),
+(912, 36, 443, '0', 'Non reprehenderit qu', '0', '1', '1', '1', '0'),
+(913, 36, 444, '0', 'Magnam reprehenderit', '1', '0', '0', '0', '1'),
+(914, 36, 445, '0', 'Similique animi iur', '0', '0', '1', '1', '1'),
+(915, 36, 446, '1', 'Error eum excepteur ', '1', '0', '1', '1', '1'),
+(916, 36, 447, '0', 'Provident culpa ali', '1', '0', '0', '1', '0'),
+(917, 36, 448, '0', 'Sed commodo in nisi ', '1', '1', '1', '0', '0'),
+(918, 36, 449, '1', 'Ut minus fugit dele', '0', '0', '1', '0', '0'),
+(919, 36, 450, '1', 'Eaque commodi invent', '0', '1', '0', '1', '0'),
+(920, 36, 451, '0', 'Facere facilis ducim', '1', '1', '1', '1', '0'),
+(921, 36, 452, '0', 'Molestiae ipsum adip', '1', '0', '1', '0', '1'),
+(922, 36, 453, '0', 'Ut laudantium harum', '1', '0', '1', '1', '1'),
+(923, 36, 454, '0', 'In quis consequuntur', '0', '1', '0', '0', '0'),
+(924, 36, 455, '1', 'Harum deleniti nostr', '1', '1', '1', '0', '1'),
+(925, 36, 456, '0', 'Eligendi accusamus n', '1', '0', '0', '0', '0'),
+(926, 36, 457, '1', 'Dolores dolor autem ', '0', '0', '1', '1', '0'),
+(927, 36, 458, '1', 'Quam qui molestiae u', '1', '0', '0', '0', '0'),
+(928, 36, 459, '1', 'Obcaecati fugiat nul', '1', '0', '1', '1', '1'),
+(929, 36, 460, '0', 'Explicabo Ut in ess', '0', '1', '1', '1', '1'),
+(930, 36, 461, '0', 'Id minim vitae quia ', '0', '1', '1', '1', '0'),
+(931, 36, 462, '1', 'Vitae et enim id ni', '1', '0', '1', '1', '0'),
+(932, 36, 463, '1', 'Saepe eiusmod qui et', '1', '1', '0', '0', '1'),
+(933, 36, 464, '1', 'Assumenda quam sed i', '1', '1', '0', '1', '0'),
+(934, 36, 465, '0', 'A exercitation cum v', '1', '0', '1', '0', '0'),
+(935, 37, 376, '0', '', '1', '0', '0', '0', '0'),
+(936, 37, 377, '0', '', '0', '0', '1', '0', '0'),
+(937, 37, 378, '0', '', '0', '1', '0', '0', '0'),
+(938, 37, 379, '0', '', '0', '0', '0', '1', '0'),
+(939, 37, 380, '0', '', '0', '0', '0', '0', '1'),
+(940, 37, 381, '1', '', '0', '0', '0', '0', '0'),
+(941, 37, 382, '0', '', '0', '0', '1', '0', '0'),
+(942, 37, 383, '0', '', '0', '0', '1', '0', '0'),
+(943, 37, 384, '0', '', '0', '0', '1', '0', '0'),
+(944, 37, 385, '0', '', '0', '0', '1', '0', '0'),
+(945, 37, 386, '0', '', '0', '0', '1', '0', '0'),
+(946, 37, 387, '0', '', '0', '0', '1', '0', '0'),
+(947, 37, 388, '0', '', '0', '0', '1', '0', '0'),
+(948, 37, 389, '0', '', '0', '0', '1', '0', '0'),
+(949, 37, 390, '0', '', '0', '0', '1', '0', '0'),
+(950, 37, 391, '0', '', '0', '0', '0', '1', '0'),
+(951, 37, 392, '0', '', '0', '0', '1', '0', '0'),
+(952, 37, 393, '0', '', '0', '0', '1', '0', '0'),
+(953, 37, 394, '0', '', '0', '0', '1', '0', '0'),
+(954, 37, 395, '0', '', '0', '0', '0', '1', '0'),
+(955, 37, 396, '0', '', '0', '0', '1', '0', '0'),
+(956, 37, 397, '0', '', '0', '1', '0', '0', '0'),
+(957, 37, 398, '0', '', '1', '0', '0', '0', '0'),
+(958, 37, 399, '0', '', '0', '0', '1', '0', '0'),
+(959, 37, 400, '0', '', '0', '0', '0', '1', '0'),
+(960, 37, 401, '0', '', '0', '0', '1', '0', '0'),
+(961, 37, 402, '0', '', '0', '0', '1', '0', '0'),
+(962, 37, 403, '0', '', '0', '0', '1', '0', '0');
 
 -- --------------------------------------------------------
 
@@ -231,7 +375,9 @@ INSERT INTO `inspection_item` (`id_item`, `id_template`, `nama_group`, `nama_ite
 (462, 5, '8. Mast', 'a. Hose', 31),
 (463, 5, '8. Mast', 'b. Bearing', 32),
 (464, 5, '8. Mast', 'c. Carriagge / Backrest', 33),
-(465, 5, '9. Tyre', 'a. Front / Rear', 34);
+(465, 5, '9. Tyre', 'a. Front / Rear', 34),
+(466, 9, '1. Engine', 'Engine', 1),
+(467, 9, '1. Engine', 'Air Cleaner', 2);
 
 -- --------------------------------------------------------
 
@@ -252,11 +398,12 @@ CREATE TABLE `inspection_template` (
 --
 
 INSERT INTO `inspection_template` (`id_template`, `nama_template`, `deskripsi_template`, `created_at`, `created_by`) VALUES
-(1, 'PDI', 'Pre Delivery Inspection', '2025-05-07 14:01:03', NULL),
-(2, 'PDI KHUSUS KR', 'Pre Delivery Inspection Khusus KR', '2025-05-07 14:01:03', NULL),
+(1, 'PDI', 'Pre Delivery Inspection', '2025-05-07 14:01:03', ''),
+(2, 'PDI KR', 'Pre Delivery Inspection KR', '2025-05-07 14:01:03', ''),
 (3, 'PDI VIBRO', 'Pre Delivery Inspection Vibro', '2025-05-07 14:01:03', NULL),
-(4, 'PDI KHUSUS EXCA', 'Pre Delivery Inspection Khusus EXCA', '2025-05-07 14:01:03', NULL),
-(5, 'PDI FORKLIFT ELECTRICT', 'Pre Delivery Inspection Forklift Electrict', '2025-05-07 14:01:03', NULL);
+(4, 'PDI EXCA', 'Pre Delivery Inspection EXCA', '2025-05-07 14:01:03', ''),
+(5, 'PDI FORKLIFT ELECTRICT', 'Pre Delivery Inspection Forklift Electrict', '2025-05-07 14:01:03', NULL),
+(9, 'PDI BARU', 'PDI Unit Baru', '2025-07-02 08:01:24', '');
 
 -- --------------------------------------------------------
 
@@ -291,7 +438,7 @@ CREATE TABLE `master_produk` (
 --
 
 INSERT INTO `master_produk` (`id_produk`, `nama_produk`, `kode_produk`, `url_gambar_produk`, `deskripsi_produk`, `harga_produk`, `harga_asli`, `harga_diskon`, `stok_produk`, `minimum_stok_produk`, `kategori_produk`, `brand_produk`, `tag_produk`, `dimensi_produk`, `berat_produk`, `warna_produk`, `is_active`, `created_by`, `created_at`) VALUES
-(7, 'Excavator Kelas Menengah', 'EXC-MID-001', 'produk_1746543277.jpeg', 'testExcavator hidrolik kelas menengah untuk berbagai pekerjaan penggalian dan pemindahan material.', 1500000000, 1650000000, 1450000000, 1, 1, 'Alat Berat Konstruksi', 'HeavyMach', 15, '9.5 x 2.8 x 3.1 m', '20 Ton', 'Kuning', 1, 'SYSTEM', '2025-05-06 21:50:23'),
+(7, 'Excavator Kelas Menengah', 'EXC-MID-001', 'produk_1746543277.jpeg', 'testExcavator hidrolik kelas menengah untuk berbagai pekerjaan penggalian dan pemindahan material.', 1500000000, 1650000000, 1450000000, 3, 1, 'Alat Berat Konstruksi', 'HeavyMach', 15, '9.5 x 2.8 x 3.1 m', '20 Ton', 'Kuning', 1, 'SYSTEM', '2025-05-06 21:50:23'),
 (8, 'Bulldozer Standar', 'BUL-STD-002', 'produk_1746543289.jpeg', 'Bulldozer dengan blade depan untuk meratakan tanah dan mendorong material di lokasi konstruksi.', 1200000000, 1300000000, 1150000000, 2, 1, 'Alat Berat Konstruksi', 'TrackMaster', 16, '7.8 x 3.5 x 3.2 m', '18 Ton', 'Oranye', 1, 'SYSTEM', '2025-05-06 21:50:23'),
 (9, 'Crane Tower Jangkauan Tinggi', 'CRN-TWR-003', 'produk_1746543302.jpg', 'Crane menara dengan jangkauan vertikal dan horizontal yang luas untuk mengangkat material di proyek bertingkat.', 2147483647, 2147483647, 2147483647, 0, 1, 'Alat Berat Konstruksi', 'LiftUp', 17, 'Jangkauan: 70 m', '35 Ton (Total)', 'Merah', 1, 'SYSTEM', '2025-05-06 21:50:23'),
 (10, 'Wheel Loader Kapasitas Besar', 'WHL-LRG-004', 'produk_1746543318.jpeg', 'Wheel loader dengan bucket besar untuk memuat dan memindahkan material dalam volume besar.', 1800000000, 1950000000, 1700000000, 2, 1, 'Alat Berat Konstruksi', 'LoadMaster', 18, '8.2 x 3.0 x 3.5 m', '25 Ton', 'Kuning', 1, 'SYSTEM', '2025-05-06 21:51:09'),
@@ -319,20 +466,24 @@ CREATE TABLE `unit` (
   `lokasi_unit` varchar(100) DEFAULT NULL,
   `keterangan_unit` varchar(100) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
-  `created_by` varchar(100) DEFAULT NULL
+  `created_by` varchar(100) DEFAULT NULL,
+  `machine_no` varchar(255) NOT NULL,
+  `model_no` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `unit`
 --
 
-INSERT INTO `unit` (`unit_id`, `serial_number`, `id_produk`, `status_inspection`, `qty`, `kondisi_unit`, `tanggal_masuk`, `tanggal_keluar`, `status_unit`, `lokasi_unit`, `keterangan_unit`, `created_at`, `created_by`) VALUES
-(14, 'test', 7, 'Belum Inspeksi', 1, 'Tidak Berfungsi', '2025-05-09 04:19:00', NULL, 'Baru', 'Gudang', '', '2025-05-08 23:29:13', NULL),
-(15, 'testkode', 8, 'Belum Inspeksi', 1, 'Berfungsi', '2025-05-09 04:29:00', NULL, 'Baru', 'Gudang', '', '2025-05-08 23:29:48', NULL),
-(16, 'testada', 10, 'Belum Inspeksi', 1, 'Berfungsi', '2025-05-09 04:29:00', NULL, 'Baru', 'Gudang', '', '2025-05-08 23:30:08', NULL),
-(17, '6001', 8, 'Belum Inspeksi', 1, 'Tidak Berfungsi', '2025-05-09 00:40:00', NULL, 'Perbaikan', 'Customer', 'Ut illum quis aperi', '2025-05-09 00:19:26', NULL),
-(19, '6', 10, 'Belum Inspeksi', 1, 'Berfungsi', '2025-05-09 18:50:00', NULL, 'Baru', 'Vendor', 'Et qui non doloremqu', '2025-05-09 00:26:03', NULL),
-(20, '955', 13, 'Belum Inspeksi', 1, 'Berfungsi', '2025-05-09 20:58:00', NULL, 'Baru', 'Gudang', 'Quo accusantium quas', '2025-05-09 07:51:00', NULL);
+INSERT INTO `unit` (`unit_id`, `serial_number`, `id_produk`, `status_inspection`, `qty`, `kondisi_unit`, `tanggal_masuk`, `tanggal_keluar`, `status_unit`, `lokasi_unit`, `keterangan_unit`, `created_at`, `created_by`, `machine_no`, `model_no`) VALUES
+(14, 'test', 7, 'Sudah Inspeksi', 1, 'Tidak Berfungsi', '2025-05-09 04:19:00', NULL, 'Baru', 'Gudang', '', '2025-05-08 23:29:13', NULL, '342', '2342222'),
+(15, 'testkode', 8, 'Belum Inspeksi', 1, 'Berfungsi', '2025-05-09 04:29:00', NULL, 'Baru', 'Gudang', '', '2025-05-08 23:29:48', NULL, '', ''),
+(16, 'testada', 10, 'Belum Inspeksi', 1, 'Berfungsi', '2025-05-09 04:29:00', NULL, 'Baru', 'Gudang', '', '2025-05-08 23:30:08', NULL, '', ''),
+(17, '6001', 8, 'Belum Inspeksi', 1, 'Tidak Berfungsi', '2025-05-09 00:40:00', NULL, 'Perbaikan', 'Customer', 'Ut illum quis aperi', '2025-05-09 00:19:26', NULL, '', ''),
+(19, '6', 10, 'Belum Inspeksi', 1, 'Berfungsi', '2025-05-09 18:50:00', NULL, 'Baru', 'Vendor', 'Et qui non doloremqu', '2025-05-09 00:26:03', NULL, '', ''),
+(20, '955', 13, 'Sudah Inspeksi', 1, 'Berfungsi', '2025-05-09 20:58:00', NULL, 'Baru', 'Gudang', 'Quo accusantium quas', '2025-05-09 07:51:00', NULL, 'gsdfgsdfg', 'fgsddfg'),
+(21, 'ABCD', 7, 'Sudah Inspeksi', 1, 'Berfungsi', '2025-05-13 21:24:00', NULL, 'Baru', 'Gudang', 'TEST UNIT', '2025-05-13 16:25:40', NULL, 'asdasdasdasd', 'asasasda'),
+(22, '881', 7, 'Sudah Inspeksi', 1, 'Berfungsi', '2023-11-05 11:22:00', NULL, 'Baru', 'Gudang', 'Quaerat est ullamco', '2025-05-17 06:01:22', NULL, 'asdasd', '41434343');
 
 -- --------------------------------------------------------
 
@@ -381,7 +532,8 @@ INSERT INTO `user_access_menu` (`id`, `role_id`, `menu_id`) VALUES
 (3, 2, 2),
 (7, 1, 3),
 (8, 1, 2),
-(10, 1, 5);
+(10, 1, 5),
+(12, 2, 5);
 
 -- --------------------------------------------------------
 
@@ -402,7 +554,7 @@ INSERT INTO `user_menu` (`id`, `menu`) VALUES
 (1, 'Admin'),
 (2, 'User'),
 (3, 'Menu'),
-(5, 'Pre  Delivery Inspection');
+(5, 'Inspection');
 
 -- --------------------------------------------------------
 
@@ -421,7 +573,7 @@ CREATE TABLE `user_role` (
 
 INSERT INTO `user_role` (`id`, `role`) VALUES
 (1, 'Administrator'),
-(2, 'Member');
+(2, 'User');
 
 -- --------------------------------------------------------
 
@@ -454,8 +606,9 @@ INSERT INTO `user_sub_menu` (`id`, `menu_id`, `title`, `url`, `icon`, `is_active
 (12, 5, 'List Unit', 'inspection/index_unit', 'fas fa-fw fa-hammer', 1),
 (13, 5, 'List Inspection', 'inspection/index_list_inspection', 'fas fa-fw fa-cog', 1),
 (14, 5, 'Result Inspection', 'inspection/result', 'fas fa-fw fa-ruler-combined', 1),
-(15, 5, 'Report Inspection', 'inspection/report', 'fas fa-fw fa-robot', 1),
-(16, 5, 'Form Inspection', 'inspection/index_form', 'fas fa-fw fa-file-alt', 1);
+(15, 5, 'Item Inspection', 'inspection/index_inspection_item', 'fas fa-fw fa-robot', 1),
+(16, 5, 'Template Inspection', 'inspection/index_template', 'fas fa-fw fa-file-alt', 1),
+(17, 5, 'Form Inspection', 'inspection/index_form', 'fas fa-fw fa-book', 1);
 
 -- --------------------------------------------------------
 
@@ -563,25 +716,25 @@ ALTER TABLE `user_token`
 -- AUTO_INCREMENT for table `inspection`
 --
 ALTER TABLE `inspection`
-  MODIFY `id_inspection` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id_inspection` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
 
 --
 -- AUTO_INCREMENT for table `inspection_detail`
 --
 ALTER TABLE `inspection_detail`
-  MODIFY `id_detail` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=103;
+  MODIFY `id_detail` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=963;
 
 --
 -- AUTO_INCREMENT for table `inspection_item`
 --
 ALTER TABLE `inspection_item`
-  MODIFY `id_item` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=466;
+  MODIFY `id_item` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=468;
 
 --
 -- AUTO_INCREMENT for table `inspection_template`
 --
 ALTER TABLE `inspection_template`
-  MODIFY `id_template` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id_template` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `master_produk`
@@ -593,7 +746,7 @@ ALTER TABLE `master_produk`
 -- AUTO_INCREMENT for table `unit`
 --
 ALTER TABLE `unit`
-  MODIFY `unit_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `unit_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT for table `user`
@@ -605,7 +758,7 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `user_access_menu`
 --
 ALTER TABLE `user_access_menu`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `user_menu`
@@ -623,7 +776,7 @@ ALTER TABLE `user_role`
 -- AUTO_INCREMENT for table `user_sub_menu`
 --
 ALTER TABLE `user_sub_menu`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `user_token`

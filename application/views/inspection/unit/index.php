@@ -3,10 +3,12 @@
     <div class="m-1 shadow card">
         <div class="card-header mb-4 d-flex justify-content-between align-items-center">
             <h1 class="h3 mb-4 text-gray-800"><?= $title; ?></h1>
+            <?php if($this->session->userdata('role_id') == 1) : ?>
             <a href="<?= site_url('inspection/add_unit'); ?>" class="btn btn-outline-primary">
                 <i class="fas fa-plus mr-2"></i>
                 Tambah Unit
             </a>
+            <?php endif; ?>
         </div>
         <?php if ($this->session->flashdata('swal')): ?>
             <script>
@@ -154,6 +156,7 @@
                                             data-toggle="modal" title="Hasil Inspeksi" 
                                             data-target="#modalInspectionResult"><i class="fas fa-search"></i></button>
                                         <?php endif; ?>
+                                        <?php if($this->session->userdata('role_id') == 1) : ?>
                                             <a href="<?= site_url('inspection/edit_unit/' . $unit['unit_id']); ?>" class="btn btn-warning btn-sm"
                                                 data-toggle="tooltip" data-placement="top" title="Edit Unit">
                                                 <i class="fas fa-edit"></i> 
@@ -162,6 +165,9 @@
                                                 data-toggle="tooltip" data-placement="top" title="Hapus Unit"
                                                 data-unit-id="<?= $unit['unit_id']; ?>">  <i class="fas fa-trash-alt"></i>
                                             </a>
+                                        <?php else : ?>
+                                            <a class="badge badge-success disabled-link">-</a>
+                                        <?php endif; ?>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>

@@ -47,6 +47,55 @@ class Inspection extends CI_Controller
         }
     }
 
+    public function reject_inspection()
+    {
+        // Pastikan hanya request AJAX yang diproses
+        if (!$this->input->is_ajax_request()) {
+            show_404();
+            exit;
+        }
+
+        $inspection_id = $this->input->post('inspection_id');
+        $unit_id_for_status = $this->input->post('unit_id_for_status'); // ID dari tabel 'unit'
+
+        // Validasi input
+        if (empty($inspection_id) || !is_numeric($inspection_id) || empty($unit_id_for_status) || !is_numeric($unit_id_for_status)) {
+            echo json_encode(['status' => 'error', 'message' => 'ID Inspeksi atau ID Unit tidak valid!']);
+            exit;
+        }
+
+        // --- Mulai Transaksi Database ---
+        // Ini memastikan kedua operasi (delete dan update) berhasil atau keduanya gagal
+        $this->db->trans_start();
+
+        // 1. Hapus data dari tabel 'inspection'
+        $this->db->where('id_inspection', $inspection_id);
+        $this->db->delete('inspection');
+        $deleted_rows = $this->db->affected_rows();
+
+        // 2. Update status_inspection di tabel 'unit' menjadi 'Belum Inspeksi'
+        $this->db->where('unit_id', $unit_id_for_status);
+        $this->db->update('unit', ['status_inspection' => 'Belum Inspeksi']);
+        $updated_rows = $this->db->affected_rows();
+
+        // --- Selesaikan Transaksi Database ---
+        $this->db->trans_complete();
+
+        if ($this->db->trans_status() === FALSE) {
+            // Transaksi gagal, roll back
+            echo json_encode(['status' => 'error', 'message' => 'Gagal menghapus inspeksi dan memperbarui status unit.']);
+        } else {
+            // Transaksi berhasil
+            if ($deleted_rows > 0) {
+                echo json_encode(['status' => 'success', 'message' => 'Inspeksi berhasil dihapus dan status unit diatur ulang.']);
+            } else {
+                // Ini bisa terjadi jika inspeksi_id tidak ditemukan, tapi unit_id_for_status mungkin ada
+                echo json_encode(['status' => 'error', 'message' => 'Inspeksi tidak ditemukan atau gagal dihapus, tetapi status unit mungkin telah diperbarui.']);
+            }
+        }
+        exit; // Penting untuk menghentikan eksekusi setelah mengirim JSON
+    }
+
     /* produk */
     public function master_produk()
     {

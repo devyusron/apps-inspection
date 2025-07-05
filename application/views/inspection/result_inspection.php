@@ -139,6 +139,14 @@
                                                 </a>
                                             <?php endif; ?>
                                         <?php endif; ?>
+                                        <?php if ($unit['approve_manager'] == '0'): ?>
+                                            <a href="#" class="btn btn-warning btn-sm btn-reject-inspection"
+                                                data-toggle="tooltip" data-placement="top" title="Reject Inspection"
+                                                data-inspection-id="<?= $unit['id_inspection']; ?>"
+                                                data-unit-id-for-status="<?= $unit['unit_id']; ?>">
+                                                <i class="fas fa-times"></i>
+                                            </a>
+                                        <?php endif; ?>
                                         <button type="button" class="btn btn-success btn-sm lihat-template-result" 
                                             data-inspection-id="<?= $unit['id_inspection']; ?>"
                                             data-unit-id="<?= $unit['unit_id']; ?>"
@@ -197,6 +205,87 @@
 <script src="https://unpkg.com/jspdf-autotable@3.5.20/dist/jspdf.plugin.autotable.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox-plus-jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script>
+$(document).ready(function() {
+    // ... (Kode untuk btn-approve-manager yang sudah ada) ...
+
+    // --- SCRIPT UNTUK REJECT/DELETE INSPECTION ---
+    $(document).on('click', '.btn-reject-inspection', function(e) {
+        e.preventDefault();
+
+        const inspectionId = $(this).data('inspection-id');
+        const unitIdForStatus = $(this).data('unit-id-for-status'); // ID dari tabel `unit`
+        const button = $(this); // Simpan referensi tombol
+
+        Swal.fire({
+            title: 'Konfirmasi Rejection?',
+            text: "Anda akan menghapus data inspeksi ini dan mengembalikan status unit menjadi 'Belum Inspeksi'. Tindakan ini tidak dapat dibatalkan!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33', // Merah untuk reject
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Ya, Hapus Inspeksi!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '<?= base_url("inspection/reject_inspection"); ?>', // URL ke controller reject
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        inspection_id: inspectionId,
+                        unit_id_for_status: unitIdForStatus // Kirim ID unit untuk update status
+                    },
+                    beforeSend: function() {
+                        Swal.fire({
+                            title: 'Loading...',
+                            text: 'Memproses penghapusan inspeksi...',
+                            allowOutsideClick: false,
+                            didOpen: () => {
+                                Swal.showLoading();
+                            }
+                        });
+                    },
+                    success: function(response) {
+                        Swal.close();
+
+                        if (response.status === 'success') {
+                            Swal.fire(
+                                'Berhasil!',
+                                response.message,
+                                'success'
+                            ).then(() => {
+                                // Refresh halaman untuk melihat perubahan
+                                window.location.reload();
+                                // Atau jika ingin update UI tanpa reload, Anda perlu lebih banyak logika
+                                // Misalnya, sembunyikan baris tabel terkait inspeksi yang dihapus
+                                // button.closest('tr').remove();
+                            });
+                        } else {
+                            Swal.fire(
+                                'Gagal!',
+                                response.message,
+                                'error'
+                            );
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        Swal.close();
+                        Swal.fire(
+                            'Error!',
+                            'Terjadi kesalahan saat menghubungi server: ' + error,
+                            'error'
+                        );
+                        console.error('AJAX Error: ', status, error, xhr);
+                    }
+                });
+            }
+        });
+    });
+    // --- AKHIR SCRIPT UNTUK REJECT/DELETE INSPECTION ---
+
+});
+</script>
 <script>
     lightbox.option({
         'resizeDuration': 200,

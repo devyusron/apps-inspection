@@ -92,8 +92,8 @@
                                 <tr>
                                     <td><?= $i++; ?></td>
                                     <td><?= htmlspecialchars($unit['serial_number']); ?></td>
-                                    <td><?= htmlspecialchars($unit['machine_no']); ?></td>
-                                    <td><?= htmlspecialchars($unit['model_no']); ?></td>
+                                    <td><?= isset($unit['machine_no']) ? htmlspecialchars($unit['machine_no']) : '-'; ?></td>
+                                    <td><?= isset($unit['model_no']) ? htmlspecialchars($unit['model_no']) : '-'; ?></td>
                                     <td><?= htmlspecialchars($unit['nama_produk']); ?></td>
                                     <td><?= $unit['qty']; ?></td>
                                     <td><?= htmlspecialchars($unit['kondisi_unit']); ?></td>
@@ -114,8 +114,8 @@
                                         <a href="#" class="btn btn-success btn-sm lihat-template"
                                         data-toggle="tooltip" data-placement="top" title="Inspeksi"
                                         data-unit-id="<?= $unit['unit_id']; ?>" 
-                                        data-machine-no="<?= $unit['machine_no']; ?>" 
-                                        data-model-no="<?= $unit['model_no']; ?>" 
+                                        data-machine-no="<?= isset($unit['machine_no']) ? $unit['machine_no'] : '-'; ?>" 
+                                        data-model-no="<?= isset($unit['model_no']) ? $unit['model_no'] : '-' ?>"  
                                         data-serial-number="<?= $unit['serial_number']?>"> 
                                             <i class="fas fa-clipboard-check"></i>
                                         </a>

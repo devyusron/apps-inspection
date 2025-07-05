@@ -116,8 +116,8 @@
                                     <td><?= $i++; ?></td>
                                     <td><?= htmlspecialchars($unit['serial_number']); ?></td>
                                     <td><?= htmlspecialchars($unit['nama_produk']); ?></td>
-                                    <td><?= $unit['machine_no']; ?></td>    
-                                    <td><?= $unit['model_no']; ?>
+                                    <td><?= isset($unit['machine_no']) ? htmlspecialchars($unit['machine_no']) : '-'; ?></td>    
+                                    <td><?= isset($unit['model_no']) ? htmlspecialchars($unit['model_no']) : '-'; ?>
                                     <td><?= $unit['qty']; ?></td>
                                     <td><?= htmlspecialchars($unit['kondisi_unit']); ?></td>
                                     <td><?= $unit['tanggal_masuk']; ?></td>

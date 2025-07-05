@@ -55,9 +55,9 @@
                             <label for="lokasi_unit">Lokasi Unit:</label>
                             <select class="form-control form-control-sm" id="lokasi_unit" name="lokasi_unit">
                                 <option value="">Pilih Lokasi</option>
-                                <option value="Gudang">Gudang</option>
-                                <option value="Vendor">Vendor</option>
-                                <option value="Customer">Customer</option>
+                                <?php foreach ($lokasi_units as $lokasi) : ?>
+                                    <option value="<?= $lokasi['id']; ?>"><?= $lokasi['lokasi_unit']; ?></option>
+                                <?php endforeach; ?>
                             </select>
                         </div>
                     </div>

@@ -62,9 +62,9 @@
                             <label for="lokasi_unit">Lokasi Unit:</label>
                             <select class="form-control form-control-sm" id="lokasi_unit" name="lokasi_unit">
                                 <option value="">Pilih Lokasi</option>
-                                <option value="Gudang">Gudang</option>
-                                <option value="Vendor">Vendor</option>
-                                <option value="Customer">Customer</option>
+                                <?php foreach ($lokasi_units as $lokasi) : ?>
+                                    <option value="<?= $lokasi['id']; ?>"><?= $lokasi['lokasi_unit']; ?></option>
+                                <?php endforeach; ?>
                             </select>
                         </div>
                     </div>
@@ -94,6 +94,7 @@
                                 <th>Lokasi Unit</th>
                                 <th>Keterangan Unit</th>
                                 <th>Status Inspeksi</th>
+                                <th>Status Approve</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
@@ -121,6 +122,23 @@
                                         <?php endif; ?>
                                     </td>
                                     <td>
+                                        <?php if ($unit['approve_manager'] == '0'): ?>
+                                            <span class="badge badge-danger">Belum Approve</span>
+                                        <?php elseif ($unit['approve_manager'] == '1'): ?>
+                                            <span class="badge badge-success">Sudah Approve</span>
+                                        <?php else: ?>
+                                            <span class="badge badge-danger">Belum Inspeksi</span>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td>
+                                        <?php if($this->session->userdata('role') == 'Manager') : ?>
+                                            <?php if ($unit['approve_manager'] == '0'): ?>
+                                                <a href="#" class="btn btn-danger btn-sm btn-approve-manager"
+                                                    data-toggle="tooltip" data-placement="top" title="Approve Manager"
+                                                    data-unit-id="<?= $unit['id_inspection']; ?>">  <i class="fas fa-user-check"></i>
+                                                </a>
+                                            <?php endif; ?>
+                                        <?php endif; ?>
                                         <button type="button" class="btn btn-success btn-sm lihat-template-result" 
                                             data-inspection-id="<?= $unit['id_inspection']; ?>"
                                             data-unit-id="<?= $unit['unit_id']; ?>"
@@ -220,6 +238,16 @@
                                 html += '<div class="form-group row">';
                                 html += '<label for="attachment" class="col-sm-3 col-form-label">Other Attachment</label>';
                                 html += '<div class="col-sm-9"><input readonly type="text" class="form-control form-control-sm" id="attachment" name="attachment" value="' + hasil_inspeksi[0].attachment + '"></div>';
+                                html += '</div>';
+                                html += '<div class="form-group row">';
+                                html += '<label for="approve_manager" class="col-sm-3 col-form-label">Approve Manager</label>';
+                                let approveStatus = '';
+                                if (hasil_inspeksi[0].approve_manager == 1) {
+                                    approveStatus = 'Sudah Approve';
+                                } else {
+                                    approveStatus = 'Belum Approve';
+                                }
+                                html += '<div class="col-sm-9"><input readonly type="text" class="form-control form-control-sm" id="approve_manager" name="approve_manager" value="' + approveStatus + '"></div>';
                                 html += '</div>';
                                 html += '</div>';
                                 html += '<div class="col-md-6">';
@@ -392,4 +420,87 @@
     //     const doc = new jsPDF();
     //     let filename = "hasil_inspeksi_" + id_inspection + ".pdf";
     // }
+</script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+$(document).ready(function() {
+    // Event listener untuk tombol approve manager
+    $(document).on('click', '.btn-approve-manager', function(e) {
+        e.preventDefault(); // Mencegah link default berfungsi
+
+        const unitId = $(this).data('unit-id');
+        const button = $(this); // Simpan referensi tombol
+
+        Swal.fire({
+            title: 'Konfirmasi Approve?',
+            text: "Anda akan meng-approve inspeksi ini sebagai Manager. Tindakan ini tidak bisa dibatalkan!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya, Approve!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '<?= base_url("inspection/approve_manager"); ?>', // URL ke controller approve
+                    type: 'POST',
+                    dataType: 'json', // Harap respons dalam format JSON
+                    data: {
+                        unit_id: unitId
+                    },
+                    beforeSend: function() {
+                        // Opsi: Tampilkan loading spinner
+                        Swal.fire({
+                            title: 'Loading...',
+                            text: 'Memproses persetujuan...',
+                            allowOutsideClick: false,
+                            didOpen: () => {
+                                Swal.showLoading();
+                            }
+                        });
+                    },
+                    success: function(response) {
+                        Swal.close(); // Tutup loading spinner
+
+                        if (response.status === 'success') {
+                            Swal.fire(
+                                'Berhasil!',
+                                response.message,
+                                'success'
+                            ).then(() => {
+                                // Opsional: Ubah tampilan tombol atau refresh halaman
+                                // Anda bisa mengubah kelas tombol, teks, atau menyembunyikannya
+                                button.removeClass('btn-danger').addClass('btn-success');
+                                button.html('<i class="fas fa-check"></i> Disetujui'); // Contoh teks/ikon baru
+                                button.tooltip('dispose'); // Hapus tooltip lama
+                                button.attr('title', 'Telah Disetujui'); // Atur title baru
+                                button.prop('disabled', true); // Nonaktifkan tombol setelah diapprove
+                                // Jika Anda ingin me-refresh halaman:
+                                // window.location.reload(); 
+                            });
+                        } else {
+                            Swal.fire(
+                                'Gagal!',
+                                response.message,
+                                'error'
+                            );
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        Swal.close(); // Tutup loading spinner
+                        Swal.fire(
+                            'Error!',
+                            'Terjadi kesalahan saat menghubungi server: ' + error,
+                            'error'
+                        );
+                        console.error('AJAX Error: ', status, error, xhr);
+                    }
+                });
+            }
+        });
+    });
+});
 </script>

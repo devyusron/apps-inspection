@@ -49,11 +49,79 @@ class Admin extends CI_Controller
 
         $data['role'] = $this->db->get('user_role')->result_array();
 
-        $this->load->view('templates/header', $data);
-        $this->load->view('templates/sidebar', $data);
-        $this->load->view('templates/topbar', $data);
-        $this->load->view('admin/role', $data);
-        $this->load->view('templates/footer');
+        // Validasi untuk penambahan role baru
+        $this->form_validation->set_rules('role', 'Role', 'required|trim|is_unique[user_role.role]', [
+            'is_unique' => 'This role name already exists!'
+        ]);
+
+        if ($this->form_validation->run() == false) {
+            $this->load->view('templates/header', $data);
+            $this->load->view('templates/sidebar', $data);
+            $this->load->view('templates/topbar', $data);
+            $this->load->view('admin/role', $data);
+            $this->load->view('templates/footer');
+        } else {
+            // Proses penambahan role baru
+            $this->db->insert('user_role', ['role' => $this->input->post('role')]);
+            $this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">New role added!</div>');
+            redirect('admin/role');
+        }
+    }
+
+    // Method untuk mengedit role
+    public function editRole()
+    {
+        $data['title'] = 'Edit Role';
+        $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+        
+        $role_id = $this->input->post('id');
+        $data['role_item'] = $this->db->get_where('user_role', ['id' => $role_id])->row_array();
+
+        $this->form_validation->set_rules('role', 'Role', 'required|trim');
+        
+        // Tambahkan validasi is_unique hanya jika nama role diubah
+        $original_role_name = $this->input->post('original_role_name'); // Dari hidden input di modal
+        $new_role_name = $this->input->post('role');
+
+        if ($new_role_name != $original_role_name) {
+            $this->form_validation->set_rules('role', 'Role', 'is_unique[user_role.role]', [
+                'is_unique' => 'This role name already exists!'
+            ]);
+        }
+
+        if ($this->form_validation->run() == false) {
+            // Jika validasi gagal, atau pertama kali memuat form edit
+            // Anda bisa arahkan kembali ke halaman role dengan modal edit terbuka
+            // Namun, untuk kesederhanaan, kita akan tampilkan pesan error jika ada
+            $this->load->view('templates/header', $data);
+            $this->load->view('templates/sidebar', $data);
+            $this->load->view('templates/topbar', $data);
+            $this->load->view('admin/role', $data); // Tampilkan halaman role lagi
+            $this->load->view('templates/footer');
+        } else {
+            // Proses update role
+            $updated_role_name = $this->input->post('role');
+            $this->db->where('id', $role_id);
+            $this->db->update('user_role', ['role' => $updated_role_name]);
+            $this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">Role updated!</div>');
+            redirect('admin/role');
+        }
+    }
+
+    // Method untuk menghapus role
+    public function deleteRole($id)
+    {
+        if (!is_numeric($id)) {
+            redirect('admin/role'); // Redirect jika ID tidak valid
+        }
+        $this->db->where('id', $id);
+        $this->db->delete('user_role');
+        // Juga hapus akses menu yang terkait dengan role ini
+        $this->db->where('role_id', $id);
+        $this->db->delete('user_access_menu');
+
+        $this->session->set_flashdata('message', '<div class="alert alert-danger" role="alert">Role and its access deleted!</div>');
+        redirect('admin/role');
     }
 
 

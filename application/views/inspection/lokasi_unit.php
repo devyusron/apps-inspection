@@ -3,19 +3,18 @@
     <div class="m-1 shadow card">
         <div class="card-header mb-4 d-flex justify-content-between align-items-center">
             <h1 class="h3 text-gray-800"><?= $title; ?></h1>
-            <a href="" class="btn btn-outline-primary mb-0" data-toggle="modal" data-target="#newRoleModal">
+            <a href="" class="btn btn-outline-primary mb-0" data-toggle="modal" data-target="#newLocationModal">
                 <i class="fas fa-plus mr-2"></i>
-                Add New Role
+                Add New Location
             </a>
         </div>
         <div class="row">
             <div class="col-lg m-1">
-                <?= form_error('role', '<div class="alert alert-danger" role="alert">', '</div>'); ?>
+                <?= form_error('lokasi_unit', '<div class="alert alert-danger" role="alert">', '</div>'); ?>
                 
                 <?php if ($this->session->flashdata('message')): ?>
                     <?php echo $this->session->flashdata('message'); ?>
                     <script>
-                        // Script untuk menghilangkan flashdata message setelah 5 detik
                         setTimeout(function() {
                             var alertElement = document.querySelector('.alert');
                             if (alertElement) {
@@ -23,31 +22,27 @@
                             }
                         }, 5000);
                     </script>
-                    <?php $this->session->unset_userdata('message'); // Hapus flashdata setelah ditampilkan ?>
+                    <?php $this->session->unset_userdata('message'); ?>
                 <?php endif; ?>
 
-                <br>
-                <!-- <a href="<?= base_url('admin/cetak'); ?>" class="btn btn-primary" target="_blank">Cetak</a> -->
-                <br>
                 <table class="table table-hover" id="dataTable">
                     <thead>
                         <tr>
                             <th scope="col">#</th>
-                            <th scope="col">Role</th>
+                            <th scope="col">Location Name</th>
                             <th scope="col">Action</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php $i = 1; ?>
-                        <?php foreach ($role as $r) : ?>
+                        <?php foreach ($locations as $loc) : ?>
                             <tr>
                                 <th scope="row"><?= $i; ?></th>
-                                <td><?= $r['role']; ?></td>
+                                <td><?= $loc['lokasi_unit']; ?></td>
                                 <td>
-                                    <a href="<?= base_url('admin/roleaccess/') . $r['id']; ?>" class="badge badge-warning">access</a>
-                                    <a href="#" class="badge badge-success" data-toggle="modal" data-target="#editRoleModal"
-                                        data-id="<?= $r['id']; ?>" data-role="<?= $r['role']; ?>">edit</a>
-                                    <a href="<?= base_url('admin/deleteRole/' . $r['id']); ?>" class="badge badge-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus role ini? Ini juga akan menghapus semua akses menu yang terkait!');">delete</a>
+                                    <a href="#" class="badge badge-success" data-toggle="modal" data-target="#editLocationModal"
+                                        data-id="<?= $loc['id']; ?>" data-lokasi_unit="<?= $loc['lokasi_unit']; ?>">edit</a>
+                                    <a href="<?= base_url('inspection/delete_lokasi_unit/' . $loc['id']); ?>" class="badge badge-danger" onclick="return confirm('Are you sure you want to delete this unit location?');">delete</a>
                                 </td>
                             </tr>
                             <?php $i++; ?>
@@ -59,19 +54,19 @@
     </div>
 </div>
 </div>
-<div class="modal fade" id="newRoleModal" tabindex="-1" role="dialog" aria-labelledby="newRoleModalLabel" aria-hidden="true">
+<div class="modal fade" id="newLocationModal" tabindex="-1" role="dialog" aria-labelledby="newLocationModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="newRoleModalLabel">Add New Role</h5>
+                <h5 class="modal-title" id="newLocationModalLabel">Add New Unit Location</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="<?= base_url('admin/role'); ?>" method="post">
+            <form action="<?= base_url('inspection/lokasi_unit'); ?>" method="post">
                 <div class="modal-body">
                     <div class="form-group">
-                        <input type="text" class="form-control" id="role" name="role" placeholder="Role name">
+                        <input type="text" class="form-control" id="lokasi_unit" name="lokasi_unit" placeholder="Unit Location Name">
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -83,20 +78,21 @@
     </div>
 </div>
 
-<div class="modal fade" id="editRoleModal" tabindex="-1" role="dialog" aria-labelledby="editRoleModalLabel" aria-hidden="true">
+<div class="modal fade" id="editLocationModal" tabindex="-1" role="dialog" aria-labelledby="editLocationModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="editRoleModalLabel">Edit Role</h5>
+                <h5 class="modal-title" id="editLocationModalLabel">Edit Unit Location</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="<?= base_url('admin/editRole'); ?>" method="post">
+            <form action="<?= base_url('inspection/edit_lokasi_unit'); ?>" method="post">
                 <div class="modal-body">
-                    <input type="hidden" id="edit_role_id" name="id">
-                    <input type="hidden" id="original_role_name" name="original_role_name"> <div class="form-group">
-                        <input type="text" class="form-control" id="edit_role_name" name="role" placeholder="Role name">
+                    <input type="hidden" id="edit_location_id" name="id">
+                    <input type="hidden" id="original_lokasi_unit_name" name="original_lokasi_unit_name">
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="edit_lokasi_unit_name" name="lokasi_unit" placeholder="Unit Location Name">
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -112,18 +108,18 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 <script>
     // Script untuk mengisi data ke modal edit saat tombol edit diklik
-    $('#editRoleModal').on('show.bs.modal', function (event) {
+    $('#editLocationModal').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget); // Tombol yang memicu modal
-        var id = button.data('id'); // Ambil data-id dari tombol
-        var role_name = button.data('role'); // Ambil data-role dari tombol
+        var id = button.data('id'); // Ambil data-id
+        var lokasi_unit_name = button.data('lokasi_unit'); // Ambil data-lokasi_unit
 
         var modal = $(this);
-        modal.find('.modal-body #edit_role_id').val(id); // Set ID ke hidden input
-        modal.find('.modal-body #edit_role_name').val(role_name); // Set nama role ke input teks
-        modal.find('.modal-body #original_role_name').val(role_name); // Set nama role asli ke hidden input
+        modal.find('.modal-body #edit_location_id').val(id); // Set ID ke hidden input
+        modal.find('.modal-body #edit_lokasi_unit_name').val(lokasi_unit_name); // Set nama lokasi ke input teks
+        modal.find('.modal-body #original_lokasi_unit_name').val(lokasi_unit_name); // Set nama asli untuk validasi
     });
 
-    // Script untuk menghilangkan flashdata message (sudah ada di contoh Anda, tapi saya masukkan kembali untuk kelengkapan)
+    // Script untuk menghilangkan flashdata message (sudah ada di contoh Anda)
     $(document).ready(function() {
         setTimeout(function() {
             var alertElement = $('.alert');
@@ -132,6 +128,6 @@
                     $(this).remove();
                 });
             }
-        }, 5000); // 5000 milidetik = 5 detik
+        }, 5000);
     });
 </script>

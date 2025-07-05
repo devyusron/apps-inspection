@@ -34,17 +34,30 @@ class Auth extends CI_Controller
     {
         $email = $this->input->post('email');
         $password = $this->input->post('password');
-        $user = $this->db->get_where('user', ['email' => $email])->row_array();
+
+        // --- START: MODIFICATION FOR GETTING ROLE NAME ---
+        // Instead of just get_where, perform a JOIN to fetch the role name
+        $this->db->select('user.*, user_role.role as role_name'); // Select all user columns, and user_role.role as 'role_name'
+        $this->db->from('user');
+        $this->db->join('user_role', 'user_role.id = user.role_id');
+        $this->db->where('user.email', $email); // Specify table for 'email' to avoid ambiguity
+        $user = $this->db->get()->row_array();
+        // --- END: MODIFICATION FOR GETTING ROLE NAME ---
+
         if ($user) {
-            $this->session->unset_userdata('message');
-            $this->session->set_flashdata('message', '<div class="alert alert-info" role="alert">Success login!</div>');
+            $this->session->unset_userdata('message'); // Clean up any previous message, though set_flashdata usually overwrites
+
             if ($user['is_active'] == 1) {
                 if (password_verify($password, $user['password'])) {
                     $data = [
                         'email' => $user['email'],
-                        'role_id' => $user['role_id']
+                        'role_id' => $user['role_id'],
+                        'role' => $user['role_name'] // <-- Use 'role_name' from the JOIN result
                     ];
                     $this->session->set_userdata($data);
+                    
+                    $this->session->set_flashdata('message', '<div class="alert alert-info" role="alert">Success login!</div>'); // Moved success message here
+                    
                     if ($user['role_id'] == 1) {
                         redirect('admin');
                     } else {

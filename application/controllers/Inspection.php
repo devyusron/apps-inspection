@@ -12,6 +12,41 @@ class Inspection extends CI_Controller
         $this->load->library('upload');
     }
 
+    public function approve_manager()
+    {
+        // Pastikan hanya request AJAX yang diproses
+        if (!$this->input->is_ajax_request()) {
+            show_404(); // Atau redirect ke halaman lain
+            exit;
+        }
+
+        $id_inspection = $this->input->post('unit_id');
+
+        // Validasi input
+        if (empty($id_inspection) || !is_numeric($id_inspection)) {
+            echo json_encode(['status' => 'error', 'message' => 'ID Inspeksi tidak valid!']);
+            exit;
+        }
+
+        // Data untuk diupdate
+        $data = [
+            'approve_manager' => 1 // Set menjadi 1 (approved)
+        ];
+
+        // Lakukan update ke database
+        // Diasumsikan nama tabel adalah 'inspection' dan primary key adalah 'id_inspection'
+        $this->db->where('id_inspection', $id_inspection);
+        $this->db->update('inspection', $data);
+
+        // Cek apakah update berhasil
+        if ($this->db->affected_rows() > 0) {
+            echo json_encode(['status' => 'success', 'message' => 'Inspeksi berhasil di-approve oleh Manager!']);
+        } else {
+            // Bisa jadi ID tidak ditemukan atau sudah di-approve sebelumnya
+            echo json_encode(['status' => 'error', 'message' => 'Gagal meng-approve inspeksi. Data tidak ditemukan atau sudah di-approve.']);
+        }
+    }
+
     /* produk */
     public function master_produk()
     {
@@ -161,6 +196,7 @@ class Inspection extends CI_Controller
 
     /* unit */
     public function index_unit() {
+        $data['lokasi_units'] = $this->db->get('lokasi_unit')->result_array();
         $this->db->select('*');
         $this->db->from('inspection_template');
         $data['inspection_template'] = $this->db->get()->result_array();
@@ -171,7 +207,7 @@ class Inspection extends CI_Controller
         $lokasi_unit = $this->input->get('lokasi_unit');
         $status_inspection = $this->input->get('status_inspection');
         $data['daftar_produk'] = $this->db->get('master_produk')->result_array();
-        $this->db->select('unit.*, master_produk.nama_produk, inspection.inspection_template_id as id_template, inspection.id_inspection as id_inspection');
+        $this->db->select('unit.*, master_produk.nama_produk, inspection.inspection_template_id as id_template, inspection.id_inspection as id_inspection,approve_manager');
         $this->db->from('unit');
         $this->db->join('master_produk', 'unit.id_produk = master_produk.id_produk');
         $this->db->join('inspection', 'unit.unit_id = inspection.unit_id', 'left');
@@ -507,6 +543,7 @@ class Inspection extends CI_Controller
                 inspection_template_id,model_no,machine_no,serial_number,customer,address,attachment,time(i.tanggal_inspeksi) hours,i.additional_comment,
                 date(i.tanggal_inspeksi) tanggal_inspeksi,
                 i.mechanic,
+                i.approve_manager,
                 i.acknowledge,
                 i.additional_comment,
                 i.photo_inspection,
@@ -542,6 +579,7 @@ class Inspection extends CI_Controller
 
     /* list inspection */
     public function index_list_inspection() {
+        $data['lokasi_units'] = $this->db->get('lokasi_unit')->result_array();
         $tanggal_mulai = $this->input->get('tanggal_mulai');
         $tanggal_akhir = $this->input->get('tanggal_akhir');
         $nama_produk_filter = $this->input->get('nama_produk');
@@ -581,13 +619,14 @@ class Inspection extends CI_Controller
     }
 
     public function result() {
+        $data['lokasi_units'] = $this->db->get('lokasi_unit')->result_array();
         $tanggal_mulai = $this->input->get('tanggal_mulai');
         $tanggal_akhir = $this->input->get('tanggal_akhir');
         $nama_produk_filter = $this->input->get('nama_produk');
         $kondisi_unit = $this->input->get('kondisi_unit');
         $lokasi_unit = $this->input->get('lokasi_unit');
         $data['daftar_produk'] = $this->db->get('master_produk')->result_array();
-        $this->db->select('unit.*, master_produk.nama_produk, inspection.inspection_template_id as id_template, inspection.id_inspection as id_inspection');
+        $this->db->select('unit.*, master_produk.nama_produk, inspection.inspection_template_id as id_template, inspection.id_inspection as id_inspection,approve_manager');
         $this->db->from('unit');
         $this->db->join('master_produk', 'unit.id_produk = master_produk.id_produk');
         $this->db->join('inspection', 'unit.unit_id = inspection.unit_id', 'left');
@@ -1051,4 +1090,84 @@ class Inspection extends CI_Controller
         redirect('inspection/index_template');
     }
     /* end template inspection */
+
+    /* lokasi unit */
+    public function lokasi_unit()
+    {
+        $data['title'] = 'Lokasi Unit';
+        $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+
+        // Mengambil semua data lokasi unit
+        $data['locations'] = $this->db->get('lokasi_unit')->result_array();
+
+        // Validasi untuk penambahan lokasi unit baru
+        $this->form_validation->set_rules('lokasi_unit', 'Location Name', 'required|trim|is_unique[lokasi_unit.lokasi_unit]', [
+            'is_unique' => 'This location name already exists!'
+        ]);
+
+        if ($this->form_validation->run() == false) {
+            $this->load->view('templates/header', $data);
+            $this->load->view('templates/sidebar', $data);
+            $this->load->view('templates/topbar', $data);
+            $this->load->view('inspection/lokasi_unit', $data); // View untuk lokasi unit
+            $this->load->view('templates/footer');
+        } else {
+            // Proses penambahan lokasi unit baru
+            $this->db->insert('lokasi_unit', ['lokasi_unit' => htmlspecialchars($this->input->post('lokasi_unit', true))]);
+            $this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">New unit location added!</div>');
+            redirect('inspection/lokasi_unit');
+        }
+    }
+
+    public function edit_lokasi_unit()
+    {
+        $data['title'] = 'Edit Unit Location';
+        $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+
+        $id = $this->input->post('id');
+        $original_location_name = $this->input->post('original_lokasi_unit_name');
+        $new_location_name = htmlspecialchars($this->input->post('lokasi_unit', true));
+
+        $this->form_validation->set_rules('lokasi_unit', 'Location Name', 'required|trim');
+
+        // Tambahkan validasi is_unique hanya jika nama lokasi diubah
+        if ($new_location_name != $original_location_name) {
+            $this->form_validation->set_rules('lokasi_unit', 'Location Name', 'is_unique[lokasi_unit.lokasi_unit]', [
+                'is_unique' => 'This location name already exists!'
+            ]);
+        }
+
+        if ($this->form_validation->run() == false) {
+            // Jika validasi gagal, kembalikan ke halaman daftar lokasi
+            // (Mungkin dengan modal edit terbuka jika menggunakan AJAX untuk form submit)
+            // Untuk kesederhanaan, kita akan redirect jika form gagal divalidasi
+            $this->session->set_flashdata('message', '<div class="alert alert-danger" role="alert">' . validation_errors() . '</div>');
+            redirect('inspection/lokasi_unit');
+        } else {
+            // Proses update lokasi unit
+            $this->db->where('id', $id);
+            $this->db->update('lokasi_unit', ['lokasi_unit' => $new_location_name]);
+            $this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">Unit location updated!</div>');
+            redirect('inspection/lokasi_unit');
+        }
+    }
+
+    public function delete_lokasi_unit($id)
+    {
+        if (!is_numeric($id)) {
+            redirect('inspection/lokasi_unit'); // Redirect jika ID tidak valid
+        }
+
+        $this->db->where('id', $id);
+        $this->db->delete('lokasi_unit');
+
+        if ($this->db->affected_rows() > 0) {
+            $this->session->set_flashdata('message', '<div class="alert alert-danger" role="alert">Unit location deleted!</div>');
+        } else {
+            $this->session->set_flashdata('message', '<div class="alert alert-warning" role="alert">Failed to delete unit location or location not found.</div>');
+        }
+        
+        redirect('inspection/lokasi_unit');
+    }
+    /* end lokasi unit */
 }

@@ -7,7 +7,7 @@ class Inspection extends CI_Controller
     {
         parent::__construct();
         // date_default_timezone_set('Asia/Jakarta');
-        is_logged_in();
+        // is_logged_in();
         $this->load->helper('url');
         $this->load->library('upload');
     }

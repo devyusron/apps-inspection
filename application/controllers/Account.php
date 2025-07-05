@@ -7,7 +7,7 @@ class Account extends CI_Controller
     {
         parent::__construct();
         // Pastikan Anda memiliki helper 'is_logged_in()' atau sesuaikan dengan sistem otentikasi Anda
-        is_logged_in(); 
+        // is_logged_in(); 
         $this->load->library('form_validation');
     }
 

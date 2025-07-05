@@ -11,7 +11,9 @@
     <div class="card shadow mb-4">
         <div class="card-header py-3">
             <h6 class="m-0 font-weight-bold text-primary">Data Inspection Templates</h6>
+            <?php if($this->session->userdata('role_id') == '1') : ?>
             <a href="<?= site_url('inspection/create_template'); ?>" class="btn btn-success"><i class="fas fa-plus"></i> Add Template</a>
+            <?php endif; ?>
         </div>
         <div class="card-body">
             <div class="table-responsive">
@@ -36,8 +38,12 @@
                                 <td><?= $template['created_at']; ?></td>
                                  <td><?= htmlspecialchars($template['created_by']); ?></td>
                                 <td>
+                                    <?php if($this->session->userdata('role_id') == '1') : ?>
                                     <a href="<?= site_url('inspection/edit_template/' . $template['id_template']); ?>" class="btn btn-primary btn-sm"><i class="fas fa-edit"></i> Edit</a>
                                     <a href="<?= site_url('inspection/delete_template/' . $template['id_template']); ?>" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')"><i class="fas fa-trash"></i> Delete</a>
+                                    <?php else : ?>
+                                        -
+                                    <?php endif; ?>
                                 </td>
                             </tr>
                         <?php endforeach; ?>

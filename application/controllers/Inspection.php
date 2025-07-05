@@ -596,6 +596,15 @@ class Inspection extends CI_Controller
                 i.acknowledge,
                 i.additional_comment,
                 i.photo_inspection,
+                i.photo_hourmeter,
+                i.photo_engine_plate,
+                i.photo_1,
+                i.photo_2,
+                i.photo_3,
+                i.photo_4,
+                i.photo_5,
+                i.photo_6,
+                i.photo_serialnumber,
                 ii.nama_group,
                 ii.nama_item,
                 id.add,
@@ -836,12 +845,74 @@ class Inspection extends CI_Controller
             ->set_output(json_encode($response));
     }
 
+    // public function upload_inspection_photo() {
+    //     // $response = array('fils' => $_FILES, 'post' => $this->input->post());
+    //     $response = array('status' => 'error', 'message' => 'Terjadi kesalahan saat upload foto.');
+
+    //     if ($this->input->method() == 'post') {
+    //         $inspection_id = $this->input->post('inspection_id'); // Ambil ID inspeksi dari FormData
+
+    //         if (empty($inspection_id)) {
+    //             $response['message'] = 'ID Inspeksi tidak ditemukan.';
+    //             echo json_encode($response);
+    //             return;
+    //         }
+
+    //         if (!empty($_FILES['photo_inspection']['name'])) {
+    //             $original_filename = $_FILES['photo_inspection']['name'];
+    //             $file_extension = pathinfo($original_filename, PATHINFO_EXTENSION);
+                
+    //             // Gunakan timestamp untuk nama file yang unik
+    //             list($usec, $sec) = explode(" ", microtime());
+    //             $milliseconds = round($usec * 1000);
+    //             $new_file_name = 'inspection_' . $sec . sprintf('%03d', $milliseconds) . '.' . $file_extension;
+
+    //             $config['upload_path']   = FCPATH . 'assets/img/inspection_photos/'; // Pastikan path ini benar dan dapat ditulis
+    //             $config['allowed_types'] = 'gif|jpg|png|jpeg'; // Menambahkan 'gif' ke allowed_types
+    //             $config['max_size']      = 2048; // 2MB
+    //             $config['file_name']     = $new_file_name; // Gunakan nama file yang sudah digenerate
+
+    //             // Pastikan direktori ada
+    //             if (!is_dir($config['upload_path'])) {
+    //                 mkdir($config['upload_path'], 0777, TRUE); // Buat direktori jika belum ada
+    //             }
+
+    //             // Inisialisasi ulang library upload dengan konfigurasi baru
+    //             $this->upload->initialize($config);
+    //             $this->upload->set_allowed_types('*');
+    //             if ($this->upload->do_upload('photo_inspection')) {
+    //                 $upload_data = $this->upload->data();
+    //                 $photo_path = $upload_data['file_name']; // Simpan hanya nama file
+
+    //                 // Update kolom photo_inspection di tabel 'inspection'
+    //                 $this->db->where('id_inspection', $inspection_id); // Sesuaikan dengan nama kolom ID di tabel inspection Anda
+    //                 $update = $update_success = $this->db->update('inspection', array('photo_inspection' => $photo_path));
+
+    //                 if ($update_success) {
+    //                     $response['status'] = 'success';
+    //                     $response['message'] = 'Foto berhasil diupload dan disimpan.';
+    //                 } else {
+    //                     // Jika gagal update database, hapus file yang sudah diupload
+    //                     unlink($upload_data['full_path']);
+    //                     $response['message'] = 'Gagal menyimpan path foto ke database.';
+    //                 }
+    //             } else {
+    //                 $response['message'] = 'Gagal upload foto: ' . $this->upload->display_errors('', '');
+    //             }
+    //         } else {
+    //             $response['status'] = 'success'; // Jika tidak ada foto yang diupload, tetap anggap sukses
+    //             $response['message'] = 'Tidak ada foto yang diupload.';
+    //         }
+    //     } else {
+    //         $response['message'] = 'Metode request tidak diizinkan.';
+    //     }
+    //     echo json_encode($response);
+    // }
     public function upload_inspection_photo() {
-        // $response = array('fils' => $_FILES, 'post' => $this->input->post());
         $response = array('status' => 'error', 'message' => 'Terjadi kesalahan saat upload foto.');
 
         if ($this->input->method() == 'post') {
-            $inspection_id = $this->input->post('inspection_id'); // Ambil ID inspeksi dari FormData
+            $inspection_id = $this->input->post('inspection_id');
 
             if (empty($inspection_id)) {
                 $response['message'] = 'ID Inspeksi tidak ditemukan.';
@@ -849,50 +920,83 @@ class Inspection extends CI_Controller
                 return;
             }
 
-            if (!empty($_FILES['photo_inspection']['name'])) {
-                $original_filename = $_FILES['photo_inspection']['name'];
-                $file_extension = pathinfo($original_filename, PATHINFO_EXTENSION);
-                
-                // Gunakan timestamp untuk nama file yang unik
-                list($usec, $sec) = explode(" ", microtime());
-                $milliseconds = round($usec * 1000);
-                $new_file_name = 'inspection_' . $sec . sprintf('%03d', $milliseconds) . '.' . $file_extension;
+            // Definisi nama-nama kolom foto di database Anda
+            $photo_columns = [
+                'photo_inspection',
+                'photo_hourmeter',
+                'photo_engine_plate',
+                'photo_1',
+                'photo_2',
+                'photo_3',
+                'photo_4',
+                'photo_5',
+                'photo_6',
+                'photo_serialnumber'
+            ];
 
-                $config['upload_path']   = FCPATH . 'assets/img/inspection_photos/'; // Pastikan path ini benar dan dapat ditulis
-                $config['allowed_types'] = 'gif|jpg|png|jpeg'; // Menambahkan 'gif' ke allowed_types
-                $config['max_size']      = 2048; // 2MB
-                $config['file_name']     = $new_file_name; // Gunakan nama file yang sudah digenerate
+            $uploaded_photos = []; // Untuk menyimpan nama file yang berhasil diupload
+            $errors = []; // Untuk menyimpan error upload
 
-                // Pastikan direktori ada
-                if (!is_dir($config['upload_path'])) {
-                    mkdir($config['upload_path'], 0777, TRUE); // Buat direktori jika belum ada
-                }
+            foreach ($photo_columns as $column_name) {
+                // Periksa apakah ada file yang diupload untuk kolom ini
+                if (!empty($_FILES[$column_name]['name'])) {
+                    // Konfigurasi upload untuk setiap file
+                    $config['upload_path']   = FCPATH . 'assets/img/inspection_photos/';
+                    $config['allowed_types'] = '*';
+                    $config['max_size']      = 2048; // 2MB
+                    $config['overwrite']     = FALSE; // Jangan menimpa file dengan nama yang sama
+                    
+                    // Generate nama file unik menggunakan microtime
+                    list($usec, $sec) = explode(" ", microtime());
+                    $milliseconds = round($usec * 1000);
+                    $file_extension = pathinfo($_FILES[$column_name]['name'], PATHINFO_EXTENSION);
+                    $new_file_name = $column_name . '_' . $sec . sprintf('%03d', $milliseconds) . '.' . $file_extension;
+                    $config['file_name'] = $new_file_name;
 
-                // Inisialisasi ulang library upload dengan konfigurasi baru
-                $this->upload->initialize($config);
-                $this->upload->set_allowed_types('*');
-                if ($this->upload->do_upload('photo_inspection')) {
-                    $upload_data = $this->upload->data();
-                    $photo_path = $upload_data['file_name']; // Simpan hanya nama file
+                    // Pastikan direktori ada
+                    if (!is_dir($config['upload_path'])) {
+                        mkdir($config['upload_path'], 0777, TRUE); // Buat direktori jika belum ada
+                    }
 
-                    // Update kolom photo_inspection di tabel 'inspection'
-                    $this->db->where('id_inspection', $inspection_id); // Sesuaikan dengan nama kolom ID di tabel inspection Anda
-                    $update = $update_success = $this->db->update('inspection', array('photo_inspection' => $photo_path));
+                    // Inisialisasi ulang library upload dengan konfigurasi spesifik untuk file ini
+                    $this->upload->initialize($config);
 
-                    if ($update_success) {
-                        $response['status'] = 'success';
-                        $response['message'] = 'Foto berhasil diupload dan disimpan.';
+                    if ($this->upload->do_upload($column_name)) {
+                        $upload_data = $this->upload->data();
+                        $uploaded_photos[$column_name] = $upload_data['file_name'];
                     } else {
-                        // Jika gagal update database, hapus file yang sudah diupload
-                        unlink($upload_data['full_path']);
-                        $response['message'] = 'Gagal menyimpan path foto ke database.';
+                        $errors[$column_name] = $this->upload->display_errors('', '');
+                    }
+                }
+            }
+
+            // Update database hanya jika ada foto yang berhasil diupload
+            if (!empty($uploaded_photos)) {
+                $this->db->where('id_inspection', $inspection_id); // Sesuaikan dengan nama kolom ID di tabel inspection Anda
+                $update_success = $this->db->update('inspection', $uploaded_photos);
+
+                if ($update_success) {
+                    $response['status'] = 'success';
+                    $response['message'] = 'Foto(foto) berhasil diupload dan disimpan.';
+                    if (!empty($errors)) {
+                        $response['message'] .= ' Namun, beberapa foto gagal diupload: ' . implode(', ', array_values($errors));
+                        $response['status'] = 'warning'; // Set status warning jika ada yang gagal
                     }
                 } else {
-                    $response['message'] = 'Gagal upload foto: ' . $this->upload->display_errors('', '');
+                    $response['message'] = 'Gagal menyimpan path foto ke database.';
+                    // Jika gagal update database, hapus semua file yang sudah terupload
+                    foreach($uploaded_photos as $filename) {
+                        unlink($config['upload_path'] . $filename);
+                    }
                 }
             } else {
-                $response['status'] = 'success'; // Jika tidak ada foto yang diupload, tetap anggap sukses
-                $response['message'] = 'Tidak ada foto yang diupload.';
+                // Jika tidak ada foto yang diupload atau semua gagal
+                if (empty($errors)) {
+                    $response['status'] = 'success'; // Anggap sukses jika memang tidak ada foto yang diupload
+                    $response['message'] = 'Tidak ada foto yang diupload.';
+                } else {
+                    $response['message'] = 'Semua foto gagal diupload: ' . implode(', ', array_values($errors));
+                }
             }
         } else {
             $response['message'] = 'Metode request tidak diizinkan.';

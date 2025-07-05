@@ -375,26 +375,58 @@ $(document).ready(function() {
                                     html += '<tr>';
                                     html += '<td>' + item.nama_group + '</td>';
                                     html += '<td>' + item.nama_item + '</td>';
-                                    html += '<td class="text-center">'+getCheckbox(item.add)+'</td>';
-                                    html += '<td class="text-center">'+getCheckbox(item.clean_up)+'</td>';
-                                    html += '<td class="text-center">'+getCheckbox(item.lubricate)+'</td>';
-                                    html += '<td class="text-center">'+getCheckbox(item.replace_change)+'</td>';
-                                    html += '<td class="text-center">'+getCheckbox(item.adjust)+'</td>';
-                                    html += '<td class="text-center">'+getCheckbox(item.test_check)+'</td>';
+                                    html += '<td class="text-center">' + getCheckbox(item.add) + '</td>';
+                                    html += '<td class="text-center">' + getCheckbox(item.clean_up) + '</td>';
+                                    html += '<td class="text-center">' + getCheckbox(item.lubricate) + '</td>';
+                                    html += '<td class="text-center">' + getCheckbox(item.replace_change) + '</td>';
+                                    html += '<td class="text-center">' + getCheckbox(item.adjust) + '</td>';
+                                    html += '<td class="text-center">' + getCheckbox(item.test_check) + '</td>';
                                     html += '<td><textarea readonly class="form-control form-control-sm" rows="1">' + (item.remark || '') + '</textarea></td>';
                                     html += '</tr>';
                                 });
                                 html += '</tbody></table>';
                                 html += '<div class="form-group mt-3">';
                                 html += '<label for="additional_comment">Additional Comment :</label>';
-                                html += '<textarea readonly class="form-control" id="additional_comment" name="additional_comment" rows="3">'+hasil_inspeksi[0].additional_comment+'</textarea>';
+                                html += '<textarea readonly class="form-control" id="additional_comment" name="additional_comment" rows="3">' + hasil_inspeksi[0].additional_comment + '</textarea>';
                                 html += '</div>';
-                                html += '<div class="form-group mt-3">';
-                                html += '<label for="photo_inspection">Photo Inspection :</label>';
-                                // html += '<input type="file" class="form-control-file" id="photo_inspection" name="photo_inspection" accept="image/*" required>';
-                                html += '<a href="<?= base_url('assets/img/inspection_photos/'); ?>' + hasil_inspeksi[0].photo_inspection + '" data-lightbox="inspection-photo" data-title="Foto Inspeksi">';
-                                html += '<img src="<?= base_url('assets/img/inspection_photos/'); ?>' + hasil_inspeksi[0].photo_inspection + '" class="img-fluid" alt="Inspection Photo" style="max-width: 300px; border-radius: 8px;">';
-                                html += '</div>';
+                                html += '<div class="form-group mt-3">'; // Ini adalah div untuk foto utama
+                                html += '<label>Photos:</label>'; // Label umum untuk semua foto
+
+                                // --- START GRID FOTO ---
+                                html += '<div class="row">'; // Baris untuk menampung semua foto
+
+                                // Definisi semua nama field foto Anda
+                                const photoFields = [
+                                    { name: 'photo_inspection', label: 'Inspection Photo' },
+                                    { name: 'photo_hourmeter', label: 'Hourmeter Photo' },
+                                    { name: 'photo_engine_plate', label: 'Engine Plate Photo' },
+                                    { name: 'photo_1', label: 'Photo 1' },
+                                    { name: 'photo_2', label: 'Photo 2' },
+                                    { name: 'photo_3', label: 'Photo 3' },
+                                    { name: 'photo_4', label: 'Photo 4' },
+                                    { name: 'photo_5', label: 'Photo 5' },
+                                    { name: 'photo_6', label: 'Photo 6' },
+                                    { name: 'photo_serialnumber', label: 'Serial Number Photo' }
+                                ];
+
+                                // Iterasi melalui setiap field foto
+                                photoFields.forEach(field => {
+                                    const photoFileName = hasil_inspeksi[0][field.name]; // Ambil nama file dari objek data
+                                    if (photoFileName) { // Hanya tampilkan jika nama file ada (tidak null/empty)
+                                        // Gunakan col-md-4 untuk 3 foto per baris di desktop, col-sm-6 untuk 2 foto di tablet, col-12 untuk 1 foto di hp
+                                        html += `<div class="col-lg-3 col-md-4 col-sm-6 col-12 mb-4 text-center">`;
+                                        html += `<p class="mb-1 text-muted small">${field.label}</p>`; // Label di bawah/atas foto
+                                        html += `<a href="<?= base_url('assets/img/inspection_photos/'); ?>${photoFileName}" data-lightbox="inspection-photos" data-title="${field.label}">`;
+                                        html += `<img src="<?= base_url('assets/img/inspection_photos/'); ?>${photoFileName}" class="img-fluid rounded shadow-sm" alt="${field.label}" style="max-height: 200px; object-fit: contain;">`;
+                                        html += `</a>`;
+                                        html += `</div>`;
+                                    }
+                                });
+
+                                html += '</div>'; // End of row for photos
+                                html += '</div>'; // End of form-group for photos
+                                // --- END GRID FOTO ---
+
                                 html += '<div class="row mt-3">';
                                 html += '<div class="col-md-6">';
                                 html += '<label for="acknowledge">Acknowledge :</label>';
@@ -407,12 +439,7 @@ $(document).ready(function() {
                                 html += '</div>';
                                 modalBody.append(html);
                                 $('#modalInspectionResult').modal('show');
-                                // Swal.fire({
-                                //     text: 'Data berhasil ditampilkan!',
-                                //     icon: 'success',
-                                //     timer: 1500,
-                                //     showConfirmButton: false
-                                // });
+                                // ... (Swal.fire yang dikomentari) ...
                             } else {
                                 modalBody.append('<p>Tidak ada item inspeksi untuk template ini.</p>');
                                 $('#modalInspectionResult').modal('show');

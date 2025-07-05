@@ -158,8 +158,8 @@
                                             <a href="#" class="btn btn-success btn-sm lihat-template"
                                                 data-toggle="tooltip" data-placement="top" title="Inspeksi"
                                                 data-unit-id="<?= $unit['unit_id']; ?>"
-                                                data-machine-no="<?= $unit['machine_no']; ?>" 
-                                                data-model-no="<?= $unit['model_no']; ?>" 
+                                                data-machine-no="<?= isset($unit['machine_no']) ? $unit['machine_no'] : '-'; ?>" 
+                                                data-model-no="<?= isset($unit['model_no']) ? $unit['model_no'] : '-' ?>" 
                                                 data-serial-number="<?= $unit['serial_number']?>"> 
                                                 <i class="fas fa-clipboard-check"></i>
                                             </a>

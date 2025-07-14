@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 02, 2025 at 03:12 PM
+-- Generation Time: Jul 14, 2025 at 09:11 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -24,6 +24,30 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `brand`
+--
+
+CREATE TABLE `brand` (
+  `id` int(11) NOT NULL,
+  `brand` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `brand`
+--
+
+INSERT INTO `brand` (`id`, `brand`) VALUES
+(1, 'CHL'),
+(2, 'LONKING'),
+(3, 'SONKING'),
+(4, 'ZHONGTONG'),
+(5, 'HOWO'),
+(6, 'TYSIM'),
+(7, 'ZHENZHONG');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `inspection`
 --
 
@@ -40,18 +64,28 @@ CREATE TABLE `inspection` (
   `photo_inspection` varchar(255) NOT NULL,
   `customer` varchar(200) NOT NULL,
   `address` varchar(255) NOT NULL,
-  `attachment` varchar(200) NOT NULL
+  `attachment` varchar(200) NOT NULL,
+  `approve_manager` int(11) NOT NULL,
+  `photo_serialnumber` varchar(255) NOT NULL,
+  `photo_engine_plate` varchar(255) NOT NULL,
+  `photo_hourmeter` varchar(255) NOT NULL,
+  `photo_1` varchar(255) NOT NULL,
+  `photo_2` varchar(255) NOT NULL,
+  `photo_3` varchar(255) NOT NULL,
+  `photo_4` varchar(255) NOT NULL,
+  `photo_5` varchar(255) NOT NULL,
+  `photo_6` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `inspection`
 --
 
-INSERT INTO `inspection` (`id_inspection`, `unit_id`, `tanggal_inspeksi`, `mechanic`, `acknowledge`, `additional_comment`, `created_at`, `created_by`, `inspection_template_id`, `photo_inspection`, `customer`, `address`, `attachment`) VALUES
-(34, 22, '2025-05-21 14:42:08', 'Ut rerum quidem non ', 'Labore architecto di', 'Voluptas est deseru', '2025-05-21 12:42:08', 'user_yang_login', 1, 'inspection_1747831328136.png', '', '', ''),
-(35, 21, '2025-05-24 04:38:06', 'Iste assumenda repel', 'Aliquam accusamus no', 'Animi rem rem qui q', '2025-05-24 02:38:06', 'user_yang_login', 3, 'inspection_1748054286637.png', '', '', ''),
-(36, 20, '2025-05-25 04:19:08', 'Dolore rerum numquam', 'Non molestiae evenie', 'Temporibus libero oc', '2025-05-25 02:19:08', 'user_yang_login', 5, 'inspection_1748139548497.png', 'CUST1748139531869', 'Ut facilis unde id ', 'Eu velit aliquid sed'),
-(37, 14, '2025-07-02 14:51:38', 'teknisi', 'manager', 'test', '2025-07-02 12:51:38', 'user_yang_login', 3, 'inspection_1751460698663.png', 'CUST1751460424992', 'tangerang', '');
+INSERT INTO `inspection` (`id_inspection`, `unit_id`, `tanggal_inspeksi`, `mechanic`, `acknowledge`, `additional_comment`, `created_at`, `created_by`, `inspection_template_id`, `photo_inspection`, `customer`, `address`, `attachment`, `approve_manager`, `photo_serialnumber`, `photo_engine_plate`, `photo_hourmeter`, `photo_1`, `photo_2`, `photo_3`, `photo_4`, `photo_5`, `photo_6`) VALUES
+(34, 22, '2025-05-21 14:42:08', 'Ut rerum quidem non ', 'Labore architecto di', 'Voluptas est deseru', '2025-05-21 12:42:08', 'user_yang_login', 1, 'inspection_1747831328136.png', '', '', '', 1, '', '', '', '', '', '', '', '', ''),
+(37, 14, '2025-07-02 14:51:38', 'teknisi', 'manager', 'test', '2025-07-02 12:51:38', 'user_yang_login', 3, 'inspection_1751460698663.png', 'CUST1751460424992', 'tangerang', '', 1, '', '', '', '', '', '', '', '', ''),
+(38, 21, '2025-07-05 10:36:33', 'Ut rerum quidem non ', 'Labore architecto di', 'Voluptas est deseru', '2025-07-05 08:36:33', 'user_yang_login', 1, '0', 'CUST1751704521496', '', '', 0, '', '', '', '', '', '', '', '', ''),
+(39, 20, '2025-07-05 10:40:43', 'Voluptatem voluptate', 'Excepteur facilis pa', 'Incidunt vitae non ', '2025-07-05 08:40:43', 'user_yang_login', 1, 'photo_inspection_1751704843948.png', 'CUST1751704776121', 'Voluptatem ex earum', 'Consequatur labore ', 0, 'photo_serialnumber_1751704844167.png', 'photo_engine_plate_1751704844008.png', 'photo_hourmeter_1751704843982.png', 'photo_1_1751704844029.png', 'photo_2_1751704844053.png', 'photo_3_1751704844077.png', 'photo_4_1751704844099.png', 'photo_5_1751704844121.png', 'photo_6_1751704844143.png');
 
 -- --------------------------------------------------------
 
@@ -200,7 +234,75 @@ INSERT INTO `inspection_detail` (`id_detail`, `inspection_id`, `item_id`, `test_
 (959, 37, 400, '0', '', '0', '0', '0', '1', '0'),
 (960, 37, 401, '0', '', '0', '0', '1', '0', '0'),
 (961, 37, 402, '0', '', '0', '0', '1', '0', '0'),
-(962, 37, 403, '0', '', '0', '0', '1', '0', '0');
+(962, 37, 403, '0', '', '0', '0', '1', '0', '0'),
+(963, 38, 311, '0', 'Deserunt sed nulla v', '0', '1', '1', '1', '1'),
+(964, 38, 312, '1', 'Sed labore explicabo', '0', '1', '0', '0', '0'),
+(965, 38, 313, '0', 'Accusamus modi est r', '0', '1', '1', '0', '1'),
+(966, 38, 314, '0', 'Et aut voluptas nihi', '1', '1', '0', '0', '0'),
+(967, 38, 315, '1', 'Animi omnis laborio', '0', '1', '1', '0', '1'),
+(968, 38, 316, '1', 'Ut esse et architec', '0', '0', '0', '0', '1'),
+(969, 38, 317, '0', 'Repellendus Pariatu', '0', '0', '0', '1', '0'),
+(970, 38, 318, '1', 'Qui perspiciatis it', '0', '1', '1', '0', '1'),
+(971, 38, 319, '1', 'Suscipit voluptatem ', '1', '1', '0', '1', '0'),
+(972, 38, 320, '0', 'Corrupti corporis q', '1', '0', '0', '0', '1'),
+(973, 38, 321, '1', 'Exercitationem tenet', '1', '0', '0', '1', '1'),
+(974, 38, 322, '0', 'Sed qui explicabo A', '1', '1', '0', '0', '0'),
+(975, 38, 323, '0', 'Et velit laborum non', '1', '0', '0', '0', '0'),
+(976, 38, 324, '1', 'Accusantium quia bla', '1', '1', '1', '1', '0'),
+(977, 38, 325, '1', 'Cillum ipsum dolore', '0', '1', '1', '1', '0'),
+(978, 38, 326, '0', 'Est sed quia cupidat', '0', '1', '0', '0', '1'),
+(979, 38, 327, '0', 'Ea consequatur Irur', '0', '1', '1', '1', '0'),
+(980, 38, 328, '0', 'Sint qui explicabo ', '0', '1', '1', '1', '1'),
+(981, 38, 329, '1', 'Lorem cupidatat nost', '0', '0', '0', '1', '1'),
+(982, 38, 330, '1', 'Consequuntur vel qui', '0', '0', '1', '1', '1'),
+(983, 38, 331, '1', 'Necessitatibus quaer', '1', '1', '0', '0', '1'),
+(984, 38, 332, '1', 'Fugiat iure enim cu', '0', '0', '0', '0', '1'),
+(985, 38, 333, '1', 'Voluptatem velit rep', '1', '0', '0', '1', '0'),
+(986, 38, 334, '0', 'Et veniam itaque cu', '0', '1', '0', '1', '0'),
+(987, 38, 335, '0', 'Vero rem alias sit e', '1', '0', '1', '0', '1'),
+(988, 38, 336, '1', 'Ut excepturi nostrum', '1', '1', '1', '1', '1'),
+(989, 38, 337, '0', 'Dolores sit impedit', '0', '1', '1', '0', '0'),
+(990, 38, 338, '0', 'Eius dolorem asperna', '0', '0', '0', '1', '1'),
+(991, 38, 339, '1', 'Dolor repellendus A', '1', '0', '1', '0', '0'),
+(992, 38, 340, '1', 'Illo ut rerum conseq', '0', '0', '1', '1', '0'),
+(993, 38, 341, '0', 'Exercitation est qui', '1', '1', '1', '1', '0'),
+(994, 38, 342, '0', 'Ut quo culpa repell', '0', '1', '1', '1', '1'),
+(995, 38, 343, '0', 'Voluptatem Mollit v', '1', '0', '0', '0', '1'),
+(996, 38, 344, '1', 'Duis alias quis sint', '0', '1', '0', '0', '0'),
+(997, 39, 311, '0', 'Nihil culpa volupta', '1', '0', '0', '1', '1'),
+(998, 39, 312, '1', 'Quia iure sed ea ten', '1', '0', '0', '0', '1'),
+(999, 39, 313, '1', 'Omnis provident qui', '1', '1', '1', '1', '0'),
+(1000, 39, 314, '1', 'Alias eu adipisci co', '1', '1', '1', '0', '1'),
+(1001, 39, 315, '0', 'Inventore in unde ut', '1', '0', '1', '1', '1'),
+(1002, 39, 316, '1', 'Reiciendis minus qui', '1', '0', '1', '0', '0'),
+(1003, 39, 317, '0', 'Aperiam ipsa eligen', '1', '0', '1', '0', '0'),
+(1004, 39, 318, '1', 'Aut autem velit nis', '1', '1', '1', '1', '0'),
+(1005, 39, 319, '0', 'Non in unde qui dist', '1', '1', '1', '1', '1'),
+(1006, 39, 320, '1', 'Delectus aliquip ad', '1', '1', '0', '0', '1'),
+(1007, 39, 321, '0', 'Tempore elit ea re', '1', '0', '1', '0', '1'),
+(1008, 39, 322, '1', 'Totam debitis fugiat', '0', '0', '1', '1', '0'),
+(1009, 39, 323, '1', 'Asperiores dolorem e', '1', '0', '0', '1', '0'),
+(1010, 39, 324, '0', 'Est tempor deserunt', '1', '1', '1', '1', '1'),
+(1011, 39, 325, '0', 'Nulla totam quam rep', '0', '1', '0', '1', '0'),
+(1012, 39, 326, '0', 'Tempora non cupidita', '1', '1', '1', '0', '1'),
+(1013, 39, 327, '1', 'Tempora sed commodi ', '0', '1', '0', '0', '0'),
+(1014, 39, 328, '0', 'Ullam adipisci reici', '0', '0', '1', '1', '1'),
+(1015, 39, 329, '1', 'Mollit rem distincti', '1', '1', '1', '0', '0'),
+(1016, 39, 330, '1', 'Voluptatem ad offic', '1', '1', '0', '1', '0'),
+(1017, 39, 331, '0', 'Cillum ad do accusan', '0', '0', '0', '0', '1'),
+(1018, 39, 332, '1', 'Voluptatum qui offic', '0', '0', '1', '1', '1'),
+(1019, 39, 333, '0', 'Eos autem vitae qui ', '0', '1', '0', '1', '1'),
+(1020, 39, 334, '0', 'Consectetur consecte', '1', '0', '1', '1', '0'),
+(1021, 39, 335, '1', 'Aliquam perferendis ', '1', '1', '0', '0', '1'),
+(1022, 39, 336, '1', 'Enim vitae aperiam v', '0', '0', '1', '1', '0'),
+(1023, 39, 337, '0', 'Soluta quia laudanti', '0', '0', '0', '1', '1'),
+(1024, 39, 338, '0', 'Dolorem dolore quis ', '0', '1', '0', '1', '1'),
+(1025, 39, 339, '1', 'Animi quia aute et ', '1', '0', '0', '1', '1'),
+(1026, 39, 340, '0', 'Et quis nisi occaeca', '0', '1', '0', '0', '0'),
+(1027, 39, 341, '0', 'Ut id eius illum do', '1', '0', '0', '0', '0'),
+(1028, 39, 342, '1', 'Dolores cupiditate m', '0', '1', '1', '0', '1'),
+(1029, 39, 343, '0', 'Elit officiis dolor', '1', '0', '0', '1', '0'),
+(1030, 39, 344, '0', 'Mollitia itaque duis', '0', '0', '1', '1', '1');
 
 -- --------------------------------------------------------
 
@@ -408,6 +510,26 @@ INSERT INTO `inspection_template` (`id_template`, `nama_template`, `deskripsi_te
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `lokasi_unit`
+--
+
+CREATE TABLE `lokasi_unit` (
+  `id` int(11) NOT NULL,
+  `lokasi_unit` varchar(200) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `lokasi_unit`
+--
+
+INSERT INTO `lokasi_unit` (`id`, `lokasi_unit`) VALUES
+(2, 'Cabang Tangerang'),
+(3, 'Cabang Depok'),
+(4, 'Cabang Surabaya');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `master_produk`
 --
 
@@ -417,35 +539,21 @@ CREATE TABLE `master_produk` (
   `kode_produk` varchar(100) NOT NULL,
   `url_gambar_produk` varchar(100) DEFAULT NULL,
   `deskripsi_produk` varchar(300) DEFAULT NULL,
-  `harga_produk` int(11) DEFAULT NULL,
-  `harga_asli` int(11) DEFAULT NULL,
-  `harga_diskon` int(11) DEFAULT NULL,
-  `stok_produk` int(11) DEFAULT NULL,
-  `minimum_stok_produk` int(11) DEFAULT NULL,
-  `kategori_produk` varchar(100) DEFAULT NULL,
-  `brand_produk` varchar(100) DEFAULT NULL,
-  `tag_produk` int(11) DEFAULT NULL,
-  `dimensi_produk` varchar(100) DEFAULT NULL,
-  `berat_produk` varchar(100) DEFAULT NULL,
-  `warna_produk` varchar(100) DEFAULT NULL,
-  `is_active` int(11) DEFAULT NULL,
+  `harga_produk` int(11) NOT NULL,
+  `harga_asli` int(11) NOT NULL,
+  `harga_diskon` int(11) NOT NULL,
+  `stok_produk` int(11) NOT NULL,
+  `minimum_stok_produk` int(11) NOT NULL,
+  `kategori_produk` varchar(100) NOT NULL,
+  `brand_produk` varchar(100) NOT NULL,
+  `tag_produk` int(11) NOT NULL,
+  `dimensi_produk` varchar(100) NOT NULL,
+  `berat_produk` varchar(100) NOT NULL,
+  `warna_produk` varchar(100) NOT NULL,
+  `is_active` int(11) NOT NULL,
   `created_by` varchar(10) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `master_produk`
---
-
-INSERT INTO `master_produk` (`id_produk`, `nama_produk`, `kode_produk`, `url_gambar_produk`, `deskripsi_produk`, `harga_produk`, `harga_asli`, `harga_diskon`, `stok_produk`, `minimum_stok_produk`, `kategori_produk`, `brand_produk`, `tag_produk`, `dimensi_produk`, `berat_produk`, `warna_produk`, `is_active`, `created_by`, `created_at`) VALUES
-(7, 'Excavator Kelas Menengah', 'EXC-MID-001', 'produk_1746543277.jpeg', 'testExcavator hidrolik kelas menengah untuk berbagai pekerjaan penggalian dan pemindahan material.', 1500000000, 1650000000, 1450000000, 3, 1, 'Alat Berat Konstruksi', 'HeavyMach', 15, '9.5 x 2.8 x 3.1 m', '20 Ton', 'Kuning', 1, 'SYSTEM', '2025-05-06 21:50:23'),
-(8, 'Bulldozer Standar', 'BUL-STD-002', 'produk_1746543289.jpeg', 'Bulldozer dengan blade depan untuk meratakan tanah dan mendorong material di lokasi konstruksi.', 1200000000, 1300000000, 1150000000, 2, 1, 'Alat Berat Konstruksi', 'TrackMaster', 16, '7.8 x 3.5 x 3.2 m', '18 Ton', 'Oranye', 1, 'SYSTEM', '2025-05-06 21:50:23'),
-(9, 'Crane Tower Jangkauan Tinggi', 'CRN-TWR-003', 'produk_1746543302.jpg', 'Crane menara dengan jangkauan vertikal dan horizontal yang luas untuk mengangkat material di proyek bertingkat.', 2147483647, 2147483647, 2147483647, 0, 1, 'Alat Berat Konstruksi', 'LiftUp', 17, 'Jangkauan: 70 m', '35 Ton (Total)', 'Merah', 1, 'SYSTEM', '2025-05-06 21:50:23'),
-(10, 'Wheel Loader Kapasitas Besar', 'WHL-LRG-004', 'produk_1746543318.jpeg', 'Wheel loader dengan bucket besar untuk memuat dan memindahkan material dalam volume besar.', 1800000000, 1950000000, 1700000000, 2, 1, 'Alat Berat Konstruksi', 'LoadMaster', 18, '8.2 x 3.0 x 3.5 m', '25 Ton', 'Kuning', 1, 'SYSTEM', '2025-05-06 21:51:09'),
-(11, 'Dump Truck 10 Roda', 'DMP-TRK-005', 'produk_1746543332.jpeg', 'Truk jungkit dengan 10 roda untuk mengangkut material konstruksi jarak jauh.', 1350000000, 1500000000, 1300000000, 0, 1, 'Kendaraan Konstruksi', 'HaulMax', 19, '10.5 x 2.5 x 3.8 m', '15 Ton (Kapasitas)', 'Putih', 1, 'SYSTEM', '2025-05-06 21:51:09'),
-(12, 'Concrete Mixer Truck 7m³', 'CONC-MXR-006', 'produk_1746543343.jpeg', 'Truk pengaduk beton dengan kapasitas 7 meter kubik untuk mengantarkan beton siap pakai.', 1600000000, 1750000000, 1550000000, 0, 1, 'Kendaraan Konstruksi', 'MixWell', 20, '9.0 x 2.5 x 3.6 m', '12 Ton (Kosong)', 'Biru', 1, 'SYSTEM', '2025-05-06 21:51:09'),
-(13, 'Road Roller Single Drum', 'ROD-ROL-007', 'produk_1746543356.jpeg', 'Mesin penggilas jalan dengan satu drum untuk memadatkan tanah dan aspal.', 950000000, 1050000000, 900000000, 1, 1, 'Alat Berat Konstruksi', 'CompacTech', 21, '6.0 x 2.2 x 2.8 m', '8 Ton', 'Hijau', 1, 'SYSTEM', '2025-05-06 21:51:09'),
-(14, 'Forklift Heavy Duty 10 Ton', 'FRK-HDY-008', 'produk_1746543368.jpeg', 'Forklift tugas berat dengan kapasitas angkat 10 ton untuk memindahkan material berat di gudang atau area proyek.', 700000000, 780000000, 680000000, 0, 1, 'Alat Material Handling', 'LiftKing', 22, '4.5 x 2.0 x 2.5 m', '15 Ton (Total)', 'Kuning', 1, 'SYSTEM', '2025-05-06 21:51:09');
 
 -- --------------------------------------------------------
 
@@ -468,22 +576,10 @@ CREATE TABLE `unit` (
   `created_at` datetime DEFAULT NULL,
   `created_by` varchar(100) DEFAULT NULL,
   `machine_no` varchar(255) NOT NULL,
-  `model_no` varchar(255) NOT NULL
+  `model_no` varchar(255) NOT NULL,
+  `engine_plate` varchar(200) NOT NULL,
+  `photo_unit` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `unit`
---
-
-INSERT INTO `unit` (`unit_id`, `serial_number`, `id_produk`, `status_inspection`, `qty`, `kondisi_unit`, `tanggal_masuk`, `tanggal_keluar`, `status_unit`, `lokasi_unit`, `keterangan_unit`, `created_at`, `created_by`, `machine_no`, `model_no`) VALUES
-(14, 'test', 7, 'Sudah Inspeksi', 1, 'Tidak Berfungsi', '2025-05-09 04:19:00', NULL, 'Baru', 'Gudang', '', '2025-05-08 23:29:13', NULL, '342', '2342222'),
-(15, 'testkode', 8, 'Belum Inspeksi', 1, 'Berfungsi', '2025-05-09 04:29:00', NULL, 'Baru', 'Gudang', '', '2025-05-08 23:29:48', NULL, '', ''),
-(16, 'testada', 10, 'Belum Inspeksi', 1, 'Berfungsi', '2025-05-09 04:29:00', NULL, 'Baru', 'Gudang', '', '2025-05-08 23:30:08', NULL, '', ''),
-(17, '6001', 8, 'Belum Inspeksi', 1, 'Tidak Berfungsi', '2025-05-09 00:40:00', NULL, 'Perbaikan', 'Customer', 'Ut illum quis aperi', '2025-05-09 00:19:26', NULL, '', ''),
-(19, '6', 10, 'Belum Inspeksi', 1, 'Berfungsi', '2025-05-09 18:50:00', NULL, 'Baru', 'Vendor', 'Et qui non doloremqu', '2025-05-09 00:26:03', NULL, '', ''),
-(20, '955', 13, 'Sudah Inspeksi', 1, 'Berfungsi', '2025-05-09 20:58:00', NULL, 'Baru', 'Gudang', 'Quo accusantium quas', '2025-05-09 07:51:00', NULL, 'gsdfgsdfg', 'fgsddfg'),
-(21, 'ABCD', 7, 'Sudah Inspeksi', 1, 'Berfungsi', '2025-05-13 21:24:00', NULL, 'Baru', 'Gudang', 'TEST UNIT', '2025-05-13 16:25:40', NULL, 'asdasdasdasd', 'asasasda'),
-(22, '881', 7, 'Sudah Inspeksi', 1, 'Berfungsi', '2023-11-05 11:22:00', NULL, 'Baru', 'Gudang', 'Quaerat est ullamco', '2025-05-17 06:01:22', NULL, 'asdasd', '41434343');
 
 -- --------------------------------------------------------
 
@@ -509,7 +605,9 @@ CREATE TABLE `user` (
 INSERT INTO `user` (`id`, `name`, `email`, `image`, `password`, `role_id`, `is_active`, `date_created`) VALUES
 (6, 'user', 'user@user.com', 'default.jpg', '$2y$10$.ybE/KxYJAjHDBaP5nlrKOguRQz7WMvDJEleRoKzCzGYsjY4fyhR.', 2, 1, 1552285263),
 (12, 'admin', 'admin@admin.com', 'default.jpg', '$2y$10$VgiXi8BbKDSROpfXM1F9kexQTWKmPsYfJwdpbe0fZQ90gQ64dS.Hi', 1, 1, 1552285263),
-(14, 'admin', 'admin@gmail.com', 'default.jpg', '$2y$10$8nYQlOyyVp2cjeBGG8aUUu3Xn9Fukgj4DOfmllVdpP5jD5kn5smwe', 2, 1, 1746493357);
+(14, 'admin', 'admin@gmail.com', 'default.jpg', '$2y$10$8nYQlOyyVp2cjeBGG8aUUu3Xn9Fukgj4DOfmllVdpP5jD5kn5smwe', 2, 1, 1746493357),
+(15, 'Manager', 'manager@manager.com', 'default.jpg', '$2y$10$vjtIHt6WOWJXyBaenkLrzu7KOuK/gLnnDD9be2SLIhQczrLh0yuVm', 3, 1, 1751690793),
+(16, 'Manager IT', 'managerit@manager.com', 'default.jpg', '$2y$10$G.ZiDENede9c5vg2v7GUFu98myURgIz9cNTkBB1L3j6dwKPt4Nda6', 3, 1, 1751690839);
 
 -- --------------------------------------------------------
 
@@ -533,7 +631,12 @@ INSERT INTO `user_access_menu` (`id`, `role_id`, `menu_id`) VALUES
 (7, 1, 3),
 (8, 1, 2),
 (10, 1, 5),
-(12, 2, 5);
+(12, 2, 5),
+(13, 1, 8),
+(14, 3, 2),
+(15, 3, 3),
+(16, 3, 5),
+(17, 3, 8);
 
 -- --------------------------------------------------------
 
@@ -554,7 +657,8 @@ INSERT INTO `user_menu` (`id`, `menu`) VALUES
 (1, 'Admin'),
 (2, 'User'),
 (3, 'Menu'),
-(5, 'Inspection');
+(5, 'Inspection'),
+(8, 'Account');
 
 -- --------------------------------------------------------
 
@@ -573,7 +677,8 @@ CREATE TABLE `user_role` (
 
 INSERT INTO `user_role` (`id`, `role`) VALUES
 (1, 'Administrator'),
-(2, 'User');
+(2, 'User'),
+(3, 'Manager');
 
 -- --------------------------------------------------------
 
@@ -608,7 +713,10 @@ INSERT INTO `user_sub_menu` (`id`, `menu_id`, `title`, `url`, `icon`, `is_active
 (14, 5, 'Result Inspection', 'inspection/result', 'fas fa-fw fa-ruler-combined', 1),
 (15, 5, 'Item Inspection', 'inspection/index_inspection_item', 'fas fa-fw fa-robot', 1),
 (16, 5, 'Template Inspection', 'inspection/index_template', 'fas fa-fw fa-file-alt', 1),
-(17, 5, 'Form Inspection', 'inspection/index_form', 'fas fa-fw fa-book', 1);
+(17, 5, 'Form Inspection', 'inspection/index_form', 'fas fa-fw fa-book', 1),
+(18, 8, 'User Management', 'account', 'fas fa-fw fa-male', 1),
+(19, 5, 'Lokasi Unit', 'inspection/lokasi_unit', 'fas fa-fw fa-map-marker', 1),
+(20, 5, 'Brand', 'inspection/brand', 'fas fa-fw fa-copy', 1);
 
 -- --------------------------------------------------------
 
@@ -636,6 +744,12 @@ INSERT INTO `user_token` (`id`, `email`, `token`, `date_created`) VALUES
 --
 
 --
+-- Indexes for table `brand`
+--
+ALTER TABLE `brand`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `inspection`
 --
 ALTER TABLE `inspection`
@@ -659,6 +773,12 @@ ALTER TABLE `inspection_item`
 ALTER TABLE `inspection_template`
   ADD PRIMARY KEY (`id_template`),
   ADD UNIQUE KEY `nama_template` (`nama_template`);
+
+--
+-- Indexes for table `lokasi_unit`
+--
+ALTER TABLE `lokasi_unit`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `master_produk`
@@ -713,16 +833,22 @@ ALTER TABLE `user_token`
 --
 
 --
+-- AUTO_INCREMENT for table `brand`
+--
+ALTER TABLE `brand`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
 -- AUTO_INCREMENT for table `inspection`
 --
 ALTER TABLE `inspection`
-  MODIFY `id_inspection` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
+  MODIFY `id_inspection` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
 
 --
 -- AUTO_INCREMENT for table `inspection_detail`
 --
 ALTER TABLE `inspection_detail`
-  MODIFY `id_detail` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=963;
+  MODIFY `id_detail` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1031;
 
 --
 -- AUTO_INCREMENT for table `inspection_item`
@@ -735,6 +861,12 @@ ALTER TABLE `inspection_item`
 --
 ALTER TABLE `inspection_template`
   MODIFY `id_template` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+--
+-- AUTO_INCREMENT for table `lokasi_unit`
+--
+ALTER TABLE `lokasi_unit`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `master_produk`
@@ -752,31 +884,31 @@ ALTER TABLE `unit`
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `user_access_menu`
 --
 ALTER TABLE `user_access_menu`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `user_menu`
 --
 ALTER TABLE `user_menu`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `user_role`
 --
 ALTER TABLE `user_role`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `user_sub_menu`
 --
 ALTER TABLE `user_sub_menu`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `user_token`

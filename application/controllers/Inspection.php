@@ -117,6 +117,8 @@ class Inspection extends CI_Controller
         if ($tanggal_mulai && $tanggal_akhir) {
             $this->db->where('created_at >=', $tanggal_mulai . ' 00:00:00');
             $this->db->where('created_at <=', $tanggal_akhir . ' 23:59:59');
+        } else if($tanggal_mulai){
+            $this->db->where('date(created_at) =', $tanggal_mulai);
         }
         $data['master_produk'] = $this->db->get()->result_array();
         // Untuk dropdown Nama Produk
@@ -245,6 +247,11 @@ class Inspection extends CI_Controller
 
     /* unit */
     public function index_unit() {
+        $ci = get_instance();
+        if (!$ci->session->userdata('email')) {
+            redirect('auth');
+            return;
+        }
         $data['lokasi_units'] = $this->db->get('lokasi_unit')->result_array();
         $this->db->select('*');
         $this->db->from('inspection_template');
@@ -1323,4 +1330,68 @@ class Inspection extends CI_Controller
         redirect('inspection/lokasi_unit');
     }
     /* end lokasi unit */
+
+    /* Brand CRUD */
+    public function brand()
+    {
+        $ci = get_instance();
+        if (!$ci->session->userdata('email')) {
+            redirect('auth');
+            return;
+        }
+        $data['title'] = 'Brand';
+        $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+        $data['brands'] = $this->db->get('brand')->result_array();
+        $this->form_validation->set_rules('brand', 'Brand Name', 'required|trim|is_unique[brand.brand]', [
+            'is_unique' => 'This brand name already exists!'
+        ]);
+        if ($this->form_validation->run() == false) {
+            $this->load->view('templates/header', $data);
+            $this->load->view('templates/sidebar', $data);
+            $this->load->view('templates/topbar', $data);
+            $this->load->view('inspection/brand', $data); // View untuk brand
+            $this->load->view('templates/footer');
+        } else {
+            $this->db->insert('brand', ['brand' => htmlspecialchars($this->input->post('brand', true))]);
+            $this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">New brand added!</div>');
+            redirect('inspection/brand');
+        }
+    }
+
+    public function edit_brand()
+    {
+        $data['title'] = 'Edit Brand';
+        $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+        $id = $this->input->post('id'); // Ambil ID brand dari input hidden
+        $original_brand_name = $this->input->post('original_brand'); // Ambil nama brand asli untuk validasi
+        $new_brand_name = htmlspecialchars($this->input->post('brand', true)); 
+        $this->form_validation->set_rules('brand', 'Brand Name', 'required|trim');
+        if ($new_brand_name != $original_brand_name) {
+            $this->form_validation->set_rules('brand', 'Brand Name', 'is_unique[brand.brand]', [
+                'is_unique' => 'This brand name already exists!'
+            ]);
+        }
+        if ($this->form_validation->run() == false) {
+            $this->session->set_flashdata('message', '<div class="alert alert-danger" role="alert">' . validation_errors() . '</div>');
+            redirect('inspection/brand');
+        } else {
+            $this->db->where('id', $id); // Pastikan kolom ID di tabel brand adalah 'id'
+            $this->db->update('brand', ['brand' => $new_brand_name]);
+            $this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">Brand updated!</div>');
+            redirect('inspection/brand');
+        }
+    }
+
+    public function delete_brand($id)
+    {
+        $this->db->where('id', $id); // Pastikan kolom ID di tabel brand adalah 'id'
+        $this->db->delete('brand');
+        if ($this->db->affected_rows() > 0) {
+            $this->session->set_flashdata('message', '<div class="alert alert-danger" role="alert">Brand deleted!</div>');
+        } else {
+            $this->session->set_flashdata('message', '<div class="alert alert-warning" role="alert">Failed to delete brand or brand not found.</div>');
+        }
+        redirect('inspection/brand');
+    }
+    /* End Brand CRUD */
 }

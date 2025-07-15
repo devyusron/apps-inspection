@@ -104,13 +104,14 @@
                                 <th>Nama Brand</th>
                                 <th>Type Unit</th>
                                 <th>Serial Number</th>
+                                <th>Engine Plate</th>
                                 <th>Machine No</th>      
                                 <th>Model No</th>
-                                <th>Qty</th>
-                                <th>Kondisi Unit</th>
-                                <th>Tanggal Masuk</th>
+                                <!-- <th>Qty</th> -->
+                                <!-- <th>Kondisi Unit</th> -->
+                                <!-- <th>Tanggal Masuk</th> -->
                                 <!-- <th>Tanggal Keluar</th> -->
-                                <th>Status Unit</th>
+                                <!-- <th>Status Unit</th> -->
                                 <th>Lokasi Unit</th>
                                 <th>Keterangan Unit</th>
                                 <!-- <th>Created At</th>
@@ -127,13 +128,14 @@
                                     <td><?= htmlspecialchars($unit['nama_produk']); ?></td>
                                     <td><?= htmlspecialchars($unit['type_unit']); ?></td>
                                     <td><?= htmlspecialchars($unit['serial_number']); ?></td>
+                                    <td><?= htmlspecialchars($unit['engine_plate']); ?></td>
                                     <td><?= isset($unit['machine_no']) ? htmlspecialchars($unit['machine_no']) : '-'; ?></td>    
                                     <td><?= isset($unit['model_no']) ? htmlspecialchars($unit['model_no']) : '-'; ?>
-                                    <td><?= $unit['qty']; ?></td>
-                                    <td><?= htmlspecialchars($unit['kondisi_unit']); ?></td>
-                                    <td><?= $unit['tanggal_masuk']; ?></td>
+                                    <!-- <td><?= $unit['qty']; ?></td> -->
+                                    <!-- <td><?= htmlspecialchars($unit['kondisi_unit']); ?></td> -->
+                                    <!-- <td><?= $unit['tanggal_masuk']; ?></td> -->
                                     <!-- <td><?= $unit['tanggal_keluar']; ?></td> -->
-                                    <td><?= htmlspecialchars($unit['status_unit']); ?></td>
+                                    <!-- <td><?= htmlspecialchars($unit['status_unit']); ?></td> -->
                                     <td><?= htmlspecialchars($unit['lokasi_unit']); ?></td>
                                     <td><?= htmlspecialchars($unit['keterangan_unit']); ?></td>
                                     <!-- <td><?= $unit['created_at']; ?></td>

@@ -27,21 +27,11 @@
                                 <?php endforeach; ?>
                             </select>
                         </div>
-                        <!-- <div class="col-md-2 mb-2">
-                            <label for="kode_produk">Kode Produk:</label>
-                            <input type="text" class="form-control form-control-sm" id="kode_produk" name="kode_produk"
-                                    value="<?= $this->input->get('kode_produk'); ?>">
-                        </div> -->
                         <div class="col-md-2 mb-2">
                             <label for="tanggal_mulai">Tanggal Masuk:</label>
                             <input type="date" class="form-control form-control-sm" id="tanggal_mulai" name="tanggal_mulai"
                                     value="<?= $this->input->get('tanggal_mulai'); ?>">
                         </div>
-                        <!-- <div class="col-md-2 mb-2">
-                            <label for="tanggal_akhir">Tanggal Terima End:</label>
-                            <input type="date" class="form-control form-control-sm" id="tanggal_akhir" name="tanggal_akhir"
-                                    value="<?= $this->input->get('tanggal_akhir'); ?>">
-                        </div> -->
                     </div>
                     <button type="submit" class="btn btn-primary btn-sm">Filter</button>
                     <a href="<?= site_url('inspection/master_produk'); ?>" class="btn btn-secondary btn-sm">Reset Filter</a>
@@ -73,19 +63,7 @@
                             <th scope="col">Type Unit</th>
                             <th scope="col">Gambar</th>
                             <th scope="col">Deskripsi</th>
-                            <!-- <th scope="col">Harga</th> -->
-                            <!-- <th scope="col">Harga Asli</th> -->
-                            <!-- <th scope="col">Harga Diskon</th> -->
-                            <!-- <th scope="col">Stok</th> -->
-                            <!-- <th scope="col">Min. Stok</th> -->
-                            <!-- <th scope="col">Kategori</th> -->
-                            <!-- <th scope="col">Brand</th> -->
-                            <!-- <th scope="col">Tag</th> -->
                             <th scope="col">Berat</th>
-                            <!-- <th scope="col">Warna</th> -->
-                            <!-- <th scope="col">Aktif</th>
-                            <th scope="col">Dibuat Oleh</th>
-                            <th scope="col">Dibuat Pada</th> -->
                             <th scope="col">Action</th>
                         </tr>
                     </thead>
@@ -112,19 +90,7 @@
                                     ?>
                                     <span title="<?= htmlspecialchars($deskripsi); ?>"><?= htmlspecialchars($shortDescription); ?></span>
                                 </td>
-                                <!-- <td>Rp <?= number_format($m['harga_produk'], 0, ',', '.'); ?></td> -->
-                                <!-- <td>Rp <?= number_format($m['harga_asli'], 0, ',', '.'); ?></td> -->
-                                <!-- <td>Rp <?= number_format($m['harga_diskon'], 0, ',', '.'); ?></td> -->
-                                <!-- <td><?= $m['stok_produk']; ?></td> -->
-                                <!-- <td><?= $m['minimum_stok_produk']; ?></td> -->
-                                <!-- <td><?= $m['kategori_produk']; ?></td> -->
-                                <!-- <td><?= $m['brand_produk']; ?></td> -->
-                                <!-- <td><?= $m['tag_produk']; ?></td> -->
                                 <td><?= $m['berat_produk']; ?></td>
-                                <!-- <td><?= $m['warna_produk']; ?></td> -->
-                                <!-- <td><?= $m['is_active'] == 1 ? 'Aktif' : 'Tidak Aktif'; ?></td>
-                                <td><?= $m['created_by']; ?></td>
-                                <td><?= date('d F Y H:i:s', strtotime($m['created_at'])); ?></td> -->
                                 <td>
                                     <?php if($this->session->userdata('role_id') == 1) : ?>
                                     <a href="#" class="badge badge-success" data-toggle="modal" data-target="#editMenuModal"
@@ -181,14 +147,10 @@
                         <label for="nama_produk">Nama Brand</label>
                         <input type="text" class="form-control" id="nama_produk" name="nama_produk" required>
                     </div>
-                    <!-- <div class="form-group">
-                        <label for="kode_produk">Kode Produk</label>
-                        <input type="text" class="form-control" id="kode_produk" name="kode_produk">
-                    </div> -->
                     <div class="form-group">
                         <label for="url_gambar_produk">Gambar Produk</label>
                         <div class="custom-file">
-                            <input type="file" class="custom-file-input" id="url_gambar_produk" name="url_gambar_produk" required>
+                            <input type="file" class="custom-file-input" id="url_gambar_produk" name="url_gambar_produk">
                             <label class="custom-file-label" for="url_gambar_produk">Pilih file</label>
                         </div>
                         <small class="text-muted">Biarkan kosong jika tidak ingin mengubah gambar.</small>
@@ -198,38 +160,6 @@
                         <label for="deskripsi_produk">Deskripsi Produk</label>
                         <textarea class="form-control" id="deskripsi_produk" name="deskripsi_produk" required></textarea>
                     </div>
-                    <!-- <div class="form-group">
-                        <label for="harga_produk">Harga</label>
-                        <input type="number" class="form-control" id="harga_produk" name="harga_produk">
-                    </div> -->
-                    <!-- <div class="form-group">
-                        <label for="harga_asli">Harga Asli</label>
-                        <input type="number" class="form-control" id="harga_asli" name="harga_asli">
-                    </div> -->
-                    <!-- <div class="form-group">
-                        <label for="harga_diskon">Harga Diskon</label>
-                        <input type="number" class="form-control" id="harga_diskon" name="harga_diskon">
-                    </div> -->
-                    <!-- <div class="form-group">
-                        <label for="stok_produk">Stok</label>
-                        <input type="number" class="form-control" id="stok_produk" name="stok_produk">
-                    </div> -->
-                    <!-- <div class="form-group">
-                        <label for="minimum_stok_produk">Minimum Stok</label>
-                        <input type="number" class="form-control" id="minimum_stok_produk" name="minimum_stok_produk">
-                    </div> -->
-                    <!-- <div class="form-group">
-                        <label for="kategori_produk">Kategori</label>
-                        <input type="text" class="form-control" id="kategori_produk" name="kategori_produk">
-                    </div> -->
-                    <!-- <div class="form-group">
-                        <label for="brand_produk">Brand</label>
-                        <input type="text" class="form-control" id="brand_produk" name="brand_produk">
-                    </div> -->
-                    <!-- <div class="form-group">
-                        <label for="tag_produk">Tag</label>
-                        <input type="number" class="form-control" id="tag_produk" name="tag_produk">
-                    </div> -->
                     <div class="form-group">
                         <label for="dimensi_produk">Type Unit</label>
                         <input type="text" class="form-control" id="dimensi_produk" name="dimensi_produk" required>
@@ -238,10 +168,6 @@
                         <label for="berat_produk">Berat</label>
                         <input type="text" class="form-control" id="berat_produk" name="berat_produk" required>
                     </div>
-                    <!-- <div class="form-group">
-                        <label for="warna_produk">Warna</label>
-                        <input type="text" class="form-control" id="warna_produk" name="warna_produk">
-                    </div> -->
                     <div class="form-group">
                         <label for="is_active">Status</label>
                         <select class="form-control" id="is_active" name="is_active">
@@ -343,14 +269,10 @@
                                 <label for="nama_produk">Nama Brand</label>
                                 <input type="text" class="form-control" id="nama_produk" name="nama_produk" placeholder="Nama Produk" required>
                             </div>
-                            <!-- <div class="form-group">
-                                <label for="kode_produk">Kode Produk</label>
-                                <input type="text" class="form-control" id="kode_produk" name="kode_produk" placeholder="Kode Produk">
-                            </div> -->
                             <div class="form-group">
                                 <label for="url_gambar_produk">Gambar Produk</label>
                                 <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="url_gambar_produk" name="url_gambar_produk" required>
+                                    <input type="file" class="custom-file-input" id="url_gambar_produk" name="url_gambar_produk">
                                     <label class="custom-file-label" for="url_gambar_produk">Pilih file</label>
                                 </div>
                             </div>
@@ -358,40 +280,8 @@
                                 <label for="deskripsi_produk">Deskripsi Produk</label>
                                 <textarea class="form-control" id="deskripsi_produk" name="deskripsi_produk" placeholder="Deskripsi Produk" required></textarea>
                             </div>
-                            <!-- <div class="form-group">
-                                <label for="harga_produk">Harga</label>
-                                <input type="number" class="form-control" id="harga_produk" name="harga_produk" placeholder="Harga">
-                            </div> -->
-                            <!-- <div class="form-group">
-                                <label for="harga_asli">Harga Asli</label>
-                                <input type="number" class="form-control" id="harga_asli" name="harga_asli" placeholder="Harga Asli">
-                            </div> -->
-                            <!-- <div class="form-group">
-                                <label for="harga_diskon">Harga Diskon</label>
-                                <input type="number" class="form-control" id="harga_diskon" name="harga_diskon" placeholder="Harga Diskon">
-                            </div> -->
-                            <!-- <div class="form-group">
-                                <label for="stok_produk">Stok</label>
-                                <input type="number" class="form-control" id="stok_produk" name="stok_produk" placeholder="Stok" value="0">
-                            </div> -->
-                            <!-- <div class="form-group">
-                                <label for="minimum_stok_produk">Minimum Stok</label>
-                                <input type="number" class="form-control" id="minimum_stok_produk" name="minimum_stok_produk" placeholder="Minimum Stok" value="0">
-                            </div> -->
                         </div>
                         <div class="col-md-6">
-                            <!-- <div class="form-group">
-                                <label for="kategori_produk">Kategori</label>
-                                <input type="text" class="form-control" id="kategori_produk" name="kategori_produk" placeholder="Kategori">
-                            </div> -->
-                            <!-- <div class="form-group">
-                                <label for="brand_produk">Brand</label>
-                                <input type="text" class="form-control" id="brand_produk" name="brand_produk" placeholder="Brand">
-                            </div> -->
-                            <!-- <div class="form-group">
-                                <label for="tag_produk">Tag</label>
-                                <input type="number" class="form-control" id="tag_produk" name="tag_produk" placeholder="Tag" value="0">
-                            </div> -->
                             <div class="form-group">
                                 <label for="dimensi_produk">Type Unit</label>
                                 <input type="text" class="form-control" id="dimensi_produk" name="dimensi_produk" placeholder="Type Unit" required>
@@ -400,10 +290,6 @@
                                 <label for="berat_produk">Berat</label>
                                 <input type="text" class="form-control" id="berat_produk" name="berat_produk" placeholder="Berat" required>
                             </div>
-                            <!-- <div class="form-group">
-                                <label for="warna_produk">Warna</label>
-                                <input type="text" class="form-control" id="warna_produk" name="warna_produk" placeholder="Warna">
-                            </div> -->
                             <div class="form-group">
                                 <label for="is_active">Status</label>
                                 <select class="form-control" id="is_active" name="is_active">

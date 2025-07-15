@@ -139,33 +139,57 @@ class Inspection extends CI_Controller
         $this->form_validation->set_rules('dimensi_produk', 'Type Unit', 'required');
         $this->form_validation->set_rules('deskripsi_produk', 'Deskripsi Produk', 'required');
         $this->form_validation->set_rules('berat_produk', 'Berat', 'required');
-        // $this->form_validation->set_rules('stok_produk', 'Stok', 'trim|numeric');
+        if (empty($_FILES['url_gambar_produk']['name'])) {
+            $this->form_validation->set_rules('url_gambar_produk', 'Gambar Produk', 'required', [
+                'required' => 'Gambar Produk wajib diisi.'
+            ]);
+        }
         if ($this->form_validation->run() == FALSE) {
             $this->master_produk(); // Reload halaman master produk dengan menampilkan error validasi (jika ada)
         } else {
-            $data = [
-                'nama_produk' => $this->input->post('nama_produk'),
-                'kode_produk' => $this->input->post('kode_produk'),
-                'url_gambar_produk' => $this->_uploadImage_master_produk(), // Fungsi untuk upload gambar
-                'deskripsi_produk' => $this->input->post('deskripsi_produk'),
-                'harga_produk' => $this->input->post('harga_produk'),
-                'harga_asli' => $this->input->post('harga_asli'),
-                'harga_diskon' => $this->input->post('harga_diskon'),
-                'stok_produk' => $this->input->post('stok_produk'),
-                'minimum_stok_produk' => $this->input->post('minimum_stok_produk'),
-                'kategori_produk' => $this->input->post('kategori_produk'),
-                'brand_produk' => $this->input->post('brand_produk'),
-                'tag_produk' => $this->input->post('tag_produk'),
-                'dimensi_produk' => $this->input->post('dimensi_produk'),
-                'berat_produk' => $this->input->post('berat_produk'),
-                'warna_produk' => $this->input->post('warna_produk'),
-                'is_active' => $this->input->post('is_active') ? 1 : 0,
-                'created_by' => $this->session->userdata('user_id') ? $this->session->userdata('user_id') : 'SYSTEM',
-                'created_at' => date('Y-m-d H:i:s')
-            ];
-            $this->db->insert('master_produk', $data);
-            $this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">Produk berhasil ditambahkan!</div>');
-            redirect('inspection/master_produk');
+            $upload_result = $this->_uploadImage_master_produk(); // Panggil fungsi upload gambar
+
+            // --- START PERBAIKAN UNTUK MENGATASI TYPEERROR ---
+            // Tambahkan pengecekan tipe data sebelum mengakses offset array
+            if (!is_array($upload_result)) {
+                // Log pesan error untuk debugging lebih lanjut
+                log_message('error', 'Unexpected return type from _uploadImage_master_produk: ' . gettype($upload_result) . ' Value: ' . print_r($upload_result, true));
+                $this->session->set_flashdata('message', '<div class="alert alert-danger" role="alert">Terjadi kesalahan internal saat upload gambar. Silakan coba lagi.</div>');
+                $this->master_produk(); // Memuat ulang halaman master produk
+                return; // Hentikan eksekusi
+            }
+            // --- END PERBAIKAN UNTUK MENGATASI TYPEERROR ---
+
+            if ($upload_result['status']) { // Jika upload berhasil
+                $data = [
+                    'nama_produk' => htmlspecialchars($this->input->post('nama_produk', true)),
+                    'kode_produk' => htmlspecialchars($this->input->post('kode_produk', true)),
+                    'url_gambar_produk' => $upload_result['file_name'], // Gunakan nama file yang berhasil diupload
+                    'deskripsi_produk' => htmlspecialchars($this->input->post('deskripsi_produk', true)),
+                    'harga_produk' => htmlspecialchars($this->input->post('harga_produk', true)),
+                    'harga_asli' => htmlspecialchars($this->input->post('harga_asli', true)),
+                    'harga_diskon' => htmlspecialchars($this->input->post('harga_diskon', true)),
+                    'stok_produk' => htmlspecialchars($this->input->post('stok_produk', true)),
+                    'minimum_stok_produk' => htmlspecialchars($this->input->post('minimum_stok_produk', true)),
+                    'kategori_produk' => htmlspecialchars($this->input->post('kategori_produk', true)),
+                    'brand_produk' => htmlspecialchars($this->input->post('brand_produk', true)),
+                    'tag_produk' => htmlspecialchars($this->input->post('tag_produk', true)),
+                    'dimensi_produk' => htmlspecialchars($this->input->post('dimensi_produk', true)),
+                    'berat_produk' => htmlspecialchars($this->input->post('berat_produk', true)),
+                    'warna_produk' => htmlspecialchars($this->input->post('warna_produk', true)),
+                    'is_active' => $this->input->post('is_active') ? 1 : 0,
+                    'created_by' => $this->session->userdata('user_id') ? $this->session->userdata('user_id') : 'SYSTEM',
+                    'created_at' => date('Y-m-d H:i:s')
+                ];
+                $this->db->insert('master_produk', $data);
+                $this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">Produk berhasil ditambahkan!</div>');
+                redirect('inspection/master_produk');
+            } else {
+                // Jika upload gagal, tampilkan error upload
+                $this->session->set_flashdata('message', '<div class="alert alert-danger" role="alert">Gagal upload gambar: ' . $upload_result['error'] . '</div>');
+                // Penting: Jangan lakukan insert ke DB jika upload gagal
+                $this->master_produk(); // Memuat ulang halaman master produk dengan error upload
+            }
         }
     }
 
@@ -179,35 +203,56 @@ class Inspection extends CI_Controller
         // Tambahkan rules validasi lain sesuai kebutuhan
 
         if ($this->form_validation->run() == FALSE) {
-            $this->master_produk(); // Reload halaman master produk dengan menampilkan error validasi (jika ada)
+            $this->session->set_flashdata('message', '<div class="alert alert-danger" role="alert">' . validation_errors() . '</div>');
+            $this->master_produk();
         } else {
             $data = [
-                'nama_produk' => $this->input->post('nama_produk'),
-                'kode_produk' => $this->input->post('kode_produk'),
-                'deskripsi_produk' => $this->input->post('deskripsi_produk'),
-                'harga_produk' => $this->input->post('harga_produk'),
-                'harga_asli' => $this->input->post('harga_asli'),
-                'harga_diskon' => $this->input->post('harga_diskon'),
-                'stok_produk' => $this->input->post('stok_produk'),
-                'minimum_stok_produk' => $this->input->post('minimum_stok_produk'),
-                'kategori_produk' => $this->input->post('kategori_produk'),
-                'brand_produk' => $this->input->post('brand_produk'),
-                'tag_produk' => $this->input->post('tag_produk'),
-                'dimensi_produk' => $this->input->post('dimensi_produk'),
-                'berat_produk' => $this->input->post('berat_produk'),
-                'warna_produk' => $this->input->post('warna_produk'),
+                'nama_produk' => htmlspecialchars($this->input->post('nama_produk', true)),
+                'kode_produk' => htmlspecialchars($this->input->post('kode_produk', true)),
+                'deskripsi_produk' => htmlspecialchars($this->input->post('deskripsi_produk', true)),
+                'harga_produk' => htmlspecialchars($this->input->post('harga_produk', true)),
+                'harga_asli' => htmlspecialchars($this->input->post('harga_asli', true)),
+                'harga_diskon' => htmlspecialchars($this->input->post('harga_diskon', true)),
+                'stok_produk' => htmlspecialchars($this->input->post('stok_produk', true)),
+                'minimum_stok_produk' => htmlspecialchars($this->input->post('minimum_stok_produk', true)),
+                'kategori_produk' => htmlspecialchars($this->input->post('kategori_produk', true)),
+                'brand_produk' => htmlspecialchars($this->input->post('brand_produk', true)),
+                'tag_produk' => htmlspecialchars($this->input->post('tag_produk', true)),
+                'dimensi_produk' => htmlspecialchars($this->input->post('dimensi_produk', true)),
+                'berat_produk' => htmlspecialchars($this->input->post('berat_produk', true)),
+                'warna_produk' => htmlspecialchars($this->input->post('warna_produk', true)),
                 'is_active' => $this->input->post('is_active') ? 1 : 0,
                 // 'updated_by' => $this->session->userdata('user_id') ? $this->session->userdata('user_id') : 'SYSTEM',
                 // 'updated_at' => date('Y-m-d H:i:s')
             ];
-            $upload_data = $this->_uploadImage_master_produk();
-            if ($upload_data) {
-                $data['url_gambar_produk'] = $upload_data;
-                $old_image = $this->db->get_where('master_produk', ['id_produk' => $id_produk])->row()->url_gambar_produk;
-                if ($old_image && file_exists(FCPATH . 'assets/img/produk/' . $old_image)) {
-                    unlink(FCPATH . 'assets/img/produk/' . $old_image);
+
+            // Cek apakah ada file gambar baru yang diupload
+            if (!empty($_FILES['url_gambar_produk']['name'])) {
+                $upload_data = $this->_uploadImage_master_produk();
+
+                // Tambahkan pengecekan tipe data sebelum mengakses offset array
+                if (!is_array($upload_data)) {
+                    log_message('error', 'Unexpected return type from _uploadImage_master_produk in edit_master_produk: ' . gettype($upload_data) . ' Value: ' . print_r($upload_data, true));
+                    $this->session->set_flashdata('message', '<div class="alert alert-danger" role="alert">Terjadi kesalahan internal saat upload gambar. Silakan coba lagi.</div>');
+                    redirect('inspection/master_produk');
+                    return;
+                }
+
+                if ($upload_data['status']) {
+                    // Hapus gambar lama jika ada dan upload berhasil
+                    $old_image = $this->db->get_where('master_produk', ['id_produk' => $id_produk])->row()->url_gambar_produk;
+                    if ($old_image && file_exists(FCPATH . 'assets/img/produk/' . $old_image)) {
+                        unlink(FCPATH . 'assets/img/produk/' . $old_image);
+                    }
+                    $data['url_gambar_produk'] = $upload_data['file_name'];
+                } else {
+                    // Jika upload gambar baru gagal, tampilkan error dan jangan update produk
+                    $this->session->set_flashdata('message', '<div class="alert alert-danger" role="alert">Gagal upload gambar: ' . $upload_data['error'] . '</div>');
+                    redirect('inspection/master_produk'); // Redirect agar pesan error tampil
+                    return; // Hentikan eksekusi
                 }
             }
+            
             $this->db->where('id_produk', $id_produk);
             $this->db->update('master_produk', $data);
             $this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">Produk berhasil diupdate!</div>');
@@ -233,18 +278,38 @@ class Inspection extends CI_Controller
     private function _uploadImage_master_produk()
     {
         $config['upload_path'] = './assets/img/produk/';
-        $config['allowed_types'] = 'gif|jpg|png|jpeg';
+        $config['allowed_types'] = '*';
         $config['max_size'] = 2048;
         $config['overwrite'] = true;
         $microtime = microtime(true);
         $microtime_str = str_replace('.', '', (string) $microtime);
         $timestamp_milisecond = substr($microtime_str, 0, 10);
         $config['file_name'] = 'produk_' . $timestamp_milisecond;
-        $this->load->library('upload', $config);
-        if ($this->upload->do_upload('url_gambar_produk')) {
-            return $this->upload->data('file_name');
+        // Inisialisasi ulang library upload dengan konfigurasi baru
+        $this->upload->initialize($config);
+
+        // --- DEBUGGING: Tambahkan logging untuk path upload dan keberadaan folder ---
+        log_message('debug', 'Upload Path yang digunakan: ' . $config['upload_path']);
+        if (!is_dir($config['upload_path'])) {
+            log_message('error', 'Direktori upload TIDAK DITEMUKAN atau TIDAK DAPAT DIAKSES: ' . $config['upload_path']);
+            // Coba buat direktori jika tidak ada (opsional, bisa di-handle manual juga)
+            if (!mkdir($config['upload_path'], 0777, TRUE)) {
+                log_message('error', 'Gagal membuat direktori upload: ' . $config['upload_path']);
+                return ['status' => false, 'error' => 'Direktori upload tidak dapat dibuat atau diakses.'];
+            }
+            log_message('debug', 'Direktori upload berhasil dibuat: ' . $config['upload_path']);
         } else {
-            return '';
+            log_message('debug', 'Direktori upload DITEMUKAN: ' . $config['upload_path']);
+        }
+        // --- END DEBUGGING ---
+
+        if ($this->upload->do_upload('url_gambar_produk')) {
+            // Upload berhasil
+            return ['status' => true, 'file_name' => $this->upload->data('file_name')];
+        } else {
+            // Upload gagal, kembalikan status false dan pesan error
+            log_message('error', 'Gagal do_upload: ' . $this->upload->display_errors('', ''));
+            return ['status' => false, 'error' => $this->upload->display_errors('', '')];
         }
     }
     /* end produk */

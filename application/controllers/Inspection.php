@@ -122,7 +122,8 @@ class Inspection extends CI_Controller
         }
         $data['master_produk'] = $this->db->get()->result_array();
         // Untuk dropdown Nama Produk
-        $this->db->select('nama_produk');
+        // $this->db->select("concat(nama_produk,'[',dimensi_produk,']') as nama_produk");
+        $this->db->select("nama_produk");
         $this->db->distinct();
         $data['nama_produk_list'] = $this->db->get('master_produk')->result_array();
         $this->load->view('templates/header', $data);
@@ -135,10 +136,10 @@ class Inspection extends CI_Controller
     public function add_master_produk()
     {
         $this->form_validation->set_rules('nama_produk', 'Nama Produk', 'required|trim');
-        $this->form_validation->set_rules('kode_produk', 'Kode Produk', 'trim');
-        $this->form_validation->set_rules('deskripsi_produk', 'Deskripsi Produk', 'trim');
-        $this->form_validation->set_rules('harga_produk', 'Harga', 'trim|numeric');
-        $this->form_validation->set_rules('stok_produk', 'Stok', 'trim|numeric');
+        $this->form_validation->set_rules('dimensi_produk', 'Type Unit', 'required');
+        $this->form_validation->set_rules('deskripsi_produk', 'Deskripsi Produk', 'required');
+        $this->form_validation->set_rules('berat_produk', 'Berat', 'required');
+        // $this->form_validation->set_rules('stok_produk', 'Stok', 'trim|numeric');
         if ($this->form_validation->run() == FALSE) {
             $this->master_produk(); // Reload halaman master produk dengan menampilkan error validasi (jika ada)
         } else {
@@ -172,6 +173,9 @@ class Inspection extends CI_Controller
     {
         $id_produk = $this->input->post('id_produk');
         $this->form_validation->set_rules('nama_produk', 'Nama Produk', 'required|trim');
+        $this->form_validation->set_rules('dimensi_produk', 'Type Unit', 'required');
+        $this->form_validation->set_rules('deskripsi_produk', 'Deskripsi Produk', 'required');
+        $this->form_validation->set_rules('berat_produk', 'Berat', 'required');
         // Tambahkan rules validasi lain sesuai kebutuhan
 
         if ($this->form_validation->run() == FALSE) {
@@ -262,6 +266,9 @@ class Inspection extends CI_Controller
         $kondisi_unit = $this->input->get('kondisi_unit');
         $lokasi_unit = $this->input->get('lokasi_unit');
         $status_inspection = $this->input->get('status_inspection');
+        // $this->db->select("concat(nama_produk,'[',dimensi_produk,']') as nama_produk");
+        $this->db->select("nama_produk");
+        $this->db->distinct();
         $data['daftar_produk'] = $this->db->get('master_produk')->result_array();
         $this->db->select('unit.*, master_produk.nama_produk, inspection.inspection_template_id as id_template, inspection.id_inspection as id_inspection,approve_manager');
         $this->db->from('unit');
@@ -296,6 +303,9 @@ class Inspection extends CI_Controller
     }
 
     public function add_unit() {
+        $this->db->select("nama_produk");
+        $this->db->distinct();
+        // $this->db->select("concat(nama_produk,' [',dimensi_produk,']') as nama_produk,id_produk");
         $data['products'] = $this->db->get('master_produk')->result_array();
         $data['title'] = 'Tambah Unit';
         $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();

@@ -19,20 +19,20 @@
             <div class="col">
                 <form action="<?= site_url('inspection/index_unit'); ?>" method="get">
                     <div class="form-row">
-                        <div class="col-md-2 mb-2">
+                        <!-- <div class="col-md-2 mb-2">
                             <label for="tanggal_mulai">Tanggal Masuk Start:</label>
                             <input type="date" class="form-control form-control-sm" id="tanggal_mulai" name="tanggal_mulai"
                                 value="<?= $this->input->get('tanggal_mulai'); ?>">
-                        </div>
-                        <div class="col-md-2 mb-2">
+                        </div> -->
+                        <!-- <div class="col-md-2 mb-2">
                             <label for="tanggal_akhir">Tanggal Masuk End:</label>
                             <input type="date" class="form-control form-control-sm" id="tanggal_akhir" name="tanggal_akhir"
                                 value="<?= $this->input->get('tanggal_akhir'); ?>">
-                        </div>
+                        </div> -->
                         <div class="col-md-2 mb-2">
-                            <label for="nama_produk">Nama Produk:</label>
+                            <label for="nama_produk">Nama Brand:</label>
                             <select class="form-control form-control-sm" id="nama_produk" name="nama_produk">
-                                <option value="">Semua Produk</option>
+                                <option value="">Semua Brand</option>
                                 <?php foreach ($daftar_produk as $produk): ?>
                                     <option value="<?= htmlspecialchars($produk['nama_produk']); ?>"
                                         <?= ($this->input->get('nama_produk') == $produk['nama_produk']) ? 'selected' : ''; ?>>
@@ -42,6 +42,15 @@
                             </select>
                         </div>
                         <div class="col-md-2 mb-2">
+                            <label for="serial_number">Serial Number:</label>
+                            <input type="text" class="form-control  form-control-sm" name="serial_number" id="serial_number">
+                        </div>
+                        <div class="col-md-2 mb-2">
+                            <label for="tanggal_mulai">Tanggal Masuk:</label>
+                            <input type="date" class="form-control form-control-sm" id="tanggal_mulai" name="tanggal_mulai"
+                                    value="<?= $this->input->get('tanggal_mulai'); ?>">
+                        </div>
+                        <div class="col-md-2 mb-2">
                             <label for="status_inspection">Status Inspection:</label>
                             <select class="form-control form-control-sm" id="status_inspection" name="status_inspection">
                                 <option value="">Pilih Status</option>
@@ -49,14 +58,14 @@
                                 <option value="Belum Inspeksi">Belum Inspeksi</option>
                             </select>
                         </div>
-                        <div class="col-md-2 mb-2">
+                        <!-- <div class="col-md-2 mb-2">
                             <label for="kondisi_unit">Kondisi Unit:</label>
                             <select class="form-control form-control-sm" id="kondisi_unit" name="kondisi_unit">
                                 <option value="">Pilih Kondisi</option>
                                 <option value="Berfungsi">Berfungsi</option>
                                 <option value="Tidak Berfungsi">Tidak Berfungsi</option>
                             </select>
-                        </div>
+                        </div> -->
                         <div class="col-md-2 mb-2">
                             <label for="lokasi_unit">Lokasi Unit:</label>
                             <select class="form-control form-control-sm" id="lokasi_unit" name="lokasi_unit">
@@ -92,8 +101,9 @@
                         <thead>
                             <tr>
                                 <th>ID Unit</th>
+                                <th>Nama Brand</th>
+                                <th>Type Unit</th>
                                 <th>Serial Number</th>
-                                <th>Nama Produk</th>
                                 <th>Machine No</th>      
                                 <th>Model No</th>
                                 <th>Qty</th>
@@ -114,8 +124,9 @@
                             <?php $i=1; foreach ($units as $unit): ?>
                                 <tr>
                                     <td><?= $i++; ?></td>
-                                    <td><?= htmlspecialchars($unit['serial_number']); ?></td>
                                     <td><?= htmlspecialchars($unit['nama_produk']); ?></td>
+                                    <td><?= htmlspecialchars($unit['type_unit']); ?></td>
+                                    <td><?= htmlspecialchars($unit['serial_number']); ?></td>
                                     <td><?= isset($unit['machine_no']) ? htmlspecialchars($unit['machine_no']) : '-'; ?></td>    
                                     <td><?= isset($unit['model_no']) ? htmlspecialchars($unit['model_no']) : '-'; ?>
                                     <td><?= $unit['qty']; ?></td>

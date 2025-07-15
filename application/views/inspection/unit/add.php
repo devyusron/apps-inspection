@@ -21,14 +21,29 @@
                         <input type="text" class="form-control" id="model_no" name="model_no">
                         <?= form_error('model_no', '<small class="text-danger">', '</small>'); ?>
                     </div>
-                    <div class="form-group">
-                        <label for="id_produk">ID Produk</label>
-                        <select class="form-control" id="id_produk" name="id_produk" required>
-                            <option value="">Pilih Produk</option>
-                            <?php foreach ($products as $product): ?>
-                                <option value="<?= $product['id_produk']; ?>"><?= htmlspecialchars($product['nama_produk']); ?></option>
-                            <?php endforeach; ?>
-                        </select>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="id_produk">Nama Brand</label>
+                                <select class="form-control" id="id_produk" name="id_produk" required>
+                                    <option value="">Pilih Brand</option>
+                                    <?php foreach ($products as $product): ?>
+                                        <option value="<?= $product['nama_produk']; ?>"><?= htmlspecialchars($product['nama_produk']); ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="id_produk">Type Unit</label>
+                                <select class="form-control" id="id_produk" name="id_produk" required>
+                                    <option value="">Pilih Type Unit</option>
+                                    <?php foreach ($products as $product): ?>
+                                        <option value="<?= $product['nama_produk']; ?>"><?= htmlspecialchars($product['nama_produk']); ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label for="status_inspection">Status Inspeksi</label>

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 14, 2025 at 09:11 AM
+-- Generation Time: Jul 15, 2025 at 04:05 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -535,25 +535,36 @@ INSERT INTO `lokasi_unit` (`id`, `lokasi_unit`) VALUES
 
 CREATE TABLE `master_produk` (
   `id_produk` int(11) NOT NULL,
-  `nama_produk` varchar(255) NOT NULL,
-  `kode_produk` varchar(100) NOT NULL,
-  `url_gambar_produk` varchar(100) DEFAULT NULL,
+  `nama_produk` varchar(255) DEFAULT NULL,
+  `kode_produk` varchar(100) DEFAULT NULL,
+  `url_gambar_produk` varchar(100) NOT NULL,
   `deskripsi_produk` varchar(300) DEFAULT NULL,
-  `harga_produk` int(11) NOT NULL,
-  `harga_asli` int(11) NOT NULL,
-  `harga_diskon` int(11) NOT NULL,
-  `stok_produk` int(11) NOT NULL,
-  `minimum_stok_produk` int(11) NOT NULL,
-  `kategori_produk` varchar(100) NOT NULL,
-  `brand_produk` varchar(100) NOT NULL,
-  `tag_produk` int(11) NOT NULL,
-  `dimensi_produk` varchar(100) NOT NULL,
-  `berat_produk` varchar(100) NOT NULL,
-  `warna_produk` varchar(100) NOT NULL,
-  `is_active` int(11) NOT NULL,
+  `harga_produk` int(11) DEFAULT NULL,
+  `harga_asli` int(11) DEFAULT NULL,
+  `harga_diskon` int(11) DEFAULT NULL,
+  `stok_produk` int(11) DEFAULT NULL,
+  `minimum_stok_produk` int(11) DEFAULT NULL,
+  `kategori_produk` varchar(100) DEFAULT NULL,
+  `brand_produk` varchar(100) DEFAULT NULL,
+  `tag_produk` int(11) DEFAULT NULL,
+  `dimensi_produk` varchar(100) DEFAULT NULL,
+  `berat_produk` varchar(100) DEFAULT NULL,
+  `warna_produk` varchar(100) DEFAULT NULL,
+  `is_active` int(11) DEFAULT NULL,
   `created_by` varchar(10) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `master_produk`
+--
+
+INSERT INTO `master_produk` (`id_produk`, `nama_produk`, `kode_produk`, `url_gambar_produk`, `deskripsi_produk`, `harga_produk`, `harga_asli`, `harga_diskon`, `stok_produk`, `minimum_stok_produk`, `kategori_produk`, `brand_produk`, `tag_produk`, `dimensi_produk`, `berat_produk`, `warna_produk`, `is_active`, `created_by`, `created_at`) VALUES
+(16, 'LONKING', NULL, '', 'lonking 100pro', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '100PRO', '-', NULL, 1, 'SYSTEM', '2025-07-15 14:46:30'),
+(17, 'LONKING', NULL, '', 'LONKING 932PRO', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '932PRO', '-', NULL, 1, 'SYSTEM', '2025-07-15 15:23:49'),
+(19, 'LONKING', NULL, '', 'lonking', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2000PRO', '-', NULL, 1, 'SYSTEM', '2025-07-15 15:29:29'),
+(20, 'SONKING', NULL, '', 'sonking', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '900PRO', '-', NULL, 1, 'SYSTEM', '2025-07-15 15:38:58'),
+(21, 'SONKING', NULL, '', 'sonking 200pro', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '200PRO', '-', NULL, 1, 'SYSTEM', '2025-07-15 15:39:26');
 
 -- --------------------------------------------------------
 
@@ -607,7 +618,10 @@ INSERT INTO `user` (`id`, `name`, `email`, `image`, `password`, `role_id`, `is_a
 (12, 'admin', 'admin@admin.com', 'default.jpg', '$2y$10$VgiXi8BbKDSROpfXM1F9kexQTWKmPsYfJwdpbe0fZQ90gQ64dS.Hi', 1, 1, 1552285263),
 (14, 'admin', 'admin@gmail.com', 'default.jpg', '$2y$10$8nYQlOyyVp2cjeBGG8aUUu3Xn9Fukgj4DOfmllVdpP5jD5kn5smwe', 2, 1, 1746493357),
 (15, 'Manager', 'manager@manager.com', 'default.jpg', '$2y$10$vjtIHt6WOWJXyBaenkLrzu7KOuK/gLnnDD9be2SLIhQczrLh0yuVm', 3, 1, 1751690793),
-(16, 'Manager IT', 'managerit@manager.com', 'default.jpg', '$2y$10$G.ZiDENede9c5vg2v7GUFu98myURgIz9cNTkBB1L3j6dwKPt4Nda6', 3, 1, 1751690839);
+(16, 'Manager IT', 'managerit@manager.com', 'default.jpg', '$2y$10$G.ZiDENede9c5vg2v7GUFu98myURgIz9cNTkBB1L3j6dwKPt4Nda6', 3, 1, 1751690839),
+(17, 'Admin Service', 'adminservice@gmail.com', 'default.jpg', '$2y$10$335b2fIRAbdIisjqwtpVRezc37FlM3pH/yHPJNlxsvFzJmqqyzqYS', 6, 1, 1752584357),
+(18, 'After Sales', 'aftersales@gmail.com', 'default.jpg', '$2y$10$Qs1wt.hPp4cZq3TijeKgyee1xlhgcFbGiqjnWKJc475WzmuwBu8Mi', 5, 1, 1752584429),
+(19, 'Mekanik', 'mekanik@gmail.com', 'default.jpg', '$2y$10$qXQutm1W.8WCG2ONALF4FuDljopP6Vfva4DNx05U00xPyB3Hq9AM.', 7, 1, 1752584459);
 
 -- --------------------------------------------------------
 
@@ -636,7 +650,13 @@ INSERT INTO `user_access_menu` (`id`, `role_id`, `menu_id`) VALUES
 (14, 3, 2),
 (15, 3, 3),
 (16, 3, 5),
-(17, 3, 8);
+(17, 3, 8),
+(18, 6, 2),
+(19, 6, 3),
+(20, 6, 5),
+(21, 6, 8),
+(22, 5, 5),
+(23, 7, 5);
 
 -- --------------------------------------------------------
 
@@ -678,7 +698,10 @@ CREATE TABLE `user_role` (
 INSERT INTO `user_role` (`id`, `role`) VALUES
 (1, 'Administrator'),
 (2, 'User'),
-(3, 'Manager');
+(3, 'Manager'),
+(5, 'After Sales'),
+(6, 'Admin Service'),
+(7, 'Mekanik');
 
 -- --------------------------------------------------------
 
@@ -711,12 +734,12 @@ INSERT INTO `user_sub_menu` (`id`, `menu_id`, `title`, `url`, `icon`, `is_active
 (12, 5, 'List Unit', 'inspection/index_unit', 'fas fa-fw fa-hammer', 1),
 (13, 5, 'List Inspection', 'inspection/index_list_inspection', 'fas fa-fw fa-cog', 1),
 (14, 5, 'Result Inspection', 'inspection/result', 'fas fa-fw fa-ruler-combined', 1),
-(15, 5, 'Item Inspection', 'inspection/index_inspection_item', 'fas fa-fw fa-robot', 1),
-(16, 5, 'Template Inspection', 'inspection/index_template', 'fas fa-fw fa-file-alt', 1),
-(17, 5, 'Form Inspection', 'inspection/index_form', 'fas fa-fw fa-book', 1),
+(15, 5, 'Item Inspection', 'inspection/index_inspection_item', 'fas fa-fw fa-robot', 0),
+(16, 5, 'Template Inspection', 'inspection/index_template', 'fas fa-fw fa-file-alt', 0),
+(17, 5, 'Form Inspection', 'inspection/index_form', 'fas fa-fw fa-book', 0),
 (18, 8, 'User Management', 'account', 'fas fa-fw fa-male', 1),
-(19, 5, 'Lokasi Unit', 'inspection/lokasi_unit', 'fas fa-fw fa-map-marker', 1),
-(20, 5, 'Brand', 'inspection/brand', 'fas fa-fw fa-copy', 1);
+(19, 5, 'Lokasi Unit', 'inspection/lokasi_unit', 'fas fa-fw fa-map-marker', 0),
+(20, 5, 'Brand', 'inspection/brand', 'fas fa-fw fa-copy', 0);
 
 -- --------------------------------------------------------
 
@@ -872,7 +895,7 @@ ALTER TABLE `lokasi_unit`
 -- AUTO_INCREMENT for table `master_produk`
 --
 ALTER TABLE `master_produk`
-  MODIFY `id_produk` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id_produk` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `unit`
@@ -884,13 +907,13 @@ ALTER TABLE `unit`
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT for table `user_access_menu`
 --
 ALTER TABLE `user_access_menu`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT for table `user_menu`
@@ -902,7 +925,7 @@ ALTER TABLE `user_menu`
 -- AUTO_INCREMENT for table `user_role`
 --
 ALTER TABLE `user_role`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `user_sub_menu`

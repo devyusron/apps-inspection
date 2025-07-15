@@ -70,17 +70,17 @@
                             <th scope="col">#</th>
                             <th scope="col">Nama Brand</th>
                             <!-- <th scope="col">Kode Produk</th> -->
+                            <th scope="col">Type Unit</th>
                             <th scope="col">Gambar</th>
                             <th scope="col">Deskripsi</th>
                             <!-- <th scope="col">Harga</th> -->
                             <!-- <th scope="col">Harga Asli</th> -->
                             <!-- <th scope="col">Harga Diskon</th> -->
-                            <th scope="col">Stok</th>
-                            <th scope="col">Min. Stok</th>
+                            <!-- <th scope="col">Stok</th> -->
+                            <!-- <th scope="col">Min. Stok</th> -->
                             <!-- <th scope="col">Kategori</th> -->
                             <!-- <th scope="col">Brand</th> -->
                             <!-- <th scope="col">Tag</th> -->
-                            <th scope="col">Dimensi</th>
                             <th scope="col">Berat</th>
                             <!-- <th scope="col">Warna</th> -->
                             <!-- <th scope="col">Aktif</th>
@@ -95,6 +95,7 @@
                             <tr>
                                 <th scope="row"><?= $i; ?></th>
                                 <td><?= $m['nama_produk']; ?></td>
+                                <td><?= $m['dimensi_produk']; ?></td>
                                 <!-- <td><?= $m['kode_produk']; ?></td> -->
                                 <td>
                                     <?php if ($m['url_gambar_produk']) : ?>
@@ -114,12 +115,11 @@
                                 <!-- <td>Rp <?= number_format($m['harga_produk'], 0, ',', '.'); ?></td> -->
                                 <!-- <td>Rp <?= number_format($m['harga_asli'], 0, ',', '.'); ?></td> -->
                                 <!-- <td>Rp <?= number_format($m['harga_diskon'], 0, ',', '.'); ?></td> -->
-                                <td><?= $m['stok_produk']; ?></td>
-                                <td><?= $m['minimum_stok_produk']; ?></td>
+                                <!-- <td><?= $m['stok_produk']; ?></td> -->
+                                <!-- <td><?= $m['minimum_stok_produk']; ?></td> -->
                                 <!-- <td><?= $m['kategori_produk']; ?></td> -->
                                 <!-- <td><?= $m['brand_produk']; ?></td> -->
                                 <!-- <td><?= $m['tag_produk']; ?></td> -->
-                                <td><?= $m['dimensi_produk']; ?></td>
                                 <td><?= $m['berat_produk']; ?></td>
                                 <!-- <td><?= $m['warna_produk']; ?></td> -->
                                 <!-- <td><?= $m['is_active'] == 1 ? 'Aktif' : 'Tidak Aktif'; ?></td>
@@ -179,7 +179,7 @@
                     <input type="hidden" name="id_produk" id="id_produk">
                     <div class="form-group">
                         <label for="nama_produk">Nama Brand</label>
-                        <input type="text" class="form-control" id="nama_produk" name="nama_produk">
+                        <input type="text" class="form-control" id="nama_produk" name="nama_produk" required>
                     </div>
                     <!-- <div class="form-group">
                         <label for="kode_produk">Kode Produk</label>
@@ -188,7 +188,7 @@
                     <div class="form-group">
                         <label for="url_gambar_produk">Gambar Produk</label>
                         <div class="custom-file">
-                            <input type="file" class="custom-file-input" id="url_gambar_produk" name="url_gambar_produk">
+                            <input type="file" class="custom-file-input" id="url_gambar_produk" name="url_gambar_produk" required>
                             <label class="custom-file-label" for="url_gambar_produk">Pilih file</label>
                         </div>
                         <small class="text-muted">Biarkan kosong jika tidak ingin mengubah gambar.</small>
@@ -196,7 +196,7 @@
                     </div>
                     <div class="form-group">
                         <label for="deskripsi_produk">Deskripsi Produk</label>
-                        <textarea class="form-control" id="deskripsi_produk" name="deskripsi_produk"></textarea>
+                        <textarea class="form-control" id="deskripsi_produk" name="deskripsi_produk" required></textarea>
                     </div>
                     <!-- <div class="form-group">
                         <label for="harga_produk">Harga</label>
@@ -231,12 +231,12 @@
                         <input type="number" class="form-control" id="tag_produk" name="tag_produk">
                     </div> -->
                     <div class="form-group">
-                        <label for="dimensi_produk">Dimensi</label>
-                        <input type="text" class="form-control" id="dimensi_produk" name="dimensi_produk">
+                        <label for="dimensi_produk">Type Unit</label>
+                        <input type="text" class="form-control" id="dimensi_produk" name="dimensi_produk" required>
                     </div>
                     <div class="form-group">
                         <label for="berat_produk">Berat</label>
-                        <input type="text" class="form-control" id="berat_produk" name="berat_produk">
+                        <input type="text" class="form-control" id="berat_produk" name="berat_produk" required>
                     </div>
                     <!-- <div class="form-group">
                         <label for="warna_produk">Warna</label>
@@ -350,13 +350,13 @@
                             <div class="form-group">
                                 <label for="url_gambar_produk">Gambar Produk</label>
                                 <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="url_gambar_produk" name="url_gambar_produk">
+                                    <input type="file" class="custom-file-input" id="url_gambar_produk" name="url_gambar_produk" required>
                                     <label class="custom-file-label" for="url_gambar_produk">Pilih file</label>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="deskripsi_produk">Deskripsi Produk</label>
-                                <textarea class="form-control" id="deskripsi_produk" name="deskripsi_produk" placeholder="Deskripsi Produk"></textarea>
+                                <textarea class="form-control" id="deskripsi_produk" name="deskripsi_produk" placeholder="Deskripsi Produk" required></textarea>
                             </div>
                             <!-- <div class="form-group">
                                 <label for="harga_produk">Harga</label>
@@ -393,12 +393,12 @@
                                 <input type="number" class="form-control" id="tag_produk" name="tag_produk" placeholder="Tag" value="0">
                             </div> -->
                             <div class="form-group">
-                                <label for="dimensi_produk">Dimensi</label>
-                                <input type="text" class="form-control" id="dimensi_produk" name="dimensi_produk" placeholder="Dimensi">
+                                <label for="dimensi_produk">Type Unit</label>
+                                <input type="text" class="form-control" id="dimensi_produk" name="dimensi_produk" placeholder="Type Unit" required>
                             </div>
                             <div class="form-group">
                                 <label for="berat_produk">Berat</label>
-                                <input type="text" class="form-control" id="berat_produk" name="berat_produk" placeholder="Berat">
+                                <input type="text" class="form-control" id="berat_produk" name="berat_produk" placeholder="Berat" required>
                             </div>
                             <!-- <div class="form-group">
                                 <label for="warna_produk">Warna</label>

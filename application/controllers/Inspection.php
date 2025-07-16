@@ -325,6 +325,7 @@ class Inspection extends CI_Controller
         $this->db->select('*');
         $this->db->from('inspection_template');
         $data['inspection_template'] = $this->db->get()->result_array();
+        $serial_number = $this->input->get('serial_number');
         $tanggal_mulai = $this->input->get('tanggal_mulai');
         $tanggal_akhir = $this->input->get('tanggal_akhir');
         $nama_produk_filter = $this->input->get('nama_produk');
@@ -335,17 +336,21 @@ class Inspection extends CI_Controller
         $this->db->select("nama_produk");
         $this->db->distinct();
         $data['daftar_produk'] = $this->db->get('master_produk')->result_array();
-        $this->db->select('unit.*, master_produk.nama_produk, inspection.inspection_template_id as id_template, inspection.id_inspection as id_inspection,approve_manager');
+        $this->db->select('unit.*, master_produk.nama_produk, dimensi_produk type_unit, inspection.inspection_template_id as id_template, inspection.id_inspection as id_inspection,lokasi_unit.lokasi_unit lokasi,approve_manager');
         $this->db->from('unit');
         $this->db->join('master_produk', 'unit.id_produk = master_produk.id_produk');
         $this->db->join('inspection', 'unit.unit_id = inspection.unit_id', 'left');
+        $this->db->join('lokasi_unit', 'unit.lokasi_unit = lokasi_unit.id', 'left');
         $this->db->order_by('unit_id', 'DESC');
-        if ($tanggal_mulai && $tanggal_akhir) {
-            $this->db->where('unit.tanggal_masuk >=', $tanggal_mulai . ' 00:00:00');
-            $this->db->where('unit.tanggal_masuk <=', $tanggal_akhir . ' 23:59:59');
+        if ($tanggal_mulai) {
+            // var_dump($tanggal_mulai);die;
+            $this->db->where('date(unit.tanggal_masuk) =', $tanggal_mulai);
         }
         if ($nama_produk_filter) {
             $this->db->like('master_produk.nama_produk', $nama_produk_filter);
+        }
+        if ($serial_number) {
+            $this->db->like('unit.serial_number', $serial_number);
         }
         if ($lokasi_unit) {
             $this->db->like('unit.lokasi_unit', $lokasi_unit);
@@ -368,10 +373,10 @@ class Inspection extends CI_Controller
     }
 
     public function add_unit() {
+        $data['lokasi_units'] = $this->db->get('lokasi_unit')->result_array();
         $this->db->select("nama_produk");
         $this->db->distinct();
-        // $this->db->select("concat(nama_produk,' [',dimensi_produk,']') as nama_produk,id_produk");
-        $data['products'] = $this->db->get('master_produk')->result_array();
+        $data['product_units'] = $this->db->get('master_produk')->result_array();
         $data['title'] = 'Tambah Unit';
         $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
         $this->load->view('templates/header', $data);
@@ -380,11 +385,63 @@ class Inspection extends CI_Controller
         $this->load->view('inspection/unit/add', $data);
         $this->load->view('templates/footer');
     }
+    public function get_types_by_brand() {
+        // Check if it's an AJAX request and a POST method
+        if ($this->input->is_ajax_request() && $this->input->method() == 'post') {
+            // Get the 'nama_produk' from the POST data
+            $nama_produk = $this->input->post('nama_produk');
+
+            // Check if nama_produk is not empty
+            if (!empty($nama_produk)) {
+                // Build the database query
+                $this->db->select("dimensi_produk,id_produk");
+                $this->db->distinct();
+                // FIX: Use $nama_produk here, not $brand_name
+                $this->db->where('nama_produk', $nama_produk);
+                $this->db->where('is_active', 1); // Only active product types
+                $this->db->order_by('dimensi_produk', 'ASC'); // Order by product dimension
+
+                // Execute the query
+                $types = $this->db->get('master_produk')->result_array();
+
+                // Return the data as JSON
+                echo json_encode($types);
+            } else {
+                // If nama_produk is empty, return an empty JSON array
+                echo json_encode([]);
+            }
+        } else {
+            // If it's not an AJAX POST request, return an error message as JSON
+            // Using show_404() might return HTML, which causes the parsererror.
+            // Returning JSON explicitly is better for AJAX endpoints.
+            header('Content-Type: application/json'); // Ensure header is set for error JSON too
+            echo json_encode(['error' => 'Invalid request: Must be an AJAX POST request.']);
+            // Alternatively, show_404(); but be aware of the HTML output.
+        }
+    }
+    public function get_types_by_product_id()
+    {
+        $id_produk = $this->input->post('id_produk'); // Get the id_produk from the AJAX request
+
+        if ($id_produk) {
+            // This is a placeholder. You need to implement this method in your model.
+            // This method should query your database to get all types (dimensi_produk)
+            // associated with the given id_produk.
+            // $types = $this->Inspection_model->get_product_types_by_product_id($id_produk);
+            $this->db->select('id_produk, dimensi_produk'); // Select the ID and the display text for the type
+            $this->db->where('id_produk', $id_produk); // Assuming `id_produk` is the foreign key in the types table
+            $query = $this->db->get('product_types'); // Replace 'product_types' with your actual table name for product types/dimensions
+            $types = $query->result_array();
+            echo json_encode($types);
+        } else {
+            echo json_encode([]); // Return empty array if no id_produk is provided
+        }
+    }
 
     public function insert_unit() {
         $this->form_validation->set_rules('serial_number', 'Serial Number', 'required|trim|is_unique[unit.serial_number]');
-        $this->form_validation->set_rules('id_produk', 'ID Produk', 'required|trim|numeric');
-        $this->form_validation->set_rules('qty', 'Kuantitas', 'required|trim|numeric|greater_than[0]');
+        $this->form_validation->set_rules('id_produk', 'ID Produk', 'required');
+        // $this->form_validation->set_rules('qty', 'Kuantitas', 'required|trim|numeric|greater_than[0]');
         $this->form_validation->set_rules('kondisi_unit', 'Kondisi Unit', 'required|trim');
         $this->form_validation->set_rules('tanggal_masuk', 'Tanggal Masuk', 'required|trim');
         $this->form_validation->set_rules('status_unit', 'Status Unit', 'required|trim');
@@ -393,11 +450,26 @@ class Inspection extends CI_Controller
         $this->form_validation->set_rules('machine_no', 'Machine Number', 'trim'); // Tambah validasi
         $this->form_validation->set_rules('model_no', 'Model Number', 'trim');     // Tambah validasi
         if ($this->form_validation->run() == FALSE) {
+            $error_messages = validation_errors('<li>', '</li>'); // Format errors as list items
+            $error_messages = "<ul>" . $error_messages . "</ul>"; // Wrap in an unordered list
+
+            // Set SweetAlert flashdata for validation errors
+            $this->session->unset_userdata('swal'); // Clear previous swal data
+            $this->session->set_flashdata('swal', [
+                'title' => 'Validasi Gagal!',
+                'html' => $error_messages, // Use 'html' to render list items
+                'icon' => 'error',
+                'showConfirmButton' => true,
+            ]);
+
+            // Reload the form view to display errors
             $this->add_unit();
+            // $this->add_unit();
         } else {
             $data_unit = [
+                'engine_plate' => $this->input->post('engine_plate'),
                 'serial_number' => $this->input->post('serial_number'),
-                'id_produk' => $this->input->post('id_produk'),
+                'id_produk' => $this->input->post('type_unit'),
                 'status_inspection' => $this->input->post('status_inspection'),
                 'qty' => $this->input->post('qty'),
                 'kondisi_unit' => $this->input->post('kondisi_unit'),
@@ -455,8 +527,12 @@ class Inspection extends CI_Controller
     }
 
     public function edit_unit($id) {
+        $data['lokasi_units'] = $this->db->get('lokasi_unit')->result_array();
         $data['unit'] = $this->db->get_where('unit', ['unit_id' => $id])->row_array();
         $data['products'] = $this->db->get('master_produk')->result_array();
+        $this->db->select("nama_produk");
+        $this->db->distinct();
+        $data['product_units'] = $this->db->get('master_produk')->result_array();
         $data['title'] = 'Edit Unit';
         $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
         $this->load->view('templates/header', $data);
@@ -468,8 +544,8 @@ class Inspection extends CI_Controller
 
     public function update_unit($id) {
         $this->form_validation->set_rules('serial_number', 'Serial Number', 'required|trim|callback_check_serial_number_update[' . $id . ']');
-        $this->form_validation->set_rules('id_produk', 'ID Produk', 'required|trim|numeric');
-        $this->form_validation->set_rules('qty', 'Kuantitas', 'required|trim|numeric|greater_than[0]');
+        $this->form_validation->set_rules('id_produk', 'ID Produk', 'required');
+        // $this->form_validation->set_rules('qty', 'Kuantitas', 'required|trim|numeric|greater_than[0]');
         $this->form_validation->set_rules('kondisi_unit', 'Kondisi Unit', 'required|trim');
         $this->form_validation->set_rules('tanggal_masuk', 'Tanggal Masuk', 'required|trim');
         $this->form_validation->set_rules('status_unit', 'Status Unit', 'required|trim');
@@ -478,6 +554,17 @@ class Inspection extends CI_Controller
         $this->form_validation->set_rules('machine_no', 'Machine Number', 'trim'); // Tambah validasi
         $this->form_validation->set_rules('model_no', 'Model Number', 'trim');     // Tambah validasi
         if ($this->form_validation->run() == FALSE) {
+            $error_messages = validation_errors('<li>', '</li>'); // Format errors as list items
+            $error_messages = "<ul>" . $error_messages . "</ul>"; // Wrap in an unordered list
+
+            // Set SweetAlert flashdata for validation errors
+            $this->session->unset_userdata('swal'); // Clear previous swal data
+            $this->session->set_flashdata('swal', [
+                'title' => 'Validasi Gagal!',
+                'html' => $error_messages, // Use 'html' to render list items
+                'icon' => 'error',
+                'showConfirmButton' => true,
+            ]);
             $this->edit_unit($id);
         } else {
             $unit_data_lama = $this->db->get_where('unit', ['unit_id' => $id])->row_array();
@@ -490,6 +577,7 @@ class Inspection extends CI_Controller
             $qty_baru = $this->input->post('qty');
             $id_produk = $this->input->post('id_produk');
             $data_unit_baru = [
+                'engine_plate' => $this->input->post('engine_plate'),
                 'serial_number' => $this->input->post('serial_number'),
                 'id_produk' => $id_produk,
                 'status_inspection' => $this->input->post('status_inspection'),

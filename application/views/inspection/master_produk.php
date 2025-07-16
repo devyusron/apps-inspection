@@ -64,6 +64,7 @@
                             <th scope="col">Gambar</th>
                             <th scope="col">Deskripsi</th>
                             <th scope="col">Berat</th>
+                            <th scope="col">Status</th>
                             <th scope="col">Action</th>
                         </tr>
                     </thead>
@@ -91,6 +92,7 @@
                                     <span title="<?= htmlspecialchars($deskripsi); ?>"><?= htmlspecialchars($shortDescription); ?></span>
                                 </td>
                                 <td><?= $m['berat_produk']; ?></td>
+                                <td><?= $m['is_active'] == 1 ? 'Ready' : 'Booking'; ?></td>
                                 <td>
                                     <?php if($this->session->userdata('role_id') == 1) : ?>
                                     <a href="#" class="badge badge-success" data-toggle="modal" data-target="#editMenuModal"
@@ -171,8 +173,8 @@
                     <div class="form-group">
                         <label for="is_active">Status</label>
                         <select class="form-control" id="is_active" name="is_active">
-                            <option value="1">Aktif</option>
-                            <option value="0">Tidak Aktif</option>
+                            <option value="1">Ready</option>
+                            <option value="0">Booking</option>
                         </select>
                     </div>
                 </div>
@@ -293,8 +295,8 @@
                             <div class="form-group">
                                 <label for="is_active">Status</label>
                                 <select class="form-control" id="is_active" name="is_active">
-                                    <option value="1" selected>Aktif</option>
-                                    <option value="0">Tidak Aktif</option>
+                                    <option value="1" selected>Ready</option>
+                                    <option value="0">Booking</option>
                                 </select>
                             </div>
                             </div>

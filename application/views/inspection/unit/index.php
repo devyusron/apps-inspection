@@ -136,7 +136,7 @@
                                     <!-- <td><?= $unit['tanggal_masuk']; ?></td> -->
                                     <!-- <td><?= $unit['tanggal_keluar']; ?></td> -->
                                     <!-- <td><?= htmlspecialchars($unit['status_unit']); ?></td> -->
-                                    <td><?= htmlspecialchars($unit['lokasi_unit']); ?></td>
+                                    <td><?= htmlspecialchars($unit['lokasi']); ?></td>
                                     <td><?= htmlspecialchars($unit['keterangan_unit']); ?></td>
                                     <!-- <td><?= $unit['created_at']; ?></td>
                                     <td><?= htmlspecialchars($unit['created_by']); ?></td> -->

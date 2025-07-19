@@ -13,7 +13,10 @@
                             <select class="form-control" id="id_produk" name="id_produk" required>
                                 <option value="">Pilih Brand</option>
                                 <?php foreach ($product_units as $units): ?>
-                                    <option value="<?= htmlspecialchars($units['nama_produk']); ?>"><?= htmlspecialchars($units['nama_produk']); ?></option>
+                                    <option value="<?= htmlspecialchars($units['nama_produk']); ?>"
+                                        <?= (isset($unit['nama_produk']) && $units['nama_produk'] == $unit['nama_produk']) ? 'selected' : ''; ?>>
+                                        <?= htmlspecialchars($units['nama_produk']); ?>
+                                    </option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
@@ -22,7 +25,10 @@
                         <div class="form-group">
                             <label for="type_unit">Type Unit</label>
                             <select class="form-control" id="type_unit" name="type_unit" required disabled>
-                                <option value="">Pilih Type Unit</option>
+                                <!-- <option value="">Pilih Type Unit</option> -->
+                                <option value="<?= htmlspecialchars($unit['id_produk']); ?>">
+                                        <?= htmlspecialchars($unit['type_unit']); ?>
+                                </option>
                             </select>
                         </div>
                     </div>
@@ -69,7 +75,7 @@
                 <div class="form-group">
                     <label for="qty">Kuantitas</label>
                     <input type="number" class="form-control" id="qty" name="qty"
-                        value="<?= htmlspecialchars(set_value('qty', $unit['qty'])); ?>" required>
+                        value="<?= htmlspecialchars(set_value('qty', $unit['qty'])); ?>" readonly>
                     <?= form_error('qty', '<small class="text-danger">', '</small>'); ?>
                 </div>
                 <div class="form-group">
@@ -116,10 +122,13 @@
                 </div>
                 <div class="form-group">
                     <label for="lokasi_unit">Lokasi Unit:</label>
-                    <select class="form-control form-control-sm" id="lokasi_unit" name="lokasi_unit">
+                    <select class="form-control form-control-sm" id="lokasi_unit" name="lokasi_unit"> 
                         <option value="">Pilih Lokasi</option>
                         <?php foreach ($lokasi_units as $lokasi) : ?>
-                            <option value="<?= $lokasi['id']; ?>"><?= $lokasi['lokasi_unit']; ?></option>
+                            <option value="<?= $lokasi['id']; ?>"
+                                <?= (isset($unit['lokasi']) && $lokasi['id'] == $unit['lokasi_unit']) ? 'selected' : ''; ?>>
+                                <?= htmlspecialchars($lokasi['lokasi_unit']); ?>
+                            </option>
                         <?php endforeach; ?>
                     </select>
                 </div>
@@ -143,7 +152,7 @@
 
 <script>
     $(document).ready(function() {
-        $('#type_unit').prop('disabled', true);
+        $('#type_unit').prop('disabled', false);
         var tanggalMasukInput = document.getElementById('tanggal_masuk');
         if (tanggalMasukInput) {
             var now = new Date();

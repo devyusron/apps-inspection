@@ -527,8 +527,14 @@ class Inspection extends CI_Controller
     }
 
     public function edit_unit($id) {
+        $this->db->select('unit.*, lokasi_unit.lokasi_unit lokasi, master_produk.nama_produk nama_produk, dimensi_produk type_unit'); // Pilih semua kolom dari 'unit' dan 'nama_lokasi' dari 'lokasi_unit'
+        $this->db->from('unit');
+        $this->db->join('master_produk', 'unit.id_produk = master_produk.id_produk');
+        $this->db->join('lokasi_unit', 'lokasi_unit.id = unit.lokasi_unit'); // Lakukan JOIN berdasarkan lokasi_id
+        $this->db->where('unit.unit_id', $id);
+        $data['unit'] = $this->db->get()->row_array();
+        // $data['unit'] = $this->db->get_where('unit', ['unit_id' => $id])->row_array();
         $data['lokasi_units'] = $this->db->get('lokasi_unit')->result_array();
-        $data['unit'] = $this->db->get_where('unit', ['unit_id' => $id])->row_array();
         $data['products'] = $this->db->get('master_produk')->result_array();
         $this->db->select("nama_produk");
         $this->db->distinct();
@@ -575,7 +581,7 @@ class Inspection extends CI_Controller
             }
             $qty_lama = $unit_data_lama['qty'];
             $qty_baru = $this->input->post('qty');
-            $id_produk = $this->input->post('id_produk');
+            $id_produk = $this->input->post('type_unit');
             $data_unit_baru = [
                 'engine_plate' => $this->input->post('engine_plate'),
                 'serial_number' => $this->input->post('serial_number'),

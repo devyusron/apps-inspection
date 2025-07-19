@@ -677,7 +677,7 @@ $(document).ready(function() {
         html += '</div>';
         html += '<div class="form-group row">';
         html += '<label for="hours" class="col-sm-3 col-form-label">Hours</label>';
-        html += '<div class="col-sm-9"><input type="text" class="form-control form-control-sm" id="hours" name="hours"></div>';
+        html += '<div class="col-sm-9"><input type="number" class="form-control form-control-sm" id="hours" name="hours"></div>';
         html += '</div>';
         html += '<div class="form-group row">';
         html += '<label for="inspection_d" class="col-sm-3 col-form-label">Inspection Date</label>';

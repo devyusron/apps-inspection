@@ -54,14 +54,14 @@
                         <label for="qty">Kuantitas</label>
                         <input type="number" class="form-control" id="qty" name="qty" value="1" readonly required>
                     </div>
-                    <div class="form-group">
+                    <!-- <div class="form-group">
                         <label for="kondisi_unit">Status</label>
                         <select class="form-control" id="kondisi_unit" name="kondisi_unit" required>
                             <option value="" disabled selected>Pilih Status</option>
                             <option value="Ready">Ready</option>
                             <option value="Booking">Booking</option>
                         </select>
-                    </div>
+                    </div> -->
                     <div class="form-group">
                         <label for="tanggal_masuk">Tanggal Masuk</label>
                         <input type="datetime-local" class="form-control" id="tanggal_masuk" name="tanggal_masuk" required>
@@ -70,8 +70,8 @@
                         <label for="status_unit">Status Unit</label>
                         <select class="form-control" id="status_unit" name="status_unit" required>
                             <option value="" disabled selected>Pilih Status</option>
-                            <option value="Baru">Baru</option>
-                            <option value="Perbaikan">Perbaikan</option>
+                            <option value="Ready">Ready</option>
+                            <option value="Booking">Booking</option>
                         </select>
                     </div>
                     <div class="form-group">

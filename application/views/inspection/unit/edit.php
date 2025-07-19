@@ -78,7 +78,7 @@
                         value="<?= htmlspecialchars(set_value('qty', $unit['qty'])); ?>" readonly>
                     <?= form_error('qty', '<small class="text-danger">', '</small>'); ?>
                 </div>
-                <div class="form-group">
+                <!-- <div class="form-group">
                     <label for="kondisi_unit">Status</label>
                     <select class="form-control" id="kondisi_unit" name="kondisi_unit" required>
                         <option value="" disabled>Pilih Status</option>
@@ -92,7 +92,7 @@
                         </option>
                     </select>
                     <?= form_error('kondisi_unit', '<small class="text-danger">', '</small>'); ?>
-                </div>
+                </div> -->
                 <div class="form-group">
                     <label for="tanggal_masuk">Tanggal Masuk</label>
                     <input type="datetime-local" class="form-control" id="tanggal_masuk" name="tanggal_masuk"
@@ -110,12 +110,12 @@
                     <label for="status_unit">Status Unit</label>
                     <select class="form-control" id="status_unit" name="status_unit" required>
                         <option value="" disabled>Pilih Status</option>
-                        <option value="Baru"
-                            <?= (set_value('status_unit', $unit['status_unit']) == 'Baru') ? 'selected' : ''; ?>>Baru
+                        <option value="Ready"
+                            <?= (set_value('status_unit', $unit['status_unit']) == 'Ready') ? 'selected' : ''; ?>>Ready
                         </option>
-                        <option value="Perbaikan"
-                            <?= (set_value('status_unit', $unit['status_unit']) == 'Perbaikan') ? 'selected' : ''; ?>>
-                            Perbaikan
+                        <option value="Booking"
+                            <?= (set_value('status_unit', $unit['status_unit']) == 'Booking') ? 'selected' : ''; ?>>
+                            Booking
                         </option>
                     </select>
                     <?= form_error('status_unit', '<small class="text-danger">', '</small>'); ?>

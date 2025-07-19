@@ -651,7 +651,7 @@ $(document).ready(function() {
         html += '<div class="col-md-6">';
         html += '<div class="form-group row">';
         html += '<label for="customer" class="col-sm-3 col-form-label">Customer</label>';
-        html += '<div class="col-sm-9"><input readonly type="text" class="form-control form-control-sm" id="customer" name="customer"></div>';
+        html += '<div class="col-sm-9"><input type="text" class="form-control form-control-sm" id="customer" name="customer"></div>';
         html += '</div>';
         html += '<div class="form-group row">';
         html += '<label for="address" class="col-sm-3 col-form-label">Address</label>';
@@ -677,7 +677,7 @@ $(document).ready(function() {
         html += '</div>';
         html += '<div class="form-group row">';
         html += '<label for="hours" class="col-sm-3 col-form-label">Hours</label>';
-        html += '<div class="col-sm-9"><input type="text" class="form-control form-control-sm" id="hours" name="hours"></div>';
+        html += '<div class="col-sm-9"><input type="time" class="form-control form-control-sm" id="hours" name="hours"></div>';
         html += '</div>';
         html += '<div class="form-group row">';
         html += '<label for="inspection_d" class="col-sm-3 col-form-label">Inspection Date</label>';
@@ -769,7 +769,7 @@ $(document).ready(function() {
                 $('#modalFormView').modal('show');
                 setupFormSubmission();
                 var timestamp = new Date().getTime();
-                $('#customer').val('CUST' + timestamp);
+                $('#customer').val('');
             },
             error: function(xhr, status, error) {
                 $('#form-view-content').html('<p>Terjadi kesalahan saat mengambil data: ' + error + '</p>');

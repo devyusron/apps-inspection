@@ -765,7 +765,7 @@ class Inspection extends CI_Controller
     public function view_result_inspection($id) {
         $query = $this->db->query("
             SELECT
-                inspection_template_id,model_no,machine_no,serial_number,customer,address,attachment,time(i.tanggal_inspeksi) hours,i.additional_comment,
+                inspection_template_id,model_no,machine_no,serial_number,customer,address,attachment,hours_meter hours,i.additional_comment,
                 date(i.tanggal_inspeksi) tanggal_inspeksi,
                 i.mechanic,
                 i.approve_manager,
@@ -973,6 +973,7 @@ class Inspection extends CI_Controller
             $inspection_data = array(
                 'unit_id' => $unit_id,
                 'tanggal_inspeksi' => date('Y-m-d H:i:s'),
+                'hours_meter' => $post_data['hours'],
                 'mechanic' => $post_data['mechanic'],
                 'customer' => $post_data['customer'],
                 'address' => $post_data['address'],

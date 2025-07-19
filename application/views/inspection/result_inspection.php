@@ -96,8 +96,8 @@
                                 <th>Type Unit</th>
                                 <th>Serial Number</th>
                                 <th>Engine Plate</th>
-                                <th>Machine No</th>      
-                                <th>Model No</th>
+                                <!-- <th>Machine No</th>      
+                                <th>Model No</th> -->
                                 <!-- <th>Qty</th>
                                 <th>Kondisi Unit</th>
                                 <th>Tanggal Masuk</th>
@@ -117,8 +117,8 @@
                                     <td><?= htmlspecialchars($unit['type_unit']); ?></td>
                                     <td><?= htmlspecialchars($unit['serial_number']); ?></td>
                                     <td><?= htmlspecialchars($unit['engine_plate']); ?></td>
-                                    <td><?= isset($unit['machine_no']) ? htmlspecialchars($unit['machine_no']) : '-'; ?></td>
-                                    <td><?= isset($unit['model_no']) ? htmlspecialchars($unit['model_no']) : '-'; ?></td>
+                                    <!-- <td><?= isset($unit['machine_no']) ? htmlspecialchars($unit['machine_no']) : '-'; ?></td> -->
+                                    <!-- <td><?= isset($unit['model_no']) ? htmlspecialchars($unit['model_no']) : '-'; ?></td> -->
                                     <!-- <td><?= $unit['qty']; ?></td> -->
                                     <!-- <td><?= htmlspecialchars($unit['kondisi_unit']); ?></td> -->
                                     <!-- <td><?= $unit['tanggal_masuk']; ?></td> -->

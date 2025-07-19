@@ -85,9 +85,9 @@
                                 <th>Nama Brand</th>
                                 <th>Type Unit</th>
                                 <th>Serial Number</th>
-                                <th>Machine No</th> 
+                                <!-- <th>Machine No</th>  -->
                                 <th>Engine Plate</th>
-                                <th>Model No</th>
+                                <!-- <th>Model No</th> -->
                                 <!-- <th>Qty</th> -->
                                 <!-- <th>Kondisi Unit</th> -->
                                 <th>Tanggal Masuk</th>
@@ -106,8 +106,8 @@
                                     <td><?= htmlspecialchars($unit['type_unit']); ?></td>
                                     <td><?= htmlspecialchars($unit['serial_number']); ?></td>
                                     <td><?= htmlspecialchars($unit['engine_plate']); ?></td>
-                                    <td><?= isset($unit['machine_no']) ? htmlspecialchars($unit['machine_no']) : '-'; ?></td>
-                                    <td><?= isset($unit['model_no']) ? htmlspecialchars($unit['model_no']) : '-'; ?></td>
+                                    <!-- <td><?= isset($unit['machine_no']) ? htmlspecialchars($unit['machine_no']) : '-'; ?></td> -->
+                                    <!-- <td><?= isset($unit['model_no']) ? htmlspecialchars($unit['model_no']) : '-'; ?></td> -->
                                     <!-- <td><?= $unit['qty']; ?></td> -->
                                     <!-- <td><?= htmlspecialchars($unit['kondisi_unit']); ?></td> -->
                                     <td><?= $unit['tanggal_masuk']; ?></td>
@@ -228,7 +228,7 @@
         html += '</div>';
         html += '<div class="form-group row">';
         html += '<label for="hours" class="col-sm-3 col-form-label">Hours</label>';
-        html += '<div class="col-sm-9"><input  type="time" class="form-control form-control-sm" id="hours" name="hours"></div>';
+        html += '<div class="col-sm-9"><input  type="text" class="form-control form-control-sm" id="hours" name="hours"></div>';
         html += '</div>';
         html += '<div class="form-group row">';
         html += '<label for="inspection_d" class="col-sm-3 col-form-label">Inspection Date</label>';
@@ -260,10 +260,37 @@
         html += '<label for="additional_comment">Additional Comment :</label>';
         html += '<textarea  class="form-control" id="additional_comment" name="additional_comment" rows="3"></textarea>';
         html += '</div>';
-        html += '<div class="form-group mt-3">';
-        html += '<label for="photo_inspection">Photo Inspection :</label>';
-        html += '<input type="file" class="form-control-file" id="photo_inspection" name="photo_inspection" accept="image/*" required>';
-        html += '</div>';
+
+        // --- START PHOTO UPLOAD INPUTS ---
+        // Definisikan field-field foto yang akan diunggah
+        const photoFields = [
+            { name: 'photo_inspection', label: 'Photo Inspection' },
+            { name: 'photo_hourmeter', label: 'Photo Hourmeter' },
+            { name: 'photo_engine_plate', label: 'Photo Engine Plate' },
+            { name: 'photo_1', label: 'Photo 1' },
+            { name: 'photo_2', label: 'Photo 2' },
+            { name: 'photo_3', label: 'Photo 3' },
+            { name: 'photo_4', label: 'Photo 4' },
+            { name: 'photo_5', label: 'Photo 5' },
+            { name: 'photo_6', label: 'Photo 6' },
+            { name: 'photo_serialnumber', label: 'Photo Serial Number' }
+        ];
+
+        html += '<h5 class="mt-4 mb-3">Upload Photos:</h5>';
+        html += '<div class="row">'; // Baris untuk layout grid input foto
+
+        photoFields.forEach(field => {
+            html += '<div class="col-md-6 col-lg-4 col-sm-12 mb-3">'; // Kolom untuk setiap input foto
+            html += '<div class="form-group">';
+            html += `<label for="${field.name}">${field.label}:</label>`;
+            // Hapus atribut 'required' jika tidak semua foto wajib diunggah
+            html += `<input type="file" class="form-control-file" id="${field.name}" name="${field.name}" accept="image/*">`;
+            html += '</div>';
+            html += '</div>';
+        });
+        html += '</div>'; // End of row for photo inputs
+        // --- END PHOTO UPLOAD INPUTS ---
+
         html += '<div class="row mt-3">';
         html += '<div class="col-md-6">';
         html += '<label for="acknowledge">Acknowledge :</label>';
@@ -393,20 +420,38 @@
     }
 
     function uploadInspectionPhoto(inspectionId) {
-        const photoFile = $('#photo_inspection')[0].files[0];
-        if (photoFile) {
-            var formDataPhoto = new FormData();
-            formDataPhoto.append('inspection_id', inspectionId); // Kirim ID inspeksi untuk mengaitkan foto
-            formDataPhoto.append('photo_inspection', photoFile);
-            $.ajax({
-                url: '<?php echo site_url('inspection/upload_inspection_photo'); ?>', // Endpoint terpisah untuk upload foto
-                type: 'POST',
-                data: formDataPhoto,
-                processData: false, // Penting untuk FormData
-                contentType: false, // Penting untuk FormData
-                success: function(response) {
-                    console.log(typeof(response));
-                    if (response.includes('success')) {
+        // Siapkan FormData untuk semua data, termasuk file
+        var formDataPhoto = new FormData($('#inspectionForm')[0]); // Ambil semua data dari form dengan ID inspectionForm
+        formDataPhoto.append('inspection_id', inspectionId); // Pastikan ID inspeksi terkirim
+
+        // Hapus baris ini karena kita sudah mengambil semua input file langsung dari form
+        // const photoFile = $('#photo_inspection')[0].files[0]; 
+
+        // Anda tidak perlu lagi memeriksa photoFile karena FormData akan secara otomatis menyertakan semua file input.
+        // Loop melalui setiap file input dan tambahkan ke FormData (ini sudah otomatis jika Anda mengambil form secara langsung)
+        // Jika Anda ingin mengunggah hanya file yang dipilih, Anda bisa melakukan ini:
+        // $('input[type="file"]').each(function() {
+        //     if (this.files.length > 0) {
+        //         formDataPhoto.append(this.name, this.files[0]);
+        //     }
+        // });
+        
+        // Perhatikan: Dengan `var formDataPhoto = new FormData($('#inspectionForm')[0]);`, 
+        // semua input (termasuk input file) dari form akan secara otomatis ditambahkan ke FormData.
+        // Pastikan ID form Anda adalah 'inspectionForm'.
+
+        $.ajax({
+            url: '<?php echo site_url('inspection/upload_inspection_photo'); ?>', // Endpoint yang sama
+            type: 'POST',
+            data: formDataPhoto, // Kirim seluruh FormData
+            processData: false, // Penting: Jangan memproses data secara otomatis
+            contentType: false, // Penting: Jangan mengatur Content-Type
+            success: function(response) {
+                console.log(response); // Log respons dari server
+                try {
+                    // Pastikan respons adalah JSON yang valid
+                    const res = JSON.parse(response); 
+                    if (res.status === 'success') {
                         Swal.fire({
                             title: 'Berhasil!',
                             text: 'Data inspeksi dan foto berhasil disimpan!',
@@ -416,24 +461,19 @@
                             window.location.reload();
                         });
                     } else {
-                        Swal.fire('Error!', 'Gagal mengupload foto: ' + response.message, 'error');
+                        Swal.fire('Error!', 'Gagal mengupload foto: ' + res.message, 'error');
                     }
-                },
-                error: function(jqXHR, textStatus, errorThrown) {
-                    console.error('Error saat mengupload foto:', textStatus, errorThrown);
-                    Swal.fire('Error!', 'Terjadi kesalahan saat mengupload foto: ' + textStatus + ' - ' + errorThrown, 'error');
+                } catch (e) {
+                    // Tangani jika respons bukan JSON (misalnya, HTML error page)
+                    console.error('Respons bukan JSON:', response);
+                    Swal.fire('Error!', 'Terjadi kesalahan pada server. Respons tidak valid.', 'error');
                 }
-            });
-        } else {
-            Swal.fire({
-                title: 'Berhasil!',
-                text: 'Data inspeksi berhasil disimpan (tanpa foto).',
-                icon: 'success',
-                confirmButtonText: 'OK'
-            }).then(() => {
-                window.location.reload();
-            });
-        }
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.error('Error saat mengupload foto:', textStatus, errorThrown);
+                Swal.fire('Error!', 'Terjadi kesalahan saat mengupload foto: ' + textStatus + ' - ' + errorThrown, 'error');
+            }
+        });
     }
 
     $(document).ready(function() {

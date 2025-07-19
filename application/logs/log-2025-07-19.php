@@ -55,3 +55,21 @@ ERROR - 2025-07-19 05:22:58 --> Query error: You have an error in your SQL synta
                            WHERE `user_access_menu`.`role_id` = 
                         ORDER BY `user_access_menu`.`menu_id` ASC
                         
+ERROR - 2025-07-19 06:00:58 --> Query error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'ORDER BY `user_access_menu`.`menu_id` ASC' at line 5 - Invalid query: SELECT `user_menu`.`id`, `menu`
+                            FROM `user_menu` JOIN `user_access_menu`
+                              ON `user_menu`.`id` = `user_access_menu`.`menu_id`
+                           WHERE `user_access_menu`.`role_id` = 
+                        ORDER BY `user_access_menu`.`menu_id` ASC
+                        
+ERROR - 2025-07-19 06:18:49 --> Severity: Warning --> Undefined variable $unit C:\xampp\htdocs\apps-inspection\application\views\inspection\result_inspection.php 198
+ERROR - 2025-07-19 06:18:49 --> Severity: Warning --> Trying to access array offset on value of type null C:\xampp\htdocs\apps-inspection\application\views\inspection\result_inspection.php 198
+ERROR - 2025-07-19 06:18:49 --> Severity: Warning --> Undefined variable $unit C:\xampp\htdocs\apps-inspection\application\views\inspection\result_inspection.php 199
+ERROR - 2025-07-19 06:18:49 --> Severity: Warning --> Trying to access array offset on value of type null C:\xampp\htdocs\apps-inspection\application\views\inspection\result_inspection.php 199
+ERROR - 2025-07-19 06:18:49 --> Severity: Warning --> Undefined variable $unit C:\xampp\htdocs\apps-inspection\application\views\inspection\result_inspection.php 200
+ERROR - 2025-07-19 06:18:49 --> Severity: Warning --> Trying to access array offset on value of type null C:\xampp\htdocs\apps-inspection\application\views\inspection\result_inspection.php 200
+ERROR - 2025-07-19 06:18:49 --> Severity: Warning --> Undefined variable $unit C:\xampp\htdocs\apps-inspection\application\views\inspection\result_inspection.php 201
+ERROR - 2025-07-19 06:18:49 --> Severity: Warning --> Trying to access array offset on value of type null C:\xampp\htdocs\apps-inspection\application\views\inspection\result_inspection.php 201
+ERROR - 2025-07-19 06:18:49 --> Severity: Warning --> Undefined variable $unit C:\xampp\htdocs\apps-inspection\application\views\inspection\result_inspection.php 202
+ERROR - 2025-07-19 06:18:49 --> Severity: Warning --> Trying to access array offset on value of type null C:\xampp\htdocs\apps-inspection\application\views\inspection\result_inspection.php 202
+ERROR - 2025-07-19 06:18:49 --> Severity: Warning --> Undefined variable $unit C:\xampp\htdocs\apps-inspection\application\views\inspection\result_inspection.php 203
+ERROR - 2025-07-19 06:18:49 --> Severity: Warning --> Trying to access array offset on value of type null C:\xampp\htdocs\apps-inspection\application\views\inspection\result_inspection.php 203

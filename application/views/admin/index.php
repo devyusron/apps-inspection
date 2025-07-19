@@ -12,7 +12,7 @@
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Jumlah Produk</div>
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Jumlah Brand</div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800"><?= $total_produk; ?></div>
                         </div>
                         <div class="col-auto">
@@ -93,7 +93,7 @@
                                 <tr>
                                     <th>No</th>
                                     <th>Serial Number</th>
-                                    <th>Nama Produk</th>
+                                    <th>Nama Brand</th>
                                     <th>Tanggal Inspeksi</th>
                                     <th>Status Inspeksi</th>
                                     </tr>

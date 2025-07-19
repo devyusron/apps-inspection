@@ -20,7 +20,7 @@
             <div class="col">
                 <form action="<?= site_url('inspection/result'); ?>" method="get">
                     <div class="form-row">
-                        <div class="col-md-2 mb-2">
+                        <!-- <div class="col-md-2 mb-2">
                             <label for="tanggal_mulai">Tanggal Masuk Start:</label>
                             <input type="date" class="form-control form-control-sm" id="tanggal_mulai" name="tanggal_mulai"
                                 value="<?= $this->input->get('tanggal_mulai'); ?>">
@@ -29,11 +29,11 @@
                             <label for="tanggal_akhir">Tanggal Masuk End:</label>
                             <input type="date" class="form-control form-control-sm" id="tanggal_akhir" name="tanggal_akhir"
                                 value="<?= $this->input->get('tanggal_akhir'); ?>">
-                        </div>
+                        </div> -->
                         <div class="col-md-2 mb-2">
-                            <label for="nama_produk">Nama Produk:</label>
+                            <label for="nama_produk">Nama Brand:</label>
                             <select class="form-control form-control-sm" id="nama_produk" name="nama_produk">
-                                <option value="">Semua Produk</option>
+                                <option value="">Semua Brand</option>
                                 <?php foreach ($daftar_produk as $produk): ?>
                                     <option value="<?= htmlspecialchars($produk['nama_produk']); ?>"
                                         <?= ($this->input->get('nama_produk') == $produk['nama_produk']) ? 'selected' : ''; ?>>
@@ -41,6 +41,15 @@
                                     </option>
                                 <?php endforeach; ?>
                             </select>
+                        </div>
+                        <div class="col-md-2 mb-2">
+                            <label for="serial_number">Serial Number:</label>
+                            <input type="text" class="form-control  form-control-sm" name="serial_number" id="serial_number">
+                        </div>
+                        <div class="col-md-2 mb-2">
+                            <label for="tanggal_mulai">Tanggal Masuk:</label>
+                            <input type="date" class="form-control form-control-sm" id="tanggal_mulai" name="tanggal_mulai"
+                                    value="<?= $this->input->get('tanggal_mulai'); ?>">
                         </div>
                         <!-- <div class="col-md-2 mb-2">
                             <label for="status_inspection">Status Inspection:</label>
@@ -50,7 +59,7 @@
                                 <option value="Belum Inspeksi">Belum Inspeksi</option>
                             </select>
                         </div> -->
-                        <div class="col-md-2 mb-2">
+                        <!-- <div class="col-md-2 mb-2">
                             <label for="kondisi_unit">Kondisi Unit:</label>
                             <select class="form-control form-control-sm" id="kondisi_unit" name="kondisi_unit">
                                 <option value="">Pilih Kondisi</option>
@@ -66,7 +75,7 @@
                                     <option value="<?= $lokasi['id']; ?>"><?= $lokasi['lokasi_unit']; ?></option>
                                 <?php endforeach; ?>
                             </select>
-                        </div>
+                        </div> -->
                     </div>
                     <button type="submit" class="btn btn-primary btn-sm">Filter</button>
                     <a href="<?= site_url('inspection/result'); ?>" class="btn btn-secondary btn-sm">Reset Filter</a>
@@ -83,14 +92,16 @@
                         <thead>
                             <tr>
                                 <th>ID Unit</th>
+                                <th>Nama Brand</th>
+                                <th>Type Unit</th>
                                 <th>Serial Number</th>
+                                <th>Engine Plate</th>
                                 <th>Machine No</th>      
                                 <th>Model No</th>
-                                <th>Nama Produk</th>
-                                <th>Qty</th>
+                                <!-- <th>Qty</th>
                                 <th>Kondisi Unit</th>
                                 <th>Tanggal Masuk</th>
-                                <th>Status Unit</th>
+                                <th>Status Unit</th> -->
                                 <th>Lokasi Unit</th>
                                 <th>Keterangan Unit</th>
                                 <th>Status Inspeksi</th>
@@ -102,15 +113,17 @@
                             <?php $i=1; foreach ($units as $unit): ?>
                                 <tr>
                                     <td><?= $i++; ?></td>
+                                    <td><?= htmlspecialchars($unit['nama_produk']); ?></td>
+                                    <td><?= htmlspecialchars($unit['type_unit']); ?></td>
                                     <td><?= htmlspecialchars($unit['serial_number']); ?></td>
+                                    <td><?= htmlspecialchars($unit['engine_plate']); ?></td>
                                     <td><?= isset($unit['machine_no']) ? htmlspecialchars($unit['machine_no']) : '-'; ?></td>
                                     <td><?= isset($unit['model_no']) ? htmlspecialchars($unit['model_no']) : '-'; ?></td>
-                                    <td><?= htmlspecialchars($unit['nama_produk']); ?></td>
-                                    <td><?= $unit['qty']; ?></td>
-                                    <td><?= htmlspecialchars($unit['kondisi_unit']); ?></td>
-                                    <td><?= $unit['tanggal_masuk']; ?></td>
-                                    <td><?= htmlspecialchars($unit['status_unit']); ?></td>
-                                    <td><?= htmlspecialchars($unit['lokasi_unit']); ?></td>
+                                    <!-- <td><?= $unit['qty']; ?></td> -->
+                                    <!-- <td><?= htmlspecialchars($unit['kondisi_unit']); ?></td> -->
+                                    <!-- <td><?= $unit['tanggal_masuk']; ?></td> -->
+                                    <!-- <td><?= htmlspecialchars($unit['status_unit']); ?></td> -->
+                                    <td><?= htmlspecialchars($unit['lokasi']); ?></td>
                                     <td><?= htmlspecialchars($unit['keterangan_unit']); ?></td>
                                     <td>
                                         <?php if ($unit['status_inspection'] == 'Belum Inspeksi'): ?>

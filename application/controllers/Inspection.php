@@ -153,7 +153,7 @@ class Inspection extends CI_Controller
             // Tambahkan pengecekan tipe data sebelum mengakses offset array
             if (!is_array($upload_result)) {
                 // Log pesan error untuk debugging lebih lanjut
-                log_message('error', 'Unexpected return type from _uploadImage_master_produk: ' . gettype($upload_result) . ' Value: ' . print_r($upload_result, true));
+                // log_message('error', 'Unexpected return type from _uploadImage_master_produk: ' . gettype($upload_result) . ' Value: ' . print_r($upload_result, true));
                 $this->session->set_flashdata('message', '<div class="alert alert-danger" role="alert">Terjadi kesalahan internal saat upload gambar. Silakan coba lagi.</div>');
                 $this->master_produk(); // Memuat ulang halaman master produk
                 return; // Hentikan eksekusi
@@ -232,7 +232,7 @@ class Inspection extends CI_Controller
 
                 // Tambahkan pengecekan tipe data sebelum mengakses offset array
                 if (!is_array($upload_data)) {
-                    log_message('error', 'Unexpected return type from _uploadImage_master_produk in edit_master_produk: ' . gettype($upload_data) . ' Value: ' . print_r($upload_data, true));
+                    // log_message('error', 'Unexpected return type from _uploadImage_master_produk in edit_master_produk: ' . gettype($upload_data) . ' Value: ' . print_r($upload_data, true));
                     $this->session->set_flashdata('message', '<div class="alert alert-danger" role="alert">Terjadi kesalahan internal saat upload gambar. Silakan coba lagi.</div>');
                     redirect('inspection/master_produk');
                     return;
@@ -289,17 +289,17 @@ class Inspection extends CI_Controller
         $this->upload->initialize($config);
 
         // --- DEBUGGING: Tambahkan logging untuk path upload dan keberadaan folder ---
-        log_message('debug', 'Upload Path yang digunakan: ' . $config['upload_path']);
+        // log_message('debug', 'Upload Path yang digunakan: ' . $config['upload_path']);
         if (!is_dir($config['upload_path'])) {
-            log_message('error', 'Direktori upload TIDAK DITEMUKAN atau TIDAK DAPAT DIAKSES: ' . $config['upload_path']);
+            // log_message('error', 'Direktori upload TIDAK DITEMUKAN atau TIDAK DAPAT DIAKSES: ' . $config['upload_path']);
             // Coba buat direktori jika tidak ada (opsional, bisa di-handle manual juga)
             if (!mkdir($config['upload_path'], 0777, TRUE)) {
-                log_message('error', 'Gagal membuat direktori upload: ' . $config['upload_path']);
+                // log_message('error', 'Gagal membuat direktori upload: ' . $config['upload_path']);
                 return ['status' => false, 'error' => 'Direktori upload tidak dapat dibuat atau diakses.'];
             }
-            log_message('debug', 'Direktori upload berhasil dibuat: ' . $config['upload_path']);
+            // log_message('debug', 'Direktori upload berhasil dibuat: ' . $config['upload_path']);
         } else {
-            log_message('debug', 'Direktori upload DITEMUKAN: ' . $config['upload_path']);
+            // log_message('debug', 'Direktori upload DITEMUKAN: ' . $config['upload_path']);
         }
         // --- END DEBUGGING ---
 
@@ -308,7 +308,7 @@ class Inspection extends CI_Controller
             return ['status' => true, 'file_name' => $this->upload->data('file_name')];
         } else {
             // Upload gagal, kembalikan status false dan pesan error
-            log_message('error', 'Gagal do_upload: ' . $this->upload->display_errors('', ''));
+            // log_message('error', 'Gagal do_upload: ' . $this->upload->display_errors('', ''));
             return ['status' => false, 'error' => $this->upload->display_errors('', '')];
         }
     }
@@ -813,15 +813,22 @@ class Inspection extends CI_Controller
         $nama_produk_filter = $this->input->get('nama_produk');
         $kondisi_unit = $this->input->get('kondisi_unit');
         $lokasi_unit = $this->input->get('lokasi_unit');
+        $serial_number = $this->input->get('serial_number');
+        $this->db->select("nama_produk");
+        $this->db->distinct();
         $data['daftar_produk'] = $this->db->get('master_produk')->result_array();
-        $this->db->select('unit.*, master_produk.nama_produk');
+        $this->db->select('unit.*, master_produk.nama_produk, dimensi_produk type_unit,lokasi_unit.lokasi_unit lokasi');
         $this->db->from('unit');
         $this->db->join('master_produk', 'unit.id_produk = master_produk.id_produk');
+        $this->db->join('lokasi_unit', 'unit.lokasi_unit = lokasi_unit.id', 'left');
         $this->db->order_by('unit_id', 'DESC');
         $this->db->where('unit.status_inspection', 'Belum Inspeksi');
-        if ($tanggal_mulai && $tanggal_akhir) {
-            $this->db->where('unit.tanggal_masuk >=', $tanggal_mulai . ' 00:00:00');
-            $this->db->where('unit.tanggal_masuk <=', $tanggal_akhir . ' 23:59:59');
+        if ($serial_number) {
+            $this->db->like('unit.serial_number', $serial_number);
+        }
+        if ($tanggal_mulai) {
+            // var_dump($tanggal_mulai);die;
+            $this->db->where('date(unit.tanggal_masuk) =', $tanggal_mulai);
         }
         if ($nama_produk_filter) {
             $this->db->like('master_produk.nama_produk', $nama_produk_filter);
@@ -853,16 +860,23 @@ class Inspection extends CI_Controller
         $nama_produk_filter = $this->input->get('nama_produk');
         $kondisi_unit = $this->input->get('kondisi_unit');
         $lokasi_unit = $this->input->get('lokasi_unit');
+        $serial_number = $this->input->get('serial_number');
+        $this->db->select("nama_produk");
+        $this->db->distinct();
         $data['daftar_produk'] = $this->db->get('master_produk')->result_array();
-        $this->db->select('unit.*, master_produk.nama_produk, inspection.inspection_template_id as id_template, inspection.id_inspection as id_inspection,approve_manager');
+        $this->db->select('unit.*, master_produk.nama_produk, dimensi_produk type_unit, inspection.inspection_template_id as id_template, inspection.id_inspection as id_inspection,approve_manager,lokasi_unit.lokasi_unit lokasi');
         $this->db->from('unit');
         $this->db->join('master_produk', 'unit.id_produk = master_produk.id_produk');
         $this->db->join('inspection', 'unit.unit_id = inspection.unit_id', 'left');
+        $this->db->join('lokasi_unit', 'unit.lokasi_unit = lokasi_unit.id', 'left');
         $this->db->order_by('unit_id', 'DESC');
         $this->db->where('unit.status_inspection', 'Sudah Inspeksi');
-        if ($tanggal_mulai && $tanggal_akhir) {
-            $this->db->where('unit.tanggal_masuk >=', $tanggal_mulai . ' 00:00:00');
-            $this->db->where('unit.tanggal_masuk <=', $tanggal_akhir . ' 23:59:59');
+        if ($tanggal_mulai) {
+            // var_dump($tanggal_mulai);die;
+            $this->db->where('date(unit.tanggal_masuk) =', $tanggal_mulai);
+        }
+        if ($serial_number) {
+            $this->db->like('unit.serial_number', $serial_number);
         }
         if ($nama_produk_filter) {
             $this->db->like('master_produk.nama_produk', $nama_produk_filter);

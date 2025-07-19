@@ -58,8 +58,8 @@
                         <label for="kondisi_unit">Kondisi Unit</label>
                         <select class="form-control" id="kondisi_unit" name="kondisi_unit" required>
                             <option value="" disabled selected>Pilih Kondisi</option>
-                            <option value="Berfungsi">Berfungsi</option>
-                            <option value="Tidak Berfungsi">Tidak Berfungsi</option>
+                            <option value="Ready">Ready</option>
+                            <option value="Booking">Booking</option>
                         </select>
                     </div>
                     <div class="form-group">

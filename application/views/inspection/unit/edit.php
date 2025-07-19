@@ -82,13 +82,13 @@
                     <label for="kondisi_unit">Kondisi Unit</label>
                     <select class="form-control" id="kondisi_unit" name="kondisi_unit" required>
                         <option value="" disabled>Pilih Kondisi</option>
-                        <option value="Berfungsi"
-                            <?= (set_value('kondisi_unit', $unit['kondisi_unit']) == 'Berfungsi') ? 'selected' : ''; ?>>
-                            Berfungsi
+                        <option value="Ready"
+                            <?= (set_value('kondisi_unit', $unit['kondisi_unit']) == 'Ready') ? 'selected' : ''; ?>>
+                            Ready
                         </option>
-                        <option value="Tidak Berfungsi"
-                            <?= (set_value('kondisi_unit', $unit['kondisi_unit']) == 'Tidak Berfungsi') ? 'selected' : ''; ?>>
-                            Tidak Berfungsi
+                        <option value="Booking"
+                            <?= (set_value('kondisi_unit', $unit['kondisi_unit']) == 'Booking') ? 'selected' : ''; ?>>
+                            Booking
                         </option>
                     </select>
                     <?= form_error('kondisi_unit', '<small class="text-danger">', '</small>'); ?>

@@ -447,8 +447,8 @@ class Inspection extends CI_Controller
         $this->form_validation->set_rules('status_unit', 'Status Unit', 'required|trim');
         $this->form_validation->set_rules('lokasi_unit', 'Lokasi Unit', 'required|trim');
         $this->form_validation->set_rules('keterangan_unit', 'Keterangan Unit', 'trim');
-        $this->form_validation->set_rules('machine_no', 'Machine Number', 'trim'); // Tambah validasi
-        $this->form_validation->set_rules('model_no', 'Model Number', 'trim');     // Tambah validasi
+        // $this->form_validation->set_rules('machine_no', 'Machine Number', 'trim'); // Tambah validasi
+        // $this->form_validation->set_rules('model_no', 'Model Number', 'trim');     // Tambah validasi
         if ($this->form_validation->run() == FALSE) {
             $error_messages = validation_errors('<li>', '</li>'); // Format errors as list items
             $error_messages = "<ul>" . $error_messages . "</ul>"; // Wrap in an unordered list
@@ -557,8 +557,8 @@ class Inspection extends CI_Controller
         $this->form_validation->set_rules('status_unit', 'Status Unit', 'required|trim');
         $this->form_validation->set_rules('lokasi_unit', 'Lokasi Unit', 'required|trim');
         $this->form_validation->set_rules('keterangan_unit', 'Keterangan Unit', 'trim');
-        $this->form_validation->set_rules('machine_no', 'Machine Number', 'trim'); // Tambah validasi
-        $this->form_validation->set_rules('model_no', 'Model Number', 'trim');     // Tambah validasi
+        // $this->form_validation->set_rules('machine_no', 'Machine Number', 'trim'); // Tambah validasi
+        // $this->form_validation->set_rules('model_no', 'Model Number', 'trim');     // Tambah validasi
         if ($this->form_validation->run() == FALSE) {
             $error_messages = validation_errors('<li>', '</li>'); // Format errors as list items
             $error_messages = "<ul>" . $error_messages . "</ul>"; // Wrap in an unordered list

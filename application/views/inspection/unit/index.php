@@ -105,8 +105,8 @@
                                 <th>Type Unit</th>
                                 <th>Serial Number</th>
                                 <th>Engine Plate</th>
-                                <th>Machine No</th>      
-                                <th>Model No</th>
+                                <!-- <th>Machine No</th>      
+                                <th>Model No</th> -->
                                 <!-- <th>Qty</th> -->
                                 <!-- <th>Kondisi Unit</th> -->
                                 <!-- <th>Tanggal Masuk</th> -->

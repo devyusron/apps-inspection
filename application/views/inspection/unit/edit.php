@@ -39,7 +39,7 @@
                         value="<?= htmlspecialchars(set_value('serial_number', $unit['serial_number'])); ?>" required>
                     <?= form_error('serial_number', '<small class="text-danger">', '</small>'); ?>
                 </div>
-                <div class="form-group">
+                <!-- <div class="form-group">
                     <label for="machine_no">Machine Number</label>
                     <input type="text" class="form-control" id="machine_no" name="machine_no"
                         value="<?= htmlspecialchars(set_value('machine_no', $unit['machine_no'])); ?>">
@@ -50,7 +50,7 @@
                     <input type="text" class="form-control" id="model_no" name="model_no"
                         value="<?= htmlspecialchars(set_value('model_no', $unit['model_no'])); ?>">
                     <?= form_error('model_no', '<small class="text-danger">', '</small>'); ?>
-                </div>
+                </div> -->
                 <div class="form-group">
                     <label for="engine_plate">Engine Plate</label>
                     <input type="text" class="form-control" id="engine_plate" name="engine_plate"

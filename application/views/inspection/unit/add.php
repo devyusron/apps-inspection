@@ -31,7 +31,7 @@
                         <label for="serial_number">Serial Number</label>
                         <input type="text" class="form-control" id="serial_number" name="serial_number" required>
                     </div>
-                    <div class="form-group">
+                    <!-- <div class="form-group">
                         <label for="machine_no">Machine Number</label>
                         <input type="text" class="form-control" id="machine_no" name="machine_no">
                         <?= form_error('machine_no', '<small class="text-danger">', '</small>'); ?>
@@ -40,7 +40,7 @@
                         <label for="model_no">Model Number</label>
                         <input type="text" class="form-control" id="model_no" name="model_no">
                         <?= form_error('model_no', '<small class="text-danger">', '</small>'); ?>
-                    </div>
+                    </div> -->
                     <div class="form-group">
                         <label for="engine_plate">Engine Plate</label>
                         <input type="text" class="form-control" id="engine_plate" name="engine_plate">

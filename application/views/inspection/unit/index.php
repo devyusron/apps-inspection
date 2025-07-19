@@ -3,7 +3,7 @@
     <div class="m-1 shadow card">
         <div class="card-header mb-4 d-flex justify-content-between align-items-center">
             <h1 class="h3 mb-4 text-gray-800"><?= $title; ?></h1>
-            <?php if($this->session->userdata('role_id') == 1) : ?>
+            <?php if($this->session->userdata('role_id') == 1 or $this->session->userdata('role') == 'After Sales' or $this->session->userdata('role') == 'Admin Service') : ?>
             <a href="<?= site_url('inspection/add_unit'); ?>" class="btn btn-outline-primary">
                 <i class="fas fa-plus mr-2"></i>
                 Tambah Unit
@@ -167,6 +167,14 @@
                                                 </a>
                                             <?php endif; ?>
                                         <?php endif; ?>
+                                        <?php if ($unit['approve_manager'] == '0' and $this->session->userdata('role') == 'Manager'): ?>
+                                            <a href="#" class="btn btn-warning btn-sm btn-reject-inspection"
+                                                data-toggle="tooltip" data-placement="top" title="Reject Inspection"
+                                                data-inspection-id="<?= $unit['id_inspection']; ?>"
+                                                data-unit-id-for-status="<?= $unit['unit_id']; ?>">
+                                                <i class="fas fa-times"></i>
+                                            </a>
+                                        <?php endif; ?>
                                         <?php if ($unit['status_inspection'] == 'Belum Inspeksi') : ?>
                                             <a href="#" class="btn btn-success btn-sm lihat-template"
                                                 data-toggle="tooltip" data-placement="top" title="Inspeksi"
@@ -189,7 +197,7 @@
                                             data-toggle="modal" title="Hasil Inspeksi" 
                                             data-target="#modalInspectionResult"><i class="fas fa-search"></i></button>
                                         <?php endif; ?>
-                                        <?php if($this->session->userdata('role_id') == 1) : ?>
+                                        <?php if($this->session->userdata('role_id') == 1 or $this->session->userdata('role') == 'After Sales' or $this->session->userdata('role') == 'Admin Service') : ?>
                                             <a href="<?= site_url('inspection/edit_unit/' . $unit['unit_id']); ?>" class="btn btn-warning btn-sm"
                                                 data-toggle="tooltip" data-placement="top" title="Edit Unit">
                                                 <i class="fas fa-edit"></i> 
@@ -280,6 +288,82 @@
 </script>
 <script>
 $(document).ready(function() {
+
+    // --- SCRIPT UNTUK REJECT/DELETE INSPECTION ---
+    $(document).on('click', '.btn-reject-inspection', function(e) {
+        e.preventDefault();
+
+        const inspectionId = $(this).data('inspection-id');
+        const unitIdForStatus = $(this).data('unit-id-for-status'); // ID dari tabel `unit`
+        const button = $(this); // Simpan referensi tombol
+
+        Swal.fire({
+            title: 'Konfirmasi Rejection?',
+            text: "Anda akan menghapus data inspeksi ini dan mengembalikan status unit menjadi 'Belum Inspeksi'. Tindakan ini tidak dapat dibatalkan!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33', // Merah untuk reject
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Ya, Hapus Inspeksi!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '<?= base_url("inspection/reject_inspection"); ?>', // URL ke controller reject
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        inspection_id: inspectionId,
+                        unit_id_for_status: unitIdForStatus // Kirim ID unit untuk update status
+                    },
+                    beforeSend: function() {
+                        Swal.fire({
+                            title: 'Loading...',
+                            text: 'Memproses penghapusan inspeksi...',
+                            allowOutsideClick: false,
+                            didOpen: () => {
+                                Swal.showLoading();
+                            }
+                        });
+                    },
+                    success: function(response) {
+                        Swal.close();
+
+                        if (response.status === 'success') {
+                            Swal.fire(
+                                'Berhasil!',
+                                response.message,
+                                'success'
+                            ).then(() => {
+                                // Refresh halaman untuk melihat perubahan
+                                window.location.reload();
+                                // Atau jika ingin update UI tanpa reload, Anda perlu lebih banyak logika
+                                // Misalnya, sembunyikan baris tabel terkait inspeksi yang dihapus
+                                // button.closest('tr').remove();
+                            });
+                        } else {
+                            Swal.fire(
+                                'Gagal!',
+                                response.message,
+                                'error'
+                            );
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        Swal.close();
+                        Swal.fire(
+                            'Error!',
+                            'Terjadi kesalahan saat menghubungi server: ' + error,
+                            'error'
+                        );
+                        console.error('AJAX Error: ', status, error, xhr);
+                    }
+                });
+            }
+        });
+    });
+    // --- AKHIR SCRIPT UNTUK REJECT/DELETE INSPECTION ---
+
     $('.btn-delete').on('click', function(e) {
         e.preventDefault(); // Prevent default link behavior
         var unitId = $(this).data('unit-id'); // Ambil ID unit dari data atribut

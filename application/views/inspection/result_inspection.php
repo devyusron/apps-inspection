@@ -152,7 +152,7 @@
                                                 </a>
                                             <?php endif; ?>
                                         <?php endif; ?>
-                                        <?php if ($unit['approve_manager'] == '0'): ?>
+                                        <?php if ($unit['approve_manager'] == '0' and $this->session->userdata('role') == 'Manager'): ?>
                                             <a href="#" class="btn btn-warning btn-sm btn-reject-inspection"
                                                 data-toggle="tooltip" data-placement="top" title="Reject Inspection"
                                                 data-inspection-id="<?= $unit['id_inspection']; ?>"

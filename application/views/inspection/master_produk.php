@@ -4,7 +4,7 @@
     <div class="m-1 shadow card">
     <div class="card-header mb-4 d-flex justify-content-between align-items-center">
         <h1 class="h3 mb-4 text-gray-800"><?= $title; ?></h1>
-        <?php if($this->session->userdata('role_id') == 1) : ?>
+        <?php if($this->session->userdata('role_id') == 1 or $this->session->userdata('role') == 'After Sales' or $this->session->userdata('role') == 'Admin Service') : ?>
         <a href="" class="btn btn-outline-primary mb-3" data-toggle="modal" data-target="#newMenuModal">
             <i class="fas fa-plus mr-2"></i>
             Add Brand
@@ -94,7 +94,7 @@
                                 <td><?= $m['berat_produk']; ?></td>
                                 <td><?= $m['is_active'] == 1 ? 'Ready' : 'Booking'; ?></td>
                                 <td>
-                                    <?php if($this->session->userdata('role_id') == 1) : ?>
+                                    <?php if($this->session->userdata('role_id') == 1 or $this->session->userdata('role') == 'After Sales' or $this->session->userdata('role') == 'Admin Service') : ?>
                                     <a href="#" class="badge badge-success" data-toggle="modal" data-target="#editMenuModal"
                                         data-id_produk="<?= $m['id_produk']; ?>"
                                         data-nama_produk="<?= $m['nama_produk']; ?>"

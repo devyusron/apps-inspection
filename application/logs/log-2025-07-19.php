@@ -49,3 +49,9 @@ ERROR - 2025-07-19 03:53:23 --> Severity: error --> Exception: Call to undefined
 ERROR - 2025-07-19 03:53:25 --> Severity: error --> Exception: Call to undefined method CI_Session::unset_flashdata() C:\xampp\htdocs\apps-inspection\application\views\inspection\unit\edit.php 172
 ERROR - 2025-07-19 03:54:29 --> Severity: error --> Exception: Call to undefined method CI_Session::unset_flashdata() C:\xampp\htdocs\apps-inspection\application\views\inspection\unit\edit.php 172
 ERROR - 2025-07-19 03:54:30 --> Severity: error --> Exception: Call to undefined method CI_Session::unset_flashdata() C:\xampp\htdocs\apps-inspection\application\views\inspection\unit\edit.php 172
+ERROR - 2025-07-19 05:22:58 --> Query error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'ORDER BY `user_access_menu`.`menu_id` ASC' at line 5 - Invalid query: SELECT `user_menu`.`id`, `menu`
+                            FROM `user_menu` JOIN `user_access_menu`
+                              ON `user_menu`.`id` = `user_access_menu`.`menu_id`
+                           WHERE `user_access_menu`.`role_id` = 
+                        ORDER BY `user_access_menu`.`menu_id` ASC
+                        

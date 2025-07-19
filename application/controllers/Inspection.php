@@ -442,7 +442,7 @@ class Inspection extends CI_Controller
         $this->form_validation->set_rules('serial_number', 'Serial Number', 'required|trim|is_unique[unit.serial_number]');
         $this->form_validation->set_rules('id_produk', 'ID Produk', 'required');
         // $this->form_validation->set_rules('qty', 'Kuantitas', 'required|trim|numeric|greater_than[0]');
-        $this->form_validation->set_rules('kondisi_unit', 'Kondisi Unit', 'required|trim');
+        // $this->form_validation->set_rules('kondisi_unit', 'Kondisi Unit', 'required|trim');
         $this->form_validation->set_rules('tanggal_masuk', 'Tanggal Masuk', 'required|trim');
         $this->form_validation->set_rules('status_unit', 'Status Unit', 'required|trim');
         $this->form_validation->set_rules('lokasi_unit', 'Lokasi Unit', 'required|trim');
@@ -552,7 +552,7 @@ class Inspection extends CI_Controller
         $this->form_validation->set_rules('serial_number', 'Serial Number', 'required|trim|callback_check_serial_number_update[' . $id . ']');
         $this->form_validation->set_rules('id_produk', 'ID Produk', 'required');
         // $this->form_validation->set_rules('qty', 'Kuantitas', 'required|trim|numeric|greater_than[0]');
-        $this->form_validation->set_rules('kondisi_unit', 'Kondisi Unit', 'required|trim');
+        // $this->form_validation->set_rules('kondisi_unit', 'Kondisi Unit', 'required|trim');
         $this->form_validation->set_rules('tanggal_masuk', 'Tanggal Masuk', 'required|trim');
         $this->form_validation->set_rules('status_unit', 'Status Unit', 'required|trim');
         $this->form_validation->set_rules('lokasi_unit', 'Lokasi Unit', 'required|trim');

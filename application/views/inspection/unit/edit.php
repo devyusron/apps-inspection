@@ -79,9 +79,9 @@
                     <?= form_error('qty', '<small class="text-danger">', '</small>'); ?>
                 </div>
                 <div class="form-group">
-                    <label for="kondisi_unit">Kondisi Unit</label>
+                    <label for="kondisi_unit">Status</label>
                     <select class="form-control" id="kondisi_unit" name="kondisi_unit" required>
-                        <option value="" disabled>Pilih Kondisi</option>
+                        <option value="" disabled>Pilih Status</option>
                         <option value="Ready"
                             <?= (set_value('kondisi_unit', $unit['kondisi_unit']) == 'Ready') ? 'selected' : ''; ?>>
                             Ready

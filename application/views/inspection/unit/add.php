@@ -55,9 +55,9 @@
                         <input type="number" class="form-control" id="qty" name="qty" value="1" readonly required>
                     </div>
                     <div class="form-group">
-                        <label for="kondisi_unit">Kondisi Unit</label>
+                        <label for="kondisi_unit">Status</label>
                         <select class="form-control" id="kondisi_unit" name="kondisi_unit" required>
-                            <option value="" disabled selected>Pilih Kondisi</option>
+                            <option value="" disabled selected>Pilih Status</option>
                             <option value="Ready">Ready</option>
                             <option value="Booking">Booking</option>
                         </select>
